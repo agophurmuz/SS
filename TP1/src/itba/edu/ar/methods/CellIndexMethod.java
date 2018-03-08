@@ -1,3 +1,4 @@
+
 package itba.edu.ar.methods;
 
 import itba.edu.ar.models.Cell;
@@ -14,9 +15,9 @@ public class CellIndexMethod {
 
         HashMap<Integer, Set<Integer>> result = new HashMap<>();
 
-        for (int x = 0; x < M - 1; x++){
-            for (int y = 0; y < M - 1; y++){
-                List<Cell> neighbors = calculateNeighborsCell(x, y, M, board);
+        for (int x = 0; x < M ; x++){
+            for (int y = 0; y < M ; y++){
+                List<Cell> neighbors = calculateNeighborsCell(y, x, M, board);
                 List<Particle> particles = board.getBoard()[x][y].getPatricleList();
                 for (Particle particle : particles){
                     for (Cell cell : neighbors) {
@@ -24,7 +25,7 @@ public class CellIndexMethod {
                             if(particle.getId() != neighborParticle.getId()){
                                 double posX = neighborParticle.getPosition().getX() - particle.getPosition().getX();
                                 double posY = neighborParticle.getPosition().getY() - particle.getPosition().getY();
-                                double dist = Math.sqrt(Math.pow(posX, 2) + Math.pow(posY, 2));
+                                double dist = (Math.sqrt(Math.pow(posX, 2) + Math.pow(posY, 2))) - (particle.getRadius() + neighborParticle.getRadius());
                                 if(dist < rc){
                                     if(result.containsKey(particle.getId())){
                                         result.get(particle.getId()).add(neighborParticle.getId());
@@ -39,7 +40,7 @@ public class CellIndexMethod {
                                     }
                                 }
                             }
-                            }
+                        }
                     }
                 }
             }
@@ -47,25 +48,25 @@ public class CellIndexMethod {
         return result;
     }
 
-    private static List<Cell> calculateNeighborsCell(int row, int col, int M, Board board) {
+    private static List<Cell> calculateNeighborsCell(int x, int y, int M, Board board) {
         List<Cell> neighborsCellList = new ArrayList<>();
-        neighborsCellList.add(board.getBoard()[row][col]);
-        if (isNeighbor(row - 1, col, M)) {
-            neighborsCellList.add(board.getBoard()[row - 1][col]);
+        neighborsCellList.add(board.getBoard()[y][x]);
+        if (isNeighbor(x, y - 1, M)) {
+            neighborsCellList.add(board.getBoard()[y - 1][x]);
         }
-        if (isNeighbor(row - 1, col + 1, M)) {
-            neighborsCellList.add(board.getBoard()[row - 1][col + 1]);
+        if (isNeighbor(x + 1, y - 1, M)) {
+            neighborsCellList.add(board.getBoard()[y - 1][x + 1]);
         }
-        if (isNeighbor(row, col + 1, M)) {
-            neighborsCellList.add(board.getBoard()[row][col + 1]);
+        if (isNeighbor(x + 1, y, M)) {
+            neighborsCellList.add(board.getBoard()[y][x + 1]);
         }
-        if (isNeighbor(row + 1, col + 1, M)) {
-            neighborsCellList.add(board.getBoard()[row + 1][col + 1]);
+        if (isNeighbor(x + 1, y + 1, M)) {
+            neighborsCellList.add(board.getBoard()[y + 1][x + 1]);
         }
         return neighborsCellList;
     }
 
-    private static boolean isNeighbor(int row, int col, int M) {
-        return (row >= 0 && col >= 0 && row <= M && col <= M);
+    private static boolean isNeighbor(int x, int y, int M) {
+        return (x >= 0 && y >= 0 && x <= M - 1 && y <= M - 1);
     }
 }

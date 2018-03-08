@@ -14,7 +14,8 @@ public class Main {
     public static void main(String[] args) {
 
         int M = 3;
-        double rc = 1;
+        double rc = 10;
+        int L = 30;
         Board board = new Board(M);
         board.getBoard()[0][0] = new Cell();
         board.getBoard()[0][1] = new Cell();
@@ -26,14 +27,14 @@ public class Main {
         board.getBoard()[2][1] = new Cell();
         board.getBoard()[2][2] = new Cell();
 
-        board.getBoard()[0][0].addParticle(new Particle(new Position(1, 1), 1, 0.25));
-        board.getBoard()[1][0].addParticle(new Particle(new Position(2, 2), 2, 0.25));
-        board.getBoard()[0][2].addParticle(new Particle(new Position(3, 3), 3, 0.25));
-        board.getBoard()[1][2].addParticle(new Particle(new Position(2.5, 3), 4, 0.25));
-        board.getBoard()[1][1].addParticle(new Particle(new Position(1.5, 2), 5, 0.25));
-        board.getBoard()[2][2].addParticle(new Particle(new Position(3.3, 3.8), 6, 0.25));
-        board.getBoard()[2][0].addParticle(new Particle(new Position(4, 1.8), 7, 0.25));
-        board.getBoard()[0][2].addParticle(new Particle(new Position(1.75, 1.8), 9, 0.25));
+        board.getBoard()[0][0].addParticle(new Particle(new Position(1, 1), 1, 0.1));
+        board.getBoard()[0][1].addParticle(new Particle(new Position(12, 2), 2, 0.2));
+        board.getBoard()[2][0].addParticle(new Particle(new Position(3, 23), 3, 0.3));
+        board.getBoard()[2][1].addParticle(new Particle(new Position(11, 22), 4, 0.4));
+        board.getBoard()[1][1].addParticle(new Particle(new Position(15, 15), 5, 0.5));
+        board.getBoard()[2][2].addParticle(new Particle(new Position(25, 24), 6, 0.6));
+        board.getBoard()[0][2].addParticle(new Particle(new Position(24, 1), 7, 0.07));
+        board.getBoard()[2][0].addParticle(new Particle(new Position(1, 28), 9, 0.8));
 
         long startTime = System.currentTimeMillis();
 
