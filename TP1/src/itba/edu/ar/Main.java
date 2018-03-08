@@ -40,6 +40,8 @@ public class Main {
 
         HashMap<Integer, Set<Integer>> result = CellIndexMethod.calculateDistance(M, rc, board);
 
+        FileGenerator.createOutputFile("OutputFile.txt", result, 8);
+
         long endTime = System.currentTimeMillis();
 
         long time = endTime - startTime;
