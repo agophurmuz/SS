@@ -2,27 +2,27 @@ package itba.edu.ar.models;
 
 public class Position {
 
-    private double x;
-    private double y;
+    private Number x;
+    private Number y;
 
-    public Position(double x, double y) {
+    public Position(Number x, Number y) {
         this.x = x;
         this.y = y;
     }
 
-    public double getX() {
+    public Number getX() {
         return x;
     }
 
-    public void setX(double x) {
+    public void setX(Number x) {
         this.x = x;
     }
 
-    public double getY() {
+    public Number getY() {
         return y;
     }
 
-    public void setY(double y) {
+    public void setY(Number y) {
         this.y = y;
     }
 

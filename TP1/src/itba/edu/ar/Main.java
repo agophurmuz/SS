@@ -1,5 +1,6 @@
 package itba.edu.ar;
 
+import itba.edu.ar.methods.BoundaryCondition;
 import itba.edu.ar.methods.CellIndexMethod;
 import itba.edu.ar.models.Board;
 import itba.edu.ar.models.Cell;
@@ -38,7 +39,9 @@ public class Main {
 
         long startTime = System.currentTimeMillis();
 
-        HashMap<Integer, Set<Integer>> result = CellIndexMethod.calculateDistance(M, rc, board);
+        CellIndexMethod cellIndexMethod = new CellIndexMethod(BoundaryCondition.PERIODIC,M, rc, board);
+
+        HashMap<Integer, Set<Integer>> result = cellIndexMethod.calculateDistance();
 
         FileGenerator.createOutputFile("OutputFile.txt", result, 8);
 
