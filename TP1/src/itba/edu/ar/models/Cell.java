@@ -5,17 +5,20 @@ import java.util.List;
 
 public class Cell {
 
-    private List<Particle> patricleList;
+    private List<Particle> particleList = new ArrayList<>();
 
-    public Cell() {
-        this.patricleList = new ArrayList<>();
-    }
-
-    public List<Particle> getPatricleList() {
-        return patricleList;
+    public List<Particle> getParticleList() {
+        return particleList;
     }
 
     public void addParticle(Particle particle) {
-        this.patricleList.add(particle);
+        this.particleList.add(particle);
+    }
+
+    @Override
+    public String toString() {
+        return "Cell{" +
+                "particleList=" + particleList +
+                '}'+"\n";
     }
 }
