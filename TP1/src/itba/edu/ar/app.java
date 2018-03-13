@@ -27,7 +27,7 @@ public class app {
 
         CellIndexMethod cellIndexMethod = new CellIndexMethod(BoundaryCondition.PERIODIC, M, L, rc, particles);
 
-        HashMap<Integer, Set<Integer>> result = cellIndexMethod.getParticleNeighbors();
+        HashMap<Particle, Set<Particle>> result = cellIndexMethod.getParticleNeighbors();
 
         FileGenerator.createOutputFile("OutputFile.txt", result, 8);
 

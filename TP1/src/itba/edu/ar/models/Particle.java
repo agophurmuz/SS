@@ -5,11 +5,19 @@ public class Particle {
     private Position position;
     private int id;
     private Double radius;
+    private Double angle;
+    private Double speed;
 
     public Particle(Position position, int id, Double radius) {
         this.position = position;
         this.id = id;
         this.radius = radius;
+    }
+
+    public Particle(Position position, int id, Double radius, Double angle, Double speed) {
+        this(position, id, radius);
+        this.angle = angle;
+        this.speed = speed;
     }
 
     public Position getPosition() {
@@ -34,6 +42,22 @@ public class Particle {
 
     public void setRadius(Double radius) {
         this.radius = radius;
+    }
+
+    public Double getAngle() {
+        return angle;
+    }
+
+    public void setAngle(Double angle) {
+        this.angle = angle;
+    }
+
+    public Double getSpeed() {
+        return speed;
+    }
+
+    public void setSpeed(Double speed) {
+        this.speed = speed;
     }
 
     @Override

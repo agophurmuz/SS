@@ -50,9 +50,10 @@ public class CellIndexMethod {
         }
     }
 
-    public HashMap<Integer, Set<Integer>> getParticleNeighbors() {
 
-        HashMap<Integer, Set<Integer>> result = new HashMap<>();
+    public HashMap<Particle, Set<Particle>> getParticleNeighbors() {
+
+        HashMap<Particle, Set<Particle>> result = new HashMap<>();
 
         for (int x = 0; x < M; x++) {
             for (int y = 0; y < M; y++) {
@@ -66,20 +67,25 @@ public class CellIndexMethod {
                                 double posY = neighborParticle.getPosition().getY().doubleValue() - particle.getPosition().getY().doubleValue();
                                 double dist = (Math.sqrt(Math.pow(posX, 2) + Math.pow(posY, 2))) - (particle.getRadius() + neighborParticle.getRadius());
                                 if (dist < rc) {
-                                    if (result.containsKey(particle.getId())) {
-                                        result.get(particle.getId()).add(neighborParticle.getId());
+                                    if (result.containsKey(particle)) {
+                                        result.get(particle).add(neighborParticle);
                                     } else {
-                                        result.put(particle.getId(), new HashSet<>());
-                                        result.get(particle.getId()).add(neighborParticle.getId());
+                                        result.put(particle, new HashSet<>());
+                                        result.get(particle).add(neighborParticle);
                                     }
-                                    if (result.containsKey(neighborParticle.getId())) {
-                                        result.get(neighborParticle.getId()).add(particle.getId());
+                                    if (result.containsKey(neighborParticle)) {
+                                        result.get(neighborParticle).add(particle);
                                     } else {
-                                        result.put(neighborParticle.getId(), new HashSet<>());
-                                        result.get(neighborParticle.getId()).add(particle.getId());
+                                        result.put(neighborParticle, new HashSet<>());
+                                        result.get(neighborParticle).add(particle);
                                     }
                                 }
+                            } else {
+                                if (!result.containsKey(particle)) {
+                                    result.put(particle, new HashSet<>());
+                                }
                             }
+
                         }
                     }
                 }
