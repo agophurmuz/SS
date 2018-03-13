@@ -1,4 +1,3 @@
-/*
 package itba.edu.ar;
 
 import itba.edu.ar.models.Cell;
@@ -15,6 +14,7 @@ public class App {
 
     public static void main(String[] args) throws IOException {
 
+        int N = 5;
         int M = 3;
         double rc = 8;
         int L = 30;
@@ -22,35 +22,9 @@ public class App {
         double pi = Math.PI;
         double eta = 0.1;
         int cantRun = 100;
-        Board board = new Board(M);
-        board.getBoard()[0][0] = new Cell();
-        board.getBoard()[0][1] = new Cell();
-        board.getBoard()[0][2] = new Cell();
-        board.getBoard()[1][0] = new Cell();
-        board.getBoard()[1][1] = new Cell();
-        board.getBoard()[1][2] = new Cell();
-        board.getBoard()[2][0] = new Cell();
-        board.getBoard()[2][1] = new Cell();
-        board.getBoard()[2][2] = new Cell();
+        double radius = 0;
 
-        board.getBoard()[0][0].addParticle(new Particle(new Position(1, 1), 1, 0.1, Math.random() * 2 * pi, speed));
-        board.getBoard()[0][1].addParticle(new Particle(new Position(12, 2), 2, 0.2, Math.random() * 2 * pi, speed));
-        board.getBoard()[2][0].addParticle(new Particle(new Position(3, 23), 3, 0.3, Math.random() * 2 * pi, speed));
-        board.getBoard()[2][1].addParticle(new Particle(new Position(11, 22), 4, 0.4, Math.random() * 2 * pi, speed));
-        board.getBoard()[1][1].addParticle(new Particle(new Position(15, 15), 5, 0.5, Math.random() * 2 * pi, speed));
-        board.getBoard()[2][2].addParticle(new Particle(new Position(25, 24), 6, 0.6, Math.random() * 2 * pi, speed));
-        board.getBoard()[0][2].addParticle(new Particle(new Position(24, 1), 7, 0.07, Math.random() * 2 * pi, speed));
-        board.getBoard()[2][0].addParticle(new Particle(new Position(1, 28), 9, 0.8, Math.random() * 2 * pi, speed));
-
-        List<Particle> particles = new ArrayList<>();
-        particles.add(new Particle(new Position(1, 1), 1, 0.1, Math.random() * 2 * pi, speed));
-        particles.add(new Particle(new Position(12, 2), 2, 0.2, Math.random() * 2 * pi, speed));
-        particles.add(new Particle(new Position(3, 23), 3, 0.3, Math.random() * 2 * pi, speed));
-        particles.add(new Particle(new Position(11, 22), 4, 0.4, Math.random() * 2 * pi, speed));
-        particles.add(new Particle(new Position(15, 15), 5, 0.5, Math.random() * 2 * pi, speed));
-        particles.add(new Particle(new Position(25, 24), 6, 0.6, Math.random() * 2 * pi, speed));
-        particles.add(new Particle(new Position(24, 1), 7, 0.07, Math.random() * 2 * pi, speed));
-        particles.add(new Particle(new Position(1, 28), 9, 0.8, Math.random() * 2 * pi, speed));
+        List<Particle> particles = ParticleSystemGenerator.generateRandomParticleWithSpeedSystem(N, L, radius, speed);
 
         //long startTime = System.currentTimeMillis();
 
@@ -72,14 +46,14 @@ public class App {
 
         FileOutputStream fileOutputStream = FileGenerator.createOutputFile("OutputTP2.xyz");
 
-        Set<Particle> result = null;
+        List<Particle> result = particles;
 
         for (int i = 0; i < cantRun; i ++) {
-            result = selfMovingParticles.move(board);
+            result = selfMovingParticles.move(result);
             FileGenerator.addToOutputFile(fileOutputStream, result, i, L);
         }
         fileOutputStream.close();
         System.out.println(selfMovingParticles.polarization(result));
     }
 }
-*/
+

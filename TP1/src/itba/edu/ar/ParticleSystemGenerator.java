@@ -27,6 +27,16 @@ public class ParticleSystemGenerator {
         return list;
     }
 
+    public static final List<Particle> generateRandomParticleWithSpeedSystem(final int N, final int L, final Double radius, final Double speed) {
+        ArrayList<Particle> list = new ArrayList<>();
+
+        for (int i = 0; i < N; i++) {
+            list.add(new Particle(getRandomPosition(L), i, radius, Math.random() * 2 * Math.PI, speed));
+        }
+
+        return list;
+    }
+
 
     private static final Position getRandomPosition(final int L) {
 

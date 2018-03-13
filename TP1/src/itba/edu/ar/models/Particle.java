@@ -1,5 +1,7 @@
 package itba.edu.ar.models;
 
+import java.util.Objects;
+
 public class Particle {
 
     private Position position;
@@ -67,5 +69,22 @@ public class Particle {
                 ", id=" + id +
                 ", radius=" + radius +
                 '}'+"\n";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Particle)) return false;
+        Particle particle = (Particle) o;
+        return getId() == particle.getId() &&
+                Objects.equals(getPosition(), particle.getPosition()) &&
+                Objects.equals(getRadius(), particle.getRadius()) &&
+                Objects.equals(getAngle(), particle.getAngle()) &&
+                Objects.equals(getSpeed(), particle.getSpeed());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getPosition(), getId(), getRadius(), getAngle(), getSpeed());
     }
 }

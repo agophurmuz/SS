@@ -80,12 +80,7 @@ public class CellIndexMethod {
                                         result.get(neighborParticle).add(particle);
                                     }
                                 }
-                            } else {
-                                if (!result.containsKey(particle)) {
-                                    result.put(particle, new HashSet<>());
-                                }
                             }
-
                         }
                     }
                 }

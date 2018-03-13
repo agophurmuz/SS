@@ -5,10 +5,7 @@ import itba.edu.ar.methods.CellIndexMethod;
 import itba.edu.ar.models.Particle;
 import itba.edu.ar.models.Position;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class SelfMovingParticles {
 
@@ -26,41 +23,42 @@ public class SelfMovingParticles {
         this.speed = speed;
     }
 
-    public Set<Particle> move(Board board) {
-        Set<Particle> newParticles = new HashSet<>();
-        CellIndexMethod cellIndexMethod = new CellIndexMethod(BoundaryCondition.NON_PERIODIC, M, r, board);
-        Map<Particle, Set<Particle>> particlesNeighbors = cellIndexMethod.calculateDistance();
-        Set<Particle> particles = particlesNeighbors.keySet();
+    public List<Particle> move(List<Particle> particles) {
+        List<Particle> newParticles = new ArrayList<>();
+        CellIndexMethod cellIndexMethod = new CellIndexMethod(BoundaryCondition.NON_PERIODIC, M, L, r, particles);
+        Map<Particle, Set<Particle>> particlesNeighbors = cellIndexMethod.getParticleNeighbors();
         for (Particle particle : particles) {
             double xCoord = particle.getPosition().getX().doubleValue() + particle.getSpeed() * Math.cos(particle.getAngle());
             double yCoord = particle.getPosition().getY().doubleValue() + particle.getSpeed() * Math.sin(particle.getAngle());
+            if(xCoord >= L) {
+                xCoord -= L;
+            } else if (xCoord < 0) {
+                xCoord += L;
+            }
+            if (yCoord >= L) {
+                yCoord -= L;
+            } else if (yCoord < 0) {
+                yCoord += L;
+            }
             double sinSum = Math.sin(particle.getAngle());
             double cosSum = Math.cos(particle.getAngle());
-            for (Particle neighbor : particlesNeighbors.get(particle)) {
-                sinSum += Math.sin(neighbor.getAngle());
-                cosSum += Math.cos(neighbor.getAngle());
+            int cant;
+            if(particlesNeighbors.containsKey(particle)){
+                for (Particle neighbor : particlesNeighbors.get(particle)) {
+                    sinSum += Math.sin(neighbor.getAngle());
+                    cosSum += Math.cos(neighbor.getAngle());
+                }
+                cant = particlesNeighbors.get(particle).size();
+            } else {
+                cant = 1;
             }
-            int cant = particlesNeighbors.get(particle).size();
             double averageAngle = Math.atan2((sinSum / cant), (cosSum / cant)) + (Math.random() * eta - (eta / 2));
             newParticles.add(new Particle(new Position(xCoord, yCoord), particle.getId(), particle.getRadius(), averageAngle, particle.getSpeed()));
-        }
-        for (int x = 0; x < M; x++) {
-            for (int y = 0; y < M; y++) {
-            List<Particle> list = board.getBoard()[x][y].getPatricleList();
-                for (Particle p1 : list) {
-                    for (Particle p2 : newParticles) {
-                        if(p1.getId() == p2.getId()){
-                            p1.setPosition(p2.getPosition());
-                            p1.setAngle(p2.getAngle());
-                        }
-                    }
-                }
-            }
         }
         return newParticles;
     }
 
-    public double polarization(Set<Particle> particles){
+    public double polarization(List<Particle> particles){
         double vxSum = 0;
         double vySum = 0;
         for (Particle particle : particles) {

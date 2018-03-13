@@ -3,14 +3,13 @@ package itba.edu.ar;
 import itba.edu.ar.models.Particle;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Set;
+import java.util.List;
 
 public class FileGenerator {
 
-    public static void  addToOutputFile(FileOutputStream fileOutputStream, Set<Particle> set, long time, int L) throws IOException {
+    public static void  addToOutputFile(FileOutputStream fileOutputStream, List<Particle> set, long time, int L) throws IOException {
 
         // id x y vx vy colorR colorG colorB
         StringBuilder sb = new StringBuilder();
