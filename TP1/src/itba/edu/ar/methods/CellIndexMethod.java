@@ -4,7 +4,6 @@ package itba.edu.ar.methods;
 import itba.edu.ar.models.Cell;
 import itba.edu.ar.models.Domain;
 import itba.edu.ar.models.Particle;
-import itba.edu.ar.models.Position;
 
 import java.util.*;
 
@@ -17,21 +16,21 @@ public class CellIndexMethod {
     private Domain domain;
 
     public CellIndexMethod(BoundaryCondition boundaryCondition, int M, int L, double rc, List<Particle> particleList) {
-        changeBoundaryConditionsStrategy(boundaryCondition);
         this.M = M;
         this.rc = rc;
         this.L = L;
         validateParameters();
         this.domain = new Domain(L, M, particleList);
+        changeBoundaryConditionsStrategy(boundaryCondition);
     }
 
     public void changeBoundaryConditionsStrategy(BoundaryCondition boundaryCondition) {
         switch (boundaryCondition) {
             case PERIODIC:
-                boundaryConditionsStrategy = new PeriodicBoundaryConditionsStrategy();
+                boundaryConditionsStrategy = new PeriodicBoundaryConditionsStrategy(domain, M, L);
                 break;
             case NON_PERIODIC:
-                boundaryConditionsStrategy = new NonPeriodicBoundaryConditionsStrategy();
+                boundaryConditionsStrategy = new NonPeriodicBoundaryConditionsStrategy(domain, M, L);
                 break;
             default:
                 throw new IllegalStateException("Invalid Boundary Condition Strategy");
@@ -57,7 +56,7 @@ public class CellIndexMethod {
 
         for (int x = 0; x < M; x++) {
             for (int y = 0; y < M; y++) {
-                List<Cell> neighbors = calculateNeighborsCell(y, x, M, domain);
+                List<Cell> neighbors = getNeighborCells(y, x, M, domain);
                 List<Particle> particles = domain.getCellParticleList(x, y);
                 for (Particle particle : particles) {
                     for (Cell cell : neighbors) {
@@ -89,14 +88,7 @@ public class CellIndexMethod {
         return result;
     }
 
-    private List<Cell> calculateNeighborsCell(int x, int y, int M, Domain domain) {
-        List<Cell> neighborsCellList = new ArrayList<>();
-
-        List<Position> neighborPositions = boundaryConditionsStrategy.getValidNeighborPositions(x, y, M);
-        for (Position n : neighborPositions) {
-            neighborsCellList.add(domain.getCell(n.getY().intValue(),n.getX().intValue()));
-        }
-
-        return neighborsCellList;
+    private List<Cell> getNeighborCells(int x, int y, int M, Domain domain) {
+        return boundaryConditionsStrategy.getNeighborCells(x, y, M);
     }
 }
