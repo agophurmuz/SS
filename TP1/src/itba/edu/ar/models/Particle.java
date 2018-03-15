@@ -1,5 +1,7 @@
 package itba.edu.ar.models;
 
+import itba.edu.ar.methods.BorderType;
+
 import java.util.Objects;
 
 public class Particle {
@@ -9,6 +11,7 @@ public class Particle {
     private Double radius;
     private Double angle;
     private Double speed;
+    private BorderType borderType;
 
     public Particle(Position position, int id, Double radius) {
         this.position = position;
@@ -68,7 +71,7 @@ public class Particle {
                 position +
                 ", id=" + id +
                 ", radius=" + radius +
-                '}'+"\n";
+                '}' + "\n";
     }
 
     @Override
@@ -86,5 +89,21 @@ public class Particle {
     @Override
     public int hashCode() {
         return Objects.hash(getPosition(), getId(), getRadius(), getAngle(), getSpeed());
+    }
+
+    public BorderType getBorderType() {
+        return borderType;
+    }
+
+    public void setBorderType(BorderType borderType) {
+        this.borderType = borderType;
+    }
+
+    public double getX(){
+        return position.getX().doubleValue();
+    }
+
+    public double getY(){
+        return position.getY().doubleValue();
     }
 }

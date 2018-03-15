@@ -2,8 +2,10 @@ package itba.edu.ar.methods;
 
 import itba.edu.ar.models.Cell;
 import itba.edu.ar.models.Domain;
+import itba.edu.ar.models.Particle;
 import itba.edu.ar.models.Position;
 
+import javax.swing.border.Border;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,7 +32,12 @@ public class NonPeriodicBoundaryConditionsStrategy extends BoundaryConditionsStr
         if (isValidNeighbor(x + 1, y + 1, M)) {
             list.add(new Position(x + 1, y + 1));
         }
-        return createCellList(list);
+        return createCellList(list, BorderType.NO_BORDER);
+    }
+
+    @Override
+    public double calculateDistance(Particle particle, Particle neighborParticle, BorderType borderType) {
+        return calculateDistance(neighborParticle.getX(), neighborParticle.getY(),particle.getX(),particle.getY(),particle.getRadius(), neighborParticle.getRadius());
     }
 
     private static boolean isValidNeighbor(int x, int y, int M) {

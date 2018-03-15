@@ -17,7 +17,7 @@ public class PeriodicBoundaryConditionsStrategy extends BoundaryConditionsStrate
     @Override
     public List<Cell> getNeighborCells(int x, int y, int M) {
         List<Position> postitionList = new ArrayList<>();
-        List<Cell> cellList = new ArrayList<>();
+        BorderType borderType = BorderType.NO_BORDER;
 
         if (isTopBorder(x, y, M)) {
             postitionList.add(new Position(x, M - 1));
@@ -27,12 +27,14 @@ public class PeriodicBoundaryConditionsStrategy extends BoundaryConditionsStrate
                 postitionList.add(new Position(0, M - 1));
                 postitionList.add(new Position(0, 0));
                 postitionList.add(new Position(0, 1));
-                cellList = createCellList(postitionList, BorderType.TOP_RIGHT_CORNER);
+                borderType = BorderType.TOP_RIGHT_CORNER;
+
             } else {
+                //IS TOP_BORDER
                 postitionList.add(new Position(x + 1, M - 1));
                 postitionList.add(new Position(x + 1, y));
                 postitionList.add(new Position(x + 1, y + 1));
-                cellList = createCellList(postitionList, BorderType.TOP_BORDER);
+                borderType = BorderType.TOP_BORDER;
             }
 
         } else if (isBottomBorder(x, y, M)) {
@@ -43,12 +45,12 @@ public class PeriodicBoundaryConditionsStrategy extends BoundaryConditionsStrate
                 postitionList.add(new Position(0, M - 2));
                 postitionList.add(new Position(0, M - 1));
                 postitionList.add(new Position(0, 0));
-                cellList = createCellList(postitionList, BorderType.BOTTOM_RIGHT_CORNER);
+                borderType = BorderType.BOTTOM_RIGHT_CORNER;
             } else {
                 postitionList.add(new Position(x + 1, y - 1));
                 postitionList.add(new Position(x + 1, y));
                 postitionList.add(new Position(x + 1, 0));
-                cellList = createCellList(postitionList, BorderType.BOTTOM_BORDER);
+                borderType = BorderType.BOTTOM_BORDER;
             }
 
 
@@ -57,7 +59,7 @@ public class PeriodicBoundaryConditionsStrategy extends BoundaryConditionsStrate
             postitionList.add(new Position(0, y - 1));
             postitionList.add(new Position(0, y));
             postitionList.add(new Position(0, y + 1));
-            cellList = createCellList(postitionList, BorderType.RIGHT_BORDER);
+            borderType = BorderType.RIGHT_BORDER;
 
         } else {
             //NO-BORDER-CELL case
@@ -65,9 +67,9 @@ public class PeriodicBoundaryConditionsStrategy extends BoundaryConditionsStrate
             postitionList.add(new Position(x + 1, y - 1));
             postitionList.add(new Position(x + 1, y));
             postitionList.add(new Position(x + 1, y + 1));
-            cellList = createCellList(postitionList);
         }
 
+        List<Cell> cellList = createCellList(postitionList, borderType);
         cellList.add(domain.getCell(y, x));
 
         return cellList;
@@ -85,45 +87,44 @@ public class PeriodicBoundaryConditionsStrategy extends BoundaryConditionsStrate
         return x == M - 1 && y >= 0 && y < M;
     }
 
-    protected List<Cell> createCellList(List<Position> list, BorderType borderType) {
-        List<Cell> cellList = createCellList(list);
-        //TODO
-        Position position = null;
-        double x, y;
-        int delta = L;
-        for (Cell cell : cellList) {
-            for (Particle particle : cell.getParticleList()) {
-                position = particle.getPosition();
-                x = position.getX().doubleValue();
-                y = position.getY().doubleValue();
-                switch (borderType) {
-                    case TOP_BORDER:
-                        //(x, y-L)
-                        position.setY(y - delta);
-                        break;
-                    case TOP_RIGHT_CORNER:
-                        //(x+L, y-L)
-                        position.setX(x + delta);
-                        position.setY(y - delta);
-                        break;
-                    case RIGHT_BORDER:
-                        //(x+L, y)
-                        position.setX(x + delta);
-                        break;
-                    case BOTTOM_BORDER:
-                        //(x, y+L)
-                        position.setY(y + delta);
-                        break;
-                    case BOTTOM_RIGHT_CORNER:
-                        //(x+L,y+L)
-                        position.setX(x + delta);
-                        position.setY(y + delta);
-                        break;
-                }
-                particle.setPosition(position);
-            }
-        }
+    @Override
+    public double calculateDistance(Particle particle, Particle neighborParticle, BorderType borderType) {
 
-        return cellList;
+        Position<Double> shiftedPosition = getShiftedPosition(neighborParticle.getPosition(), borderType);
+
+        return super.calculateDistance(shiftedPosition.getX(), shiftedPosition.getY(), particle.getX(), particle.getY(), particle.getRadius(), neighborParticle.getRadius());
     }
+
+    private Position getShiftedPosition(Position<Double> position, BorderType neighborBorderType) {
+        int delta = L;
+        double x = position.getX();
+        double y = position.getY();
+
+        switch (neighborBorderType) {
+            case TOP_BORDER:
+                //(x, y-L)
+                y = y - delta;
+                break;
+            case TOP_RIGHT_CORNER:
+                //(x+L, y-L)
+                x = x + delta;
+                y = y - delta;
+                break;
+            case RIGHT_BORDER:
+                //(x+L, y)
+                x = x + delta;
+                break;
+            case BOTTOM_BORDER:
+                //(x, y+L)
+                y = y + delta;
+                break;
+            case BOTTOM_RIGHT_CORNER:
+                //(x+L,y+L)
+                x = x + delta;
+                y = y + delta;
+                break;
+        }
+        return new Position<Double>(x, y);
+    }
+
 }

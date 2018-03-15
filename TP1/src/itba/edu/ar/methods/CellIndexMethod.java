@@ -58,13 +58,12 @@ public class CellIndexMethod {
             for (int y = 0; y < M; y++) {
                 List<Cell> neighbors = getNeighborCells(y, x, M, domain);
                 List<Particle> particles = domain.getCellParticleList(x, y);
+
                 for (Particle particle : particles) {
                     for (Cell cell : neighbors) {
                         for (Particle neighborParticle : cell.getParticleList()) {
                             if (particle.getId() != neighborParticle.getId()) {
-                                double posX = neighborParticle.getPosition().getX().doubleValue() - particle.getPosition().getX().doubleValue();
-                                double posY = neighborParticle.getPosition().getY().doubleValue() - particle.getPosition().getY().doubleValue();
-                                double dist = (Math.sqrt(Math.pow(posX, 2) + Math.pow(posY, 2))) - (particle.getRadius() + neighborParticle.getRadius());
+                                double dist = boundaryConditionsStrategy.calculateDistance(particle, neighborParticle, cell.getBorderType());
                                 if (dist < rc) {
                                     if (result.containsKey(particle)) {
                                         result.get(particle).add(neighborParticle);

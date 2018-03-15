@@ -23,6 +23,7 @@ public class app {
 
         List<Particle> particles = ParticleSystemGenerator.generateRandomParticleSystem(N, L, radius);
 
+
         long startTime = System.currentTimeMillis();
 
         CellIndexMethod cellIndexMethod = new CellIndexMethod(BoundaryCondition.PERIODIC, M, L, rc, particles);
