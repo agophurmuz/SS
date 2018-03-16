@@ -1,5 +1,6 @@
 package itba.edu.ar;
 
+import itba.edu.ar.methods.BoundaryCondition;
 import itba.edu.ar.models.Cell;
 import itba.edu.ar.models.Particle;
 import itba.edu.ar.models.Position;
@@ -19,7 +20,6 @@ public class App {
         double rc = 8;
         int L = 30;
         double speed = 0.3;
-        double pi = Math.PI;
         double eta = 0.1;
         int cantRun = 100;
         double radius = 0;
@@ -45,15 +45,20 @@ public class App {
         //System.out.println(selfMovingParticles.polarization(particles));
 
         FileOutputStream fileOutputStream = FileGenerator.createOutputFile("OutputTP2.xyz");
+        FileOutputStream fileOutputStreamPolarization = FileGenerator.createOutputFile("PolarizationOutput.csv");
 
         List<Particle> result = particles;
-
+        double p;
         for (int i = 0; i < cantRun; i ++) {
-            result = selfMovingParticles.move(result);
+            result = selfMovingParticles.move(result, BoundaryCondition.PERIODIC);
             FileGenerator.addToOutputFile(fileOutputStream, result, i, L);
+            p = selfMovingParticles.polarization(result);
+            FileGenerator.addToPolarizationFile(fileOutputStreamPolarization, i, p);
+
         }
         fileOutputStream.close();
-        System.out.println(selfMovingParticles.polarization(result));
+        fileOutputStreamPolarization.close();
+        //System.out.println(selfMovingParticles.polarization(result));
     }
 }
 

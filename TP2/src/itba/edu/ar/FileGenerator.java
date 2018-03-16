@@ -11,7 +11,7 @@ public class FileGenerator {
 
     public static void  addToOutputFile(FileOutputStream fileOutputStream, List<Particle> set, long time, int L) throws IOException {
 
-        // id x y vx vy colorR colorG colorB
+        // id x y vx vy colorR colorG
         StringBuilder sb = new StringBuilder();
         sb.append(set.size() + 4);
         sb.append("\n");
@@ -28,9 +28,9 @@ public class FileGenerator {
             sb.append("\t");
             sb.append(particle.getSpeed() * Math.cos(particle.getAngle()));
             sb.append("\t");
-            sb.append(1 + (Math.cos(particle.getAngle())) /2 );
+            sb.append((Math.cos(particle.getAngle()) + 1) /2 );
             sb.append("\t");
-            sb.append(1 + (Math.sin(particle.getAngle())) / 2);
+            sb.append((Math.sin(particle.getAngle()) + 1) / 2);
             sb.append("\n");
         }
         sb.append("999 0 0 0 0 0 0 0");
@@ -51,5 +51,14 @@ public class FileGenerator {
         FileOutputStream fileOutputStream = new FileOutputStream(file);
         //fileOutputStream.close();
         return fileOutputStream;
+    }
+
+    public static void addToPolarizationFile(FileOutputStream  fileOutputStream, int i, double p) throws IOException {
+        StringBuilder sb = new StringBuilder();
+        sb.append(i);
+        sb.append("\t");
+        sb.append(p);
+        sb.append("\n");
+        fileOutputStream.write(sb.toString().getBytes());
     }
 }

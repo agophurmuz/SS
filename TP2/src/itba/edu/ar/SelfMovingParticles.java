@@ -23,9 +23,9 @@ public class SelfMovingParticles {
         this.speed = speed;
     }
 
-    public List<Particle> move(List<Particle> particles) {
+    public List<Particle> move(List<Particle> particles, BoundaryCondition boundaryCondition) {
         List<Particle> newParticles = new ArrayList<>();
-        CellIndexMethod cellIndexMethod = new CellIndexMethod(BoundaryCondition.NON_PERIODIC, M, L, r, particles);
+        CellIndexMethod cellIndexMethod = new CellIndexMethod(boundaryCondition, M, L, r, particles);
         Map<Particle, Set<Particle>> particlesNeighbors = cellIndexMethod.getParticleNeighbors();
         for (Particle particle : particles) {
             double xCoord = particle.getPosition().getX().doubleValue() + particle.getSpeed() * Math.cos(particle.getAngle());
