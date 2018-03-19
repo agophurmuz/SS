@@ -13,7 +13,7 @@ public class FileGenerator {
 
         // id x y vx vy colorR colorG
         StringBuilder sb = new StringBuilder();
-        sb.append(set.size() + 4);
+        sb.append(set.size());
         sb.append("\n");
         sb.append(time);
         sb.append("\n");
@@ -31,16 +31,12 @@ public class FileGenerator {
             sb.append((Math.cos(particle.getAngle()) + 1) /2 );
             sb.append("\t");
             sb.append((Math.sin(particle.getAngle()) + 1) / 2);
+            sb.append("\t");
+            sb.append(Math.cos(particle.getAngle()));
+            sb.append("\t");
+            sb.append(Math.sin(particle.getAngle()));
             sb.append("\n");
         }
-        sb.append("999 0 0 0 0 0 0 0");
-        sb.append("\n");
-        sb.append("999 0 " + L + " 0 0 0 0 0");
-        sb.append("\n");
-        sb.append("999 " + L + " 0 0 0 0 0 0");
-        sb.append("\n");
-        sb.append("999 " + L + " " + L + " 0 0 0 0 0");
-        sb.append("\n");
         fileOutputStream.write(sb.toString().getBytes());
         //fileOutputStream.close();
 

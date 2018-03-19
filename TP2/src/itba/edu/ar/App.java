@@ -15,20 +15,22 @@ public class App {
 
     public static void main(String[] args) throws IOException {
 
-        int N = 5;
-        int M = 3;
-        double rc = 8;
-        int L = 30;
-        double speed = 0.3;
-        double eta = 0.1;
-        int cantRun = 100;
+        int N = 400;
+        int M = 12;
+        double rc = 1;
+        int L = 25;
+        double speed = 0.03;
+        double eta = 3;
+        int cantRun = 1000;
         double radius = 0;
 
         List<Particle> particles = ParticleSystemGenerator.generateRandomParticleWithSpeedSystem(N, L, radius, speed);
 
         //long startTime = System.currentTimeMillis();
-
-        SelfMovingParticles selfMovingParticles = new SelfMovingParticles(L,rc, eta, M, speed);
+        //FileOutputStream fileOutputStreamPolarization = FileGenerator.createOutputFile("densidadValiableL10eta3bis1.csv");
+        //for(int N = 50 ; N < 1001; N += 100) {
+        //  List<Particle> particles = ParticleSystemGenerator.generateRandomParticleWithSpeedSystem(N, L, radius, speed);
+        // SelfMovingParticles selfMovingParticles = new SelfMovingParticles(L, rc, eta, M, speed);
 
         //Set<Particle> result = selfMovingParticles.move(board);
 
@@ -48,8 +50,9 @@ public class App {
         FileOutputStream fileOutputStreamPolarization = FileGenerator.createOutputFile("PolarizationOutput.csv");
 
         List<Particle> result = particles;
+        SelfMovingParticles selfMovingParticles = new SelfMovingParticles(L, rc, eta, M, speed);
         double p;
-        for (int i = 0; i < cantRun; i ++) {
+        for (int i = 0; i < cantRun; i++) {
             result = selfMovingParticles.move(result, BoundaryCondition.PERIODIC);
             FileGenerator.addToOutputFile(fileOutputStream, result, i, L);
             p = selfMovingParticles.polarization(result);
@@ -59,6 +62,12 @@ public class App {
         fileOutputStream.close();
         fileOutputStreamPolarization.close();
         //System.out.println(selfMovingParticles.polarization(result));
+        //StringBuilder sb = new StringBuilder();
+        //sb.append(N/Math.pow(L, 2));
+        //sb.append("\t");
+        //sb.append(selfMovingParticles.polarization(result));
+        //sb.append("\n");
+        //fileOutputStreamPolarization.write(sb.toString().getBytes());
     }
 }
 

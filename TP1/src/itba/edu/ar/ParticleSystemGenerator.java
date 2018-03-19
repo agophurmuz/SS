@@ -31,7 +31,7 @@ public class ParticleSystemGenerator {
         ArrayList<Particle> list = new ArrayList<>();
 
         for (int i = 0; i < N; i++) {
-            list.add(new Particle(getRandomPosition(L), i, radius, Math.random() * 2 * Math.PI, speed));
+            list.add(new Particle(getRandomPosition(L), i, radius, Math.random() * Math.PI - (Math.PI / 2), speed));
         }
 
         return list;

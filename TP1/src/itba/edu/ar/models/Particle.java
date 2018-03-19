@@ -67,11 +67,7 @@ public class Particle {
 
     @Override
     public String toString() {
-        return "Particle{" +
-                position +
-                ", id=" + id +
-                ", radius=" + radius +
-                '}' + "\n";
+        return id + "\t" + position.toString();
     }
 
     @Override
@@ -79,16 +75,12 @@ public class Particle {
         if (this == o) return true;
         if (!(o instanceof Particle)) return false;
         Particle particle = (Particle) o;
-        return getId() == particle.getId() &&
-                Objects.equals(getPosition(), particle.getPosition()) &&
-                Objects.equals(getRadius(), particle.getRadius()) &&
-                Objects.equals(getAngle(), particle.getAngle()) &&
-                Objects.equals(getSpeed(), particle.getSpeed());
+        return getId() == particle.getId();
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getPosition(), getId(), getRadius(), getAngle(), getSpeed());
+        return Objects.hash(getId());
     }
 
     public BorderType getBorderType() {

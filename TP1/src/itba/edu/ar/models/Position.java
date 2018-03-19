@@ -28,9 +28,6 @@ public class Position<T extends Number> {
 
     @Override
     public String toString() {
-        return "Position{" +
-                "x=" + x +
-                ", y=" + y +
-                '}';
+        return x + "\t" + y;
     }
 }
