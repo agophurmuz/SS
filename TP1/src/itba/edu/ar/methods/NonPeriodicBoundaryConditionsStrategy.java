@@ -1,9 +1,6 @@
 package itba.edu.ar.methods;
 
-import itba.edu.ar.models.Cell;
-import itba.edu.ar.models.Domain;
-import itba.edu.ar.models.Particle;
-import itba.edu.ar.models.Position;
+import itba.edu.ar.models.*;
 
 import javax.swing.border.Border;
 import java.util.ArrayList;
@@ -17,22 +14,22 @@ public class NonPeriodicBoundaryConditionsStrategy extends BoundaryConditionsStr
 
     @Override
     public List<Cell> getNeighborCells(int x, int y, int M) {
-        List<Position> list = new ArrayList<>();
-        list.add(new Position(x, y));
+        List<PositionTypeCell> list = new ArrayList<>();
+        list.add(new PositionTypeCell(x, y));
 
         if (isValidNeighbor(x, y - 1, M)) {
-            list.add(new Position(x, y - 1));
+            list.add(new PositionTypeCell(x, y - 1));
         }
         if (isValidNeighbor(x + 1, y - 1, M)) {
-            list.add(new Position(x + 1, y - 1));
+            list.add(new PositionTypeCell(x + 1, y - 1));
         }
         if (isValidNeighbor(x + 1, y, M)) {
-            list.add(new Position(x + 1, y));
+            list.add(new PositionTypeCell(x + 1, y));
         }
         if (isValidNeighbor(x + 1, y + 1, M)) {
-            list.add(new Position(x + 1, y + 1));
+            list.add(new PositionTypeCell(x + 1, y + 1));
         }
-        return createCellList(list, BorderType.NO_BORDER);
+        return createCellList(list);
     }
 
     @Override

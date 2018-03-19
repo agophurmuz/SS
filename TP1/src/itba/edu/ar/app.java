@@ -16,11 +16,11 @@ public class app {
 
     public static void main(String[] args) {
 
-        int N = 400;
-        int M = 10;
+        int N = 10;
+        int M = 2;
         double rc = 2;
-        int L = 30;
-        double radius = 0.25;
+        int L = 10;
+        double radius = 0;
 
         List<Particle> particles = ParticleSystemGenerator.generateRandomParticleSystem(N, L, radius);
 
@@ -35,6 +35,7 @@ public class app {
 
         FileOutputStream fileOutputStream = FileGenerator.createOutputFilePoints("OutputFilePoints.xyz");
         for(Particle p : particles){
+            System.out.println(particles.size());
             FileGenerator.addPointsToFile(fileOutputStream, result, p);
         }
 
@@ -44,9 +45,9 @@ public class app {
 
         System.out.println("M = " + M + " - tiempo: " + time);
 
-        System.out.println(result);
+        //System.out.println(result);
 
-        System.out.println(particles);
+        //System.out.println(particles);
 
     }
 

@@ -1,9 +1,6 @@
 package itba.edu.ar.methods;
 
-import itba.edu.ar.models.Cell;
-import itba.edu.ar.models.Domain;
-import itba.edu.ar.models.Particle;
-import itba.edu.ar.models.Position;
+import itba.edu.ar.models.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,12 +17,12 @@ public abstract class BoundaryConditionsStrategy {
         this.M = M;
     }
 
-    protected List<Cell> createCellList(List<Position> neighborPositions, BorderType borderType) {
+    protected List<Cell> createCellList(List<PositionTypeCell> neighborPositions) {
         List<Cell> neighborsCellList = new ArrayList<>();
         Cell cell;
-        for (Position n : neighborPositions) {
-            cell = domain.getCell(n.getY().intValue(), n.getX().intValue());
-            cell.setBorderType(borderType);
+        for (PositionTypeCell n : neighborPositions) {
+            cell = domain.getCell(n.getY(), n.getX());
+            cell.setBorderType(n.getBorderType());
             neighborsCellList.add(cell);
         }
 
