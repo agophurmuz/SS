@@ -52,14 +52,14 @@ public class FileGenerator {
         try {
 
             StringBuilder sb = new StringBuilder();
-            Set<Particle> neighbors = new HashSet<>();
+            Set<Particle> neighbors = particles.get(particle);
             sb.append(particles.keySet().size() + "\n");
             sb.append("id" + "\t" +  "x" + "\t" + "y" + "\t" + "R" + "\t" + "G" + "\t" + "B" + "\n");
             //id x y R G B
             for (Particle p : particles.keySet()) {
                 if(p.equals(particle)){
                     sb.append(printLine(p, Color.YELLOW));
-                    neighbors = particles.get(p);
+                    //neighbors = particles.get(p);
                     for (Particle n : neighbors) {
                         sb.append(printLine(n, Color.RED));
                     }

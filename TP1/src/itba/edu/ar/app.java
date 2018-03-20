@@ -16,10 +16,10 @@ public class app {
 
     public static void main(String[] args) {
 
-        int N = 10;
-        int M = 2;
-        double rc = 2;
-        int L = 10;
+        int N = 300;
+        int M = 10;
+        double rc = 1;
+        int L = 30;
         double radius = 0;
 
         List<Particle> particles = ParticleSystemGenerator.generateRandomParticleSystem(N, L, radius);
@@ -27,7 +27,7 @@ public class app {
 
         long startTime = System.currentTimeMillis();
 
-        CellIndexMethod cellIndexMethod = new CellIndexMethod(BoundaryCondition.NON_PERIODIC, M, L, rc, particles);
+        CellIndexMethod cellIndexMethod = new CellIndexMethod(BoundaryCondition.PERIODIC, M, L, rc, particles);
         HashMap<Particle, Set<Particle>> result = cellIndexMethod.getParticleNeighbors();
 
 
