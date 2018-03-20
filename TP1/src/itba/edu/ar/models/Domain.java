@@ -41,7 +41,7 @@ public class Domain {
 
     //Range Cell x and y = (xL/M ; (L/M-1) + xL/M)
     private boolean isVariableInCellRange(double v, int cellIndex) {
-        return (v > (cellIndex * L / M) && v < (L / M) + (cellIndex * L / M));
+        return (v > (cellIndex * L / M) && v < ((L / M) + (cellIndex * L / M)));
     }
 
     public List<Particle> getCellParticleList(int x, int y) {

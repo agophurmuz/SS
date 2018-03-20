@@ -9,6 +9,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -77,5 +78,28 @@ public class FileGenerator {
 
     private static String printLine(Particle particle, Color color) {
         return particle.toString() + "\t" + color.getRed() + "\t" + color.getGreen() + "\t" + color.getBlue() + "\n";
+    }
+
+    public static void particlesToFile(String fileName, List<Particle> particles) {
+        File file = new File(fileName);
+        try {
+            FileOutputStream out = new FileOutputStream(file);
+            StringBuilder sb = new StringBuilder();
+            sb.append(particles.size() + "\n");
+            sb.append("id" + "\t" +  "x" + "\t" + "y" + "\n");
+            for (Particle particle : particles) {
+                sb.append(particle.getId());
+                sb.append("\t");
+                sb.append(particle.getPosition().getX());
+                sb.append("\t");
+                sb.append(particle.getPosition().getY());
+                sb.append("\n");
+            }
+            out.write(sb.toString().getBytes());
+            out.close();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

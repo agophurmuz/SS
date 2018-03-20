@@ -16,14 +16,14 @@ public class app {
 
     public static void main(String[] args) {
 
-        int N = 300;
-        int M = 10;
+        int N = 100;
+        int M = 5;
         double rc = 1;
         int L = 30;
         double radius = 0;
 
         List<Particle> particles = ParticleSystemGenerator.generateRandomParticleSystem(N, L, radius);
-
+        FileGenerator.particlesToFile("particles.xyz", particles);
 
         long startTime = System.currentTimeMillis();
 
@@ -31,11 +31,10 @@ public class app {
         HashMap<Particle, Set<Particle>> result = cellIndexMethod.getParticleNeighbors();
 
 
-        FileGenerator.createOutputFileNeighbors("OutputFileNeighbors.xyz", result);
+        FileGenerator.createOutputFileNeighbors("OutputFileNeighborsM5.xyz", result);
 
-        FileOutputStream fileOutputStream = FileGenerator.createOutputFilePoints("OutputFilePoints.xyz");
+        FileOutputStream fileOutputStream = FileGenerator.createOutputFilePoints("OutputFilePointsM5.xyz");
         for(Particle p : particles){
-            System.out.println(particles.size());
             FileGenerator.addPointsToFile(fileOutputStream, result, p);
         }
 
@@ -48,6 +47,7 @@ public class app {
         //System.out.println(result);
 
         //System.out.println(particles);
+
 
     }
 

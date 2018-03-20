@@ -67,7 +67,7 @@ public class CellIndexMethod {
                             for (Particle neighborParticle : cell.getParticleList()) {
                                 if (particle.getId() != neighborParticle.getId()) {
                                     double dist = boundaryConditionsStrategy.calculateDistance(particle, neighborParticle, cell.getBorderType());
-                                    if (dist < rc) {
+                                    if (dist <= rc) {
                                         result.get(particle).add(neighborParticle);
                                         if (!result.containsKey(neighborParticle)) {
                                             result.put(neighborParticle, new HashSet<>());
