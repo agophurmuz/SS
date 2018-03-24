@@ -19,7 +19,7 @@ public class app {
         int N = 100;
         int M = 5;
         double rc = 1;
-        int L = 30;
+        int L = 10;
         double radius = 0;
 
         List<Particle> particles = ParticleSystemGenerator.generateRandomParticleSystem(N, L, radius);
@@ -31,9 +31,9 @@ public class app {
         HashMap<Particle, Set<Particle>> result = cellIndexMethod.getParticleNeighbors();
 
 
-        FileGenerator.createOutputFileNeighbors("OutputFileNeighborsM5.xyz", result);
+        FileGenerator.createOutputFileNeighbors("OutputFileNeighborsM2.xyz", result);
 
-        FileOutputStream fileOutputStream = FileGenerator.createOutputFilePoints("OutputFilePointsM5.xyz");
+        FileOutputStream fileOutputStream = FileGenerator.createOutputFilePoints("OutputFilePointsM2.xyz");
         for(Particle p : particles){
             FileGenerator.addPointsToFile(fileOutputStream, result, p);
         }

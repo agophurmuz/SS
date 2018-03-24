@@ -20,7 +20,7 @@ public class App {
         double rc = 1;
         int L = 25;
         double speed = 0.03;
-        double eta = 3;
+        double eta = 0.1;
         int cantRun = 1000;
         double radius = 0;
 
