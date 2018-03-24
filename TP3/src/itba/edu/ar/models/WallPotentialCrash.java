@@ -19,4 +19,25 @@ public class WallPotentialCrash extends PotentialCrash{
                 ", time=" + time +
                 '}';
     }
+
+    @Override
+    public boolean isWall() {
+        return true;
+    }
+
+    public Particle getParticle() {
+        return particle;
+    }
+
+    public void setParticle(Particle particle) {
+        this.particle = particle;
+    }
+
+    public Wall getWall() {
+        return wall;
+    }
+
+    public void setWall(Wall wall) {
+        this.wall = wall;
+    }
 }

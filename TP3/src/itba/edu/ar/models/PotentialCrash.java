@@ -1,6 +1,6 @@
 package itba.edu.ar.models;
 
-public class PotentialCrash {
+public abstract class PotentialCrash {
 
 
     protected double time;
@@ -16,4 +16,5 @@ public class PotentialCrash {
     public void setTime(double time) {
         this.time = time;
     }
+    public abstract boolean isWall();
 }

@@ -78,14 +78,22 @@ public class Particle {
 
     @Override
     public String toString() {
-        return "Particle{" +
-                "id=" + id +
-                ", x=" + x +
-                ", y=" + y +
-                ", vx=" + vx +
-                ", vy=" + vy +
-                ", mass=" + mass +
-                ", radius=" + radius +
-                '}';
+        return id + "\t" + x + "\t" + y + "\t" + vx + "\t" + vy + "\t" + mass + "\t" + radius;
+    }
+
+    public void invertVx() {
+        this.vx = -vx;
+    }
+
+    public void invertVy() {
+        this.vy = -vy;
+    }
+
+    public void modifyVx(double j) {
+        this.vx = vx - (j/mass);
+    }
+
+    public void modifyVy(double j) {
+        this.vy = vy - (j/mass);
     }
 }
