@@ -25,12 +25,15 @@ public class FileGenerator {
         try {
 
             StringBuilder sb = new StringBuilder();
-            sb.append(particles.size() + "\n");
-            sb.append("id" + "\t" + "x" + "\t" + "y" + "\t" + "Vx" + "\t" + "Vy" + "\t" + "Radio" + "\t" + "Masa" + "\n");
+            sb.append(particles.size()+2 + "\n");
+            sb.append("id" + "\t" + "x" + "\t" + "y" + "\t" + "Vx" + "\t" + "Vy" + "\t" + "Masa" + "\t" + "Radio" + "\n");
             //id x y R G B
             for (Particle p : particles) {
                 sb.append(printLine(p));
             }
+            // Limits
+            sb.append(999 + "\t" + 0 + "\t" + 0 + "\t" + 0 + "\t" + 0 + "\t" + 0.001 + "\t" + 0.05 + "\n");
+            sb.append(998 + "\t" + 0.5 + "\t" + 0.5 + "\t" + 0 + "\t" + 0 + "\t" + 0.001 + "\t" + 0.05 + "\n");
             fileOutputStream.write(sb.toString().getBytes());
 
         } catch (IOException e) {

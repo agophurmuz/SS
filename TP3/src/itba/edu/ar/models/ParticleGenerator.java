@@ -16,8 +16,10 @@ public class ParticleGenerator {
             double y2 = 0;
             while(!validLocation){
                 // ver si el x2 e y2 estan en el rango correcto
-                x2 = Math.random() * (L - 2 * smallRadiusParticle) + smallRadiusParticle;
-                y2 = Math.random() * (L - 2 * smallRadiusParticle) + smallRadiusParticle;
+                //do {
+                    x2 = Math.random() * (L - (2 * smallRadiusParticle)) + smallRadiusParticle;
+                    y2 = Math.random() * (L - (2 * smallRadiusParticle)) + smallRadiusParticle;
+                //}while (x2>L || y2>L || x2>0 || y2>0 );
                 int j = 0;
                 validLocation = true;
                 while (j < particles.size() && validLocation) {
@@ -26,7 +28,16 @@ public class ParticleGenerator {
                     j++;
                 }
             }
-            particles.add(new Particle(i, x2, y2, Math.random() * 2 * v - v, Math.random() * 2 * v - v, smallMassParticle, smallRadiusParticle));
+            double vx;
+            double vy;
+            do {
+                vx = Math.random() * 2 * v - v;
+                vy = Math.random() * 2 * v - v;
+                System.out.println("AHHHHHH");
+            }while (vx<-v || vx>v ||vy<-v || vy>v);
+
+
+            particles.add(new Particle(i, x2, y2,vx,vy, smallMassParticle, smallRadiusParticle));
         }
         return particles;
     }

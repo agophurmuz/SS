@@ -133,10 +133,11 @@ public class BrownianMovement {
                 ((WallPotentialCrash) minCrash).getParticle().invertVy();
             }
         } else {
-            ((ParticlePotentialCrash)minCrash).getParticle1().modifyVx(((ParticlePotentialCrash)minCrash).getImpulseX());
-            ((ParticlePotentialCrash)minCrash).getParticle1().modifyVy(((ParticlePotentialCrash)minCrash).getImpulseY());
-            ((ParticlePotentialCrash)minCrash).getParticle2().modifyVx(-((ParticlePotentialCrash)minCrash).getImpulseX());
-            ((ParticlePotentialCrash)minCrash).getParticle2().modifyVy(-((ParticlePotentialCrash)minCrash).getImpulseY());
+            ((ParticlePotentialCrash)minCrash).getParticle1().modifyVx(-((ParticlePotentialCrash)minCrash).getImpulseX());
+            ((ParticlePotentialCrash)minCrash).getParticle1().modifyVy(-((ParticlePotentialCrash)minCrash).getImpulseY());
+            ((ParticlePotentialCrash)minCrash).getParticle2().modifyVx(((ParticlePotentialCrash)minCrash).getImpulseX());
+            ((ParticlePotentialCrash)minCrash).getParticle2().modifyVy(((ParticlePotentialCrash)minCrash).getImpulseY());
         }
+        this.minCrashTime =  Double.MAX_VALUE;
     }
 }
