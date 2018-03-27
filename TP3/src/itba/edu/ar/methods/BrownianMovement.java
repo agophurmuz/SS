@@ -64,24 +64,26 @@ public class BrownianMovement {
     public void timeCrashParticleToWall(Particle particle) {
 
         // calculate times with walls
-        double auxX = 0;
-        double auxY = 0;
+        double auxX;
+        double auxY;
         if (particle.getVx() > 0) {
             auxX = (L - particle.getRadius() - particle.getX()) / particle.getVx();
-        }
-        if (particle.getVx() < 0) {
+        } else if (particle.getVx() < 0) {
             auxX = (particle.getRadius() - particle.getX()) / particle.getVx();
+        } else {
+            auxX = Double.MAX_VALUE;
         }
         if (particle.getVy() > 0) {
             auxY = (L - particle.getRadius() - particle.getY()) / particle.getVy();
-        }
-        if (particle.getVy() < 0) {
+        } else if (particle.getVy() < 0) {
             auxY = (particle.getRadius() - particle.getY()) / particle.getVy();
+        } else {
+            auxY = Double.MAX_VALUE;
         }
         double aux = Math.min(auxX, auxY);
         if(aux < minCrashTime) {
             minCrashTime = aux;
-            minCrash = new WallPotentialCrash(aux, particle, auxX < auxY ? Wall.VERTICAL : Wall.HORIZONTAL);
+            minCrash = new WallPotentialCrash(minCrashTime, particle, auxX < auxY ? Wall.VERTICAL : Wall.HORIZONTAL);
         }
         crashTimes.add(new WallPotentialCrash(auxX, particle, Wall.VERTICAL));
         crashTimes.add(new WallPotentialCrash(auxY, particle, Wall.HORIZONTAL));
@@ -91,7 +93,7 @@ public class BrownianMovement {
     public void timeCrashParticleToParticle(Particle particle1, Particle particle2) {
 
         //calculate times with particles
-        double aux = 0;
+        double aux;
         double sigma = particle2.getRadius() + particle1.getRadius();
         double deltaX = particle2.getX() - particle1.getX();
         double deltaY = particle2.getY() - particle1.getY();
@@ -107,11 +109,11 @@ public class BrownianMovement {
         } else if (d < 0) {
             aux = Double.MAX_VALUE;
         } else {
-            aux = -(vr + Math.sqrt(d) / vv);
+            aux = -(vr + Math.sqrt(d)) / vv;
         }
         if (aux < minCrashTime) {
             minCrashTime = aux;
-            minCrash = new ParticlePotentialCrash(aux, particle1, particle2);
+            minCrash = new ParticlePotentialCrash(minCrashTime, particle1, particle2);
         }
         crashTimes.add(new ParticlePotentialCrash(aux, particle1, particle2));
     }
@@ -133,10 +135,10 @@ public class BrownianMovement {
                 ((WallPotentialCrash) minCrash).getParticle().invertVy();
             }
         } else {
-            ((ParticlePotentialCrash)minCrash).getParticle1().modifyVx(-((ParticlePotentialCrash)minCrash).getImpulseX());
-            ((ParticlePotentialCrash)minCrash).getParticle1().modifyVy(-((ParticlePotentialCrash)minCrash).getImpulseY());
-            ((ParticlePotentialCrash)minCrash).getParticle2().modifyVx(((ParticlePotentialCrash)minCrash).getImpulseX());
-            ((ParticlePotentialCrash)minCrash).getParticle2().modifyVy(((ParticlePotentialCrash)minCrash).getImpulseY());
+            ((ParticlePotentialCrash)minCrash).getParticle1().modifyVx(((ParticlePotentialCrash)minCrash).getImpulseX());
+            ((ParticlePotentialCrash)minCrash).getParticle1().modifyVy(((ParticlePotentialCrash)minCrash).getImpulseY());
+            ((ParticlePotentialCrash)minCrash).getParticle2().modifyVx(-((ParticlePotentialCrash)minCrash).getImpulseX());
+            ((ParticlePotentialCrash)minCrash).getParticle2().modifyVy(-((ParticlePotentialCrash)minCrash).getImpulseY());
         }
         this.minCrashTime =  Double.MAX_VALUE;
     }

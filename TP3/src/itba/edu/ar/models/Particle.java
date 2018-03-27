@@ -90,10 +90,10 @@ public class Particle {
     }
 
     public void modifyVx(double j) {
-        this.vx = vx - (j/mass);
+        this.vx += (j/mass);
     }
 
     public void modifyVy(double j) {
-        this.vy = vy - (j/mass);
+        this.vy += (j/mass);
     }
 }
