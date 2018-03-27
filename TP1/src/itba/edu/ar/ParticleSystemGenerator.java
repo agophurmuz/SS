@@ -1,7 +1,7 @@
 package itba.edu.ar;
 
-import itba.edu.ar.models.Particle;
-import itba.edu.ar.models.Position;
+import itba.edu.ar.simulation.models.Particle;
+import itba.edu.ar.simulation.models.Position;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,8 +1,8 @@
 package itba.edu.ar;
 
-import itba.edu.ar.methods.BoundaryCondition;
-import itba.edu.ar.methods.CellIndexMethod;
-import itba.edu.ar.models.Particle;
+import itba.edu.ar.simulation.methods.BoundaryCondition;
+import itba.edu.ar.simulation.methods.CellIndexMethod;
+import itba.edu.ar.simulation.models.Particle;
 
 import java.io.FileOutputStream;
 import java.util.HashMap;

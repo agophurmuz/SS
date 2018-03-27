@@ -1,6 +1,6 @@
 package itba.edu.ar;
 
-import itba.edu.ar.models.Particle;
+import itba.edu.ar.simulation.models.Particle;
 
 import java.io.File;
 import java.io.FileOutputStream;

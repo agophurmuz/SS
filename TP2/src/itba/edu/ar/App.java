@@ -1,15 +1,12 @@
 package itba.edu.ar;
 
-import itba.edu.ar.methods.BoundaryCondition;
-import itba.edu.ar.models.Cell;
-import itba.edu.ar.models.Particle;
-import itba.edu.ar.models.Position;
+import itba.edu.ar.simulation.FileGenerator;
+import itba.edu.ar.simulation.methods.BoundaryCondition;
+import itba.edu.ar.simulation.models.Particle;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 public class App {
 
@@ -46,15 +43,15 @@ public class App {
 
         //System.out.println(selfMovingParticles.polarization(particles));
 
-        FileOutputStream fileOutputStream = FileGenerator.createOutputFile("OutputTP2.xyz");
-        FileOutputStream fileOutputStreamPolarization = FileGenerator.createOutputFile("PolarizationOutput.csv");
+        FileOutputStream fileOutputStream = itba.edu.ar.simulation.FileGenerator.createOutputFile("OutputTP2.xyz");
+        FileOutputStream fileOutputStreamPolarization = itba.edu.ar.simulation.FileGenerator.createOutputFile("PolarizationOutput.csv");
 
         List<Particle> result = particles;
         SelfMovingParticles selfMovingParticles = new SelfMovingParticles(L, rc, eta, M, speed);
         double p;
         for (int i = 0; i < cantRun; i++) {
             result = selfMovingParticles.move(result, BoundaryCondition.PERIODIC);
-            FileGenerator.addToOutputFile(fileOutputStream, result, i, L);
+            itba.edu.ar.simulation.FileGenerator.addToOutputFile(fileOutputStream, result, i, L);
             p = selfMovingParticles.polarization(result);
             FileGenerator.addToPolarizationFile(fileOutputStreamPolarization, i, p);
 

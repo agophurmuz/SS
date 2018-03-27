@@ -1,6 +1,6 @@
 package itba.edu.ar;
 
-import itba.edu.ar.models.Particle;
+import itba.edu.ar.simulation.models.Particle;
 
 import java.awt.*;
 import java.io.File;
@@ -8,7 +8,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
