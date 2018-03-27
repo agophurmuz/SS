@@ -1,6 +1,6 @@
 package itba.edu.ar.models;
 
-public class WallPotentialCrash extends PotentialCrash{
+public class WallPotentialCrash extends PotentialCrash {
 
     Particle particle;
     Wall wall;
@@ -16,13 +16,8 @@ public class WallPotentialCrash extends PotentialCrash{
         return "WallPotentialCrash{" +
                 "particle=" + particle +
                 ", wall=" + wall +
-                ", time=" + time +
+                ", time=" + getTime() +
                 '}';
-    }
-
-    @Override
-    public boolean isWall() {
-        return true;
     }
 
     public Particle getParticle() {
@@ -40,4 +35,17 @@ public class WallPotentialCrash extends PotentialCrash{
     public void setWall(Wall wall) {
         this.wall = wall;
     }
+
+    @Override
+    public void crash() {
+        switch (wall) {
+            case HORIZONTAL:
+                particle.invertVy();
+                break;
+            case VERTICAL:
+                particle.invertVx();
+                break;
+        }
+    }
+
 }

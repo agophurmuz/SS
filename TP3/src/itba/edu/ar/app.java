@@ -22,16 +22,16 @@ public class app {
             for (Particle particle : particles) {
                 brownianMovement.timeCrashParticleToWall(particle);
                 for (Particle particle1 : particles) {
-                    brownianMovement.timeCrashParticleToParticle(particle, particle1);
+                    if(!particle.equals(particle1))
+                        brownianMovement.timeCrashParticleToParticle(particle, particle1);
                 }
             }
             brownianMovement.move();
-            brownianMovement.crash();
-            FileGenerator.addPointsToFile(fileOutputStream, particles);
             System.out.println("Numero de RUN: " + i + "****************************");
-            System.out.println("Final minCrashTime: " + brownianMovement.getMinCrashTime());
             System.out.println("Final minCrash: " + brownianMovement.getMinCrash().getTime());
             System.out.println("****************************************************");
+            brownianMovement.crash();
+            FileGenerator.addPointsToFile(fileOutputStream, particles);
         }
     }
 }

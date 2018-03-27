@@ -3,9 +3,10 @@ package itba.edu.ar.models;
 public abstract class PotentialCrash {
 
 
-    protected double time;
+    private final double time;
 
     public PotentialCrash(double time) {
+
         this.time = time;
     }
 
@@ -13,8 +14,5 @@ public abstract class PotentialCrash {
         return time;
     }
 
-    public void setTime(double time) {
-        this.time = time;
-    }
-    public abstract boolean isWall();
+    public abstract void crash();
 }

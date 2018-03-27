@@ -96,4 +96,40 @@ public class Particle {
     public void modifyVy(double j) {
         this.vy += (j/mass);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Particle particle = (Particle) o;
+
+        if (id != particle.id) return false;
+        if (Double.compare(particle.x, x) != 0) return false;
+        if (Double.compare(particle.y, y) != 0) return false;
+        if (Double.compare(particle.vx, vx) != 0) return false;
+        if (Double.compare(particle.vy, vy) != 0) return false;
+        if (Double.compare(particle.mass, mass) != 0) return false;
+        return Double.compare(particle.radius, radius) == 0;
+    }
+
+    @Override
+    public int hashCode() {
+        int result;
+        long temp;
+        result = id;
+        temp = Double.doubleToLongBits(x);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(y);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(vx);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(vy);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(mass);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(radius);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        return result;
+    }
 }

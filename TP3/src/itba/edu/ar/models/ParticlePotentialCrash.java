@@ -16,13 +16,8 @@ public class ParticlePotentialCrash extends PotentialCrash {
         return "ParticlePotentialCrash{" +
                 "particle1=" + particle1 +
                 ", particle2=" + particle2 +
-                ", time=" + time +
+                ", time=" + getTime() +
                 '}';
-    }
-
-    @Override
-    public boolean isWall() {
-        return false;
     }
 
     public Particle getParticle1() {
@@ -41,7 +36,7 @@ public class ParticlePotentialCrash extends PotentialCrash {
         this.particle2 = particle2;
     }
 
-    public double getImpulse(){
+    public double getImpulse() {
         double mass1 = particle1.getMass();
         double mass2 = particle2.getMass();
         return (2 * mass1 * mass2 * getVR()) / (getSigma() * (mass1 + mass2));
@@ -49,11 +44,11 @@ public class ParticlePotentialCrash extends PotentialCrash {
     }
 
     private double getDeltaX() {
-        return  particle2.getX() - particle1.getX();
+        return particle2.getX() - particle1.getX();
     }
 
     private double getDeltaY() {
-        return  particle2.getY() - particle1.getY();
+        return particle2.getY() - particle1.getY();
     }
 
     private double getVR() {
@@ -68,10 +63,20 @@ public class ParticlePotentialCrash extends PotentialCrash {
     }
 
     public double getImpulseX() {
-        return (getImpulse() * getDeltaX())/getSigma();
+        return (getImpulse() * getDeltaX()) / getSigma();
     }
 
     public double getImpulseY() {
-        return (getImpulse() * getDeltaY())/getSigma();
+        return (getImpulse() * getDeltaY()) / getSigma();
+    }
+
+    @Override
+    public void crash() {
+        final double impulseX = getImpulseX();
+        final double impulseY = getImpulseY();
+        particle1.modifyVx(impulseX);
+        particle1.modifyVy(impulseY);
+        particle2.modifyVx(-impulseX);
+        particle2.modifyVy(-impulseY);
     }
 }
