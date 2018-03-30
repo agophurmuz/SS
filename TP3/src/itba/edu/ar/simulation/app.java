@@ -13,7 +13,7 @@ public class app {
         int cantSimulations = 10;
 
         for (int s = 0; s < cantSimulations; s++) {
-            int cantRun = 1000;
+            int cantRun = 6000;
             double L = 0.5;
             double v = 0.1;
             double bigParticleInitX = L/2;
@@ -23,7 +23,9 @@ public class app {
             BrownianMovement brownianMovement = new BrownianMovement(0.5, particles);
             FileOutputStream fileOutputStream = FileGenerator.createOutputFilePoints("OutputTP3-simulation-" + s + ".xyz");
             FileOutputStream fileBigParticleOutputStream = FileGenerator.createOutputFilePoints("BigParticlePath-simulation-" + s + ".csv");
-
+            FileOutputStream fileBigParticleTimeOutputStream = FileGenerator.createOutputFilePoints("BigParticleEventTime-simulation-" + s + ".csv");
+            double time = 0;
+            double aux;
             for (int i = 0; i < cantRun; i++) {
                 for (Particle particle : particles) {
                     brownianMovement.timeCrashParticleToWall(particle);
@@ -33,12 +35,15 @@ public class app {
                     }
                 }
                 brownianMovement.move();
+                aux = brownianMovement.getMinCrash().getTime();
                 System.out.println("Numero de RUN: " + i + "****************************");
-                System.out.println("Final minCrash: " + brownianMovement.getMinCrash().getTime());
+                System.out.println("Final minCrash: " + aux);
                 System.out.println("****************************************************");
                 brownianMovement.crash();
                 FileGenerator.addPointsToFile(fileOutputStream, particles);
                 FileGenerator.addBigParticlePath(fileBigParticleOutputStream, particles.get(0), bigParticleInitX, bigParticleInitY, v, bigMassParticle);
+                time += aux;
+                FileGenerator.addBigParticleEventTime(fileBigParticleTimeOutputStream, particles.get(0), bigParticleInitX, bigParticleInitY, v, time);
             }
         }
 
