@@ -14,6 +14,8 @@ public abstract class MolecularDynamicsAlgorithm {
     protected double mass;
     protected double a;
     protected double prevAcc;
+    protected double prevPos;
+    protected double prev2Pos;
     protected double cuadraticError;
     protected double totalTime;
     protected double deltaTime;
@@ -31,55 +33,21 @@ public abstract class MolecularDynamicsAlgorithm {
         this.a = calculateAcceleration();
     }
 
-    private double calculateAcceleration() {
-        return (-k * r -gama * v) / mass;
-    }
-
-    private double analyticSolution(double time) {
+    protected double analyticSolution(double time) {
         return Math.exp(-(gama / (2 * mass)) * time) * Math.cos(Math.pow((k / mass) - (Math.pow(gama, 2) / (4 * Math.pow(mass, 2))), 0.5) * time);
     }
 
-    private double calculateCuadraticError(double calculatedR, double analyticR) {
-        return Math.pow(calculatedR - analyticR, 2);
+    protected double calculateCuadraticError(double calculatedR, double analyticR) {
+        return Math.pow(analyticR - calculatedR, 2);
     }
-
-    public void oscillate() throws IOException {
-
-        double time = 0;
-        int i = 0;
-        double cuadraticErrorStep = 0;
-        double analyticR;
-        double predictedV;
-        FileOutputStream fileOutputStream = FileGenerator.createFile(getName() + ".csv");
-        FileGenerator.addTitle(fileOutputStream);
-        while (time <= totalTime) {
-
-            analyticR = analyticSolution(time);
-            cuadraticErrorStep += calculateCuadraticError(r, analyticR);
-            FileGenerator.addLine(r, analyticR, time, fileOutputStream);
-
-            r = calculatePosition();
-            predictedV = calculateVelocityPredicted();
-            v = calculateVelocity(predictedV);
-
-            prevAcc = a;
-            time += deltaTime;
-            a = calculateAcceleration();
-            i++;
-
-        }
-
-        cuadraticError = cuadraticErrorStep / i;
-        FileGenerator.addCuadraticError(cuadraticError, fileOutputStream);
-        fileOutputStream.close();
-
-    }
-
-    protected abstract double calculateVelocityPredicted();
 
     protected abstract double calculatePosition();
 
-    protected abstract double calculateVelocity(double predictedV);
+    protected abstract double calculateVelocity();
 
     protected abstract String getName();
+
+    protected abstract double calculateAcceleration();
+
+    protected abstract void oscillate();
 }
