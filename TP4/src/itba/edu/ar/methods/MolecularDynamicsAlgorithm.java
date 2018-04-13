@@ -40,7 +40,7 @@ public abstract class MolecularDynamicsAlgorithm {
     }
 
     private double calculateCuadraticError(double calculatedR, double analyticR) {
-        return Math.pow(analyticR - calculatedR, 2);
+        return Math.pow(calculatedR - analyticR, 2);
     }
 
     public void oscillate() throws IOException {
@@ -49,6 +49,7 @@ public abstract class MolecularDynamicsAlgorithm {
         int i = 0;
         double cuadraticErrorStep = 0;
         double analyticR;
+        double predictedV;
         FileOutputStream fileOutputStream = FileGenerator.createFile(getName() + ".csv");
         FileGenerator.addTitle(fileOutputStream);
         while (time <= totalTime) {
@@ -58,7 +59,8 @@ public abstract class MolecularDynamicsAlgorithm {
             FileGenerator.addLine(r, analyticR, time, fileOutputStream);
 
             r = calculatePosition();
-            v = calculateVelocity();
+            predictedV = calculateVelocityPredicted();
+            v = calculateVelocity(predictedV);
 
             prevAcc = a;
             time += deltaTime;
@@ -73,9 +75,11 @@ public abstract class MolecularDynamicsAlgorithm {
 
     }
 
-    protected abstract double calculateVelocity();
+    protected abstract double calculateVelocityPredicted();
 
     protected abstract double calculatePosition();
+
+    protected abstract double calculateVelocity(double predictedV);
 
     protected abstract String getName();
 }

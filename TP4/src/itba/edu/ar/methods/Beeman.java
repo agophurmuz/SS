@@ -7,13 +7,19 @@ public class Beeman extends MolecularDynamicsAlgorithm {
         super(k, gama, r, v, mass, totalTime, deltaTime);
     }
 
-    protected double calculateVelocity() {
+    protected double calculatePosition() {
         return r + v * deltaTime + (2 * a * Math.pow(deltaTime, 2)) / 3 - (prevAcc * Math.pow(deltaTime, 2)) / 6;
     }
 
-    protected double calculatePosition() {
+    protected double calculateVelocityPredicted() {
         return v + (3 * a * deltaTime) / 2 - (prevAcc * deltaTime) / 2;
     }
+
+    protected double calculateVelocity(double predictedV) {
+        double futureA = (-k * r -gama * predictedV) / mass;
+        return v + (futureA * deltaTime) / 3 + (5 * a * Math.pow(deltaTime, 2)) / 6 - (prevAcc * deltaTime) / 6;
+    }
+
 
     protected String getName() {
         return "Beeman";
