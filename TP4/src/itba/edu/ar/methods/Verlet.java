@@ -35,7 +35,7 @@ public class Verlet extends  MolecularDynamicsAlgorithm{
     }
 
     @Override
-    public void oscillate() {
+    public void oscillate() throws IOException {
 
         double time = 0;
         int i = 0;
@@ -88,6 +88,7 @@ public class Verlet extends  MolecularDynamicsAlgorithm{
         } catch (IOException e) {
             e.printStackTrace();
         }
+        fileOutputStream.close();
 
     }
 

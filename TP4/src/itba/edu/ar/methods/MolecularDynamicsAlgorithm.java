@@ -49,5 +49,5 @@ public abstract class MolecularDynamicsAlgorithm {
 
     protected abstract double calculateAcceleration();
 
-    protected abstract void oscillate();
+    protected abstract void oscillate() throws IOException;
 }
