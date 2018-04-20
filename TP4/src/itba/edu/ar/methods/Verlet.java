@@ -14,7 +14,7 @@ public class Verlet extends  MolecularDynamicsAlgorithm{
     @Override
     protected double calculateVelocity() {
         //r ya tiene la siguiente pq la calculó en el paso anterior en oscillate.
-        return (r - prev2Pos)/2* deltaTime;
+        return (r - prev2Pos)/(2* deltaTime);
     }
 
     @Override
@@ -29,7 +29,9 @@ public class Verlet extends  MolecularDynamicsAlgorithm{
 
     @Override
     protected double calculateAcceleration() {
-        return (-(k * r) - (gama * v)) / mass;
+        double a = k * r;
+        double b = gama * v;
+        return ((-a - b) / mass);
     }
 
     @Override
@@ -39,34 +41,38 @@ public class Verlet extends  MolecularDynamicsAlgorithm{
         int i = 0;
         double cuadraticErrorStep = 0;
         double analyticR;
+        double aux;
 
         FileOutputStream fileOutputStream = FileGenerator.createFile(getName() + ".csv");
         FileGenerator.addTitle(fileOutputStream);
 
-        prevPos = r; //fixme euler
+        prevPos = calculatePositionEuler(); //fixme euler
+        aux = r;
         r = calculatePosition();
         time += deltaTime;
         a = calculateAcceleration();
         prev2Pos = prevPos;
-        prevPos = r;
+        prevPos = aux;
+        aux = r;
         r = calculatePosition();
         time += deltaTime;
         i+=2;
 
         //caculateNextPosition
         while (time <= totalTime) {
-
+            prev2Pos = prevPos;
+            prevPos = aux;
             analyticR = analyticSolution(time);
             cuadraticErrorStep += calculateCuadraticError(r, analyticR);
             FileGenerator.addLine(r, analyticR, time, fileOutputStream);
 
             prevAcc = a;
 
+            System.out.println(a);
             v = calculateVelocity();
             a = calculateAcceleration();
 
-            prev2Pos = prevPos;
-            prevPos = r;
+            aux = r;
             r = calculatePosition();
 
             time += deltaTime;
@@ -83,6 +89,15 @@ public class Verlet extends  MolecularDynamicsAlgorithm{
             e.printStackTrace();
         }
 
+    }
+
+    private double calculatePositionEuler() {
+        double prevV = calculatePrevV();
+        return r - (deltaTime * prevV) + ((Math.pow(-deltaTime, 2) * a) / 2);
+    }
+
+    private double calculatePrevV() {
+        return v - (deltaTime * a);
     }
 
 
