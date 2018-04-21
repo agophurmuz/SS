@@ -2,10 +2,10 @@ package itba.edu.ar.models;
 
 public class Particle {
 
-    private double vX;
-    private double vY;
-    private Position position;
-    private double mass;
+    protected double vX;
+    protected double vY;
+    protected Position position;
+    protected double mass;
 
     public Particle(double vX, double vY, Position position, double mass) {
         this.vX = vX;

@@ -25,4 +25,8 @@ public class Position {
     public void setY(double y) {
         this.y = y;
     }
+
+    public double getEuclideanDistance(Position otherPosition){
+        return Math.sqrt(Math.pow(otherPosition.x-x,2) + Math.pow(otherPosition.y-y,2));
+    }
 }
