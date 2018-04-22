@@ -40,7 +40,7 @@ public class Beeman extends MolecularDynamicsAlgorithm {
 
     protected double calculateVelocity(double predictedV) {
         double futureA = (-k * r - gama * predictedV) / mass;
-        return v + (futureA * deltaTime) / 3 + (5 * a * Math.pow(deltaTime, 2)) / 6 - (prevAcc * deltaTime) / 6;
+        return v + (futureA * deltaTime) / 3 + (5 * a * deltaTime) / 6 - (prevAcc * deltaTime) / 6;
     }
 
     @Override

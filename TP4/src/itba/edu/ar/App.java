@@ -16,18 +16,18 @@ public class App {
         double r0 = 1.0;
         double v0 = (-gama)/(2*mass);
         double totalTime = 5.0;
-        double deltaTime = 1E-7;//Math.pow(10, -4);
+        double deltaTime = 1E-4;//Math.pow(10, -4);
 
         //Beeman beeman = new Beeman(k, gama, r0, v0, mass, totalTime, deltaTime);
 
         //beeman.oscillate();
 
-        Verlet verlet = new Verlet(k, gama, r0, v0, mass, totalTime, deltaTime);
+        //Verlet verlet = new Verlet(k, gama, r0, v0, mass, totalTime, deltaTime);
 
-        verlet.oscillate();
+        //verlet.oscillate();
 
-        //GearPredictorCorrector gearPredictorCorrector = new GearPredictorCorrector(k, gama, r0, v0, mass, totalTime, deltaTime);
-        //gearPredictorCorrector.oscillate();
+        GearPredictorCorrector gearPredictorCorrector = new GearPredictorCorrector(k, gama, r0, v0, mass, totalTime, deltaTime);
+        gearPredictorCorrector.oscillate();
 
     }
 }
