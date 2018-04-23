@@ -3,6 +3,7 @@ package itba.edu.ar;
 import itba.edu.ar.methods.Beeman;
 import itba.edu.ar.methods.GearPredictorCorrector;
 import itba.edu.ar.methods.Verlet;
+import itba.edu.ar.utils.PlanetParser;
 
 
 import java.io.IOException;
@@ -29,6 +30,9 @@ public class App {
 
         GearPredictorCorrector gearPredictorCorrector = new GearPredictorCorrector(k, gama, r0, v0, mass, totalTime, deltaTime);
         gearPredictorCorrector.oscillate();
+
+        PlanetParser parser = new PlanetParser();
+        System.out.println(parser.parseFile("/Users/mminestrelli/Documents/ITBA/SS/TP4/src/itba/edu/ar/utils/data/year/","month-",1,3));
 
     }
 }
