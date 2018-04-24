@@ -54,7 +54,7 @@ public class GearPredictorCorrector extends MolecularDynamicsAlgorithm {
     }
 
     protected double calculateAcceleration() {
-        return (-k * r -gama * r1) / mass;
+        return (-k * predR -gama * predR1) / mass;
     }
 
     @Override
