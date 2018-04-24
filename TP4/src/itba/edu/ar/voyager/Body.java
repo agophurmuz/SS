@@ -8,9 +8,23 @@ import java.util.List;
 public class Body extends Particle {
 
     protected static final double G = 6.693 * 10E-11;
+    private BodyType type;
 
-    public Body(double vX, double vY, Position position, double mass) {
+    public Body(double vX, double vY, Position position, double mass, BodyType type) {
         super(vX, vY, position, mass);
+        this.type = type;
+    }
+
+    public double getAccelerationX(List<Body> bodies) {
+        return getTotalForceX(bodies) / mass;
+    }
+
+    public double getAccelerationY(List<Body> bodies) {
+        return getTotalForceY(bodies) / mass;
+    }
+
+    public double getDist(Body body1, Body body2) {
+        return getEuclideanDistanceTo(body1) + getEuclideanDistanceTo(body2);
     }
 
     public double getAcceleration(List<Body> bodies) {
@@ -49,4 +63,7 @@ public class Body extends Particle {
         return position.getEuclideanDistance(otherBody.position);
     }
 
+    public BodyType getType() {
+        return type;
+    }
 }

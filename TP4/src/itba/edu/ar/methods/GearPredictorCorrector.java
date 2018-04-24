@@ -80,7 +80,7 @@ public class GearPredictorCorrector extends MolecularDynamicsAlgorithm {
             i++;
         }
         cuadraticError = cuadraticErrorStep / i;
-        System.out.println("Gera error: " + cuadraticError);
+        System.out.println("Gear error: " + cuadraticError);
         FileGenerator.addCuadraticError(cuadraticError, fileOutputStream);
         fileOutputStream.close();
     }

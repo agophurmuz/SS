@@ -68,7 +68,7 @@ public class Verlet extends  MolecularDynamicsAlgorithm{
 
             prevAcc = a;
 
-            System.out.println(a);
+            //System.out.println(a);
             v = calculateVelocity();
             a = calculateAcceleration();
 
@@ -82,6 +82,7 @@ public class Verlet extends  MolecularDynamicsAlgorithm{
         }
 
         cuadraticError = cuadraticErrorStep / i;
+        System.out.println("Verlet: " + cuadraticError);
         FileGenerator.addCuadraticError(cuadraticError, fileOutputStream);
         try {
             fileOutputStream.close();

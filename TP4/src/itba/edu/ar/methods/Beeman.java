@@ -69,6 +69,7 @@ public class Beeman extends MolecularDynamicsAlgorithm {
         }
 
         cuadraticError = cuadraticErrorStep / i;
+        System.out.println("Beeman error: " + cuadraticError);
         FileGenerator.addCuadraticError(cuadraticError, fileOutputStream);
         fileOutputStream.close();
     }
