@@ -40,7 +40,21 @@ public class Body extends Particle {
 
         double total = 0;
         for (Body body : bodies) {
-            total -= getForceReceivedFrom(body) * (position.getX() - body.position.getX()) / getEuclideanDistanceTo(body);
+            if(body.getType() != this.getType()) {
+               /* double dx = body.getPosition().getX() - this.getPosition().getX();
+                double dy = body.getPosition().getY() - this.getPosition().getY();
+                double angle;
+                if (dx == 0) {
+                    angle = Math.signum(dy) * Math.PI / 2;
+                }else{
+                    angle = Math.atan(dy/dx);
+                    if ((dx < 0 && dy > 0) || (dx < 0 && dy < 0)){
+                        angle += Math.PI;
+                    }
+                }
+                total += getForceReceivedFrom(body) * Math.cos(angle);*/
+                total -= getForceReceivedFrom(body) * (position.getX() - body.position.getX()) / getEuclideanDistanceTo(body);
+            }
         }
         return total;
     }
@@ -49,7 +63,21 @@ public class Body extends Particle {
 
         double total = 0;
         for (Body body : bodies) {
-            total -= getForceReceivedFrom(body) * (position.getY() - body.position.getY()) / getEuclideanDistanceTo(body);
+            if(body.getType() != this.getType()) {
+                /*double dx = body.getPosition().getX() - this.getPosition().getX();
+                double dy = body.getPosition().getY() - this.getPosition().getY();
+                double angle;
+                if (dx == 0) {
+                    angle = Math.signum(dy) * Math.PI / 2;
+                }else{
+                    angle = Math.atan(dy/dx);
+                    if ((dx < 0 && dy > 0) || (dx < 0 && dy < 0)){
+                        angle += Math.PI;
+                    }
+                }
+                total += getForceReceivedFrom(body) * Math.sin(angle);*/
+                total -= getForceReceivedFrom(body) * (position.getY() - body.position.getY()) / getEuclideanDistanceTo(body);
+            }
         }
         return total;
     }
