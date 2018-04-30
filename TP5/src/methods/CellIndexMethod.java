@@ -1,11 +1,14 @@
 
-package itba.edu.ar.simulation.methods;
+package methods;
 
-import itba.edu.ar.simulation.models.Cell;
-import itba.edu.ar.simulation.models.Domain;
-import itba.edu.ar.simulation.models.Particle;
+import models.Cell;
+import models.Domain;
+import models.Particle;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class CellIndexMethod {
 
@@ -86,5 +89,9 @@ public class CellIndexMethod {
 
     private List<Cell> getNeighborCells(int x, int y, int M, Domain domain) {
         return boundaryConditionsStrategy.getNeighborCells(x, y, M);
+    }
+
+    public void resetParticles(List<Particle> nextParticles) {
+        this.domain = new Domain(L, M, nextParticles);
     }
 }

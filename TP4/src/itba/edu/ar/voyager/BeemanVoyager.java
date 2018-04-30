@@ -34,9 +34,9 @@ public class BeemanVoyager {
         this.currAy = 0;
         this.planets = planets;
         this.voyager = voyager;
-        this.voyager.setPosition(voyagerInitialPosition());
-        this.voyager.setvX(voyagerInitialVx());
-        this.voyager.setvY(voyagerInitialVy());
+        //this.voyager.setPosition(voyagerInitialPosition());
+        //this.voyager.setvX(voyagerInitialVx());
+        //this.voyager.setvY(voyagerInitialVy());
         minDist = Double.MAX_VALUE;
 
     }
@@ -119,7 +119,7 @@ public class BeemanVoyager {
         Body saturn = null;
         Body jupiter = null;
         double aux;
-        for (Body planet:planets) {
+        /*for (Body planet:planets) {
             if (planet.getType() != BodyType.SUN){
                 double auxAx = calculateAccelerationX(planet);
                 double auxAy = calculateAccelerationY(planet);
@@ -129,14 +129,14 @@ public class BeemanVoyager {
                 double y = planet.getPosition().getY() + deltaTime * planet.getvY() + Math.pow(deltaTime, 2) * auxAy;
                 planet.setPosition(new Position(x, y));
             }
-        }
+        }*/
 
         FileOutputStream fileOutputStream = FileGenerator.createFile("simulationMonths.xyz");
         while (time <= totalTime) {
             for (Body p: planets) {
                 if (p.getType() != BodyType.SUN){
-                    currAx = calculateAccelerationX(p);
-                    currAy = calculateAccelerationY(p);
+                    //currAx = calculateAccelerationX(p);
+                    //currAy = calculateAccelerationY(p);
 
                     rx = calculatePositionX(p);
                     ry = calculatePositionY(p);
@@ -151,6 +151,8 @@ public class BeemanVoyager {
                     p.setvY(vy);
                     prevAccX = currAx;
                     prevAccY = currAy;
+                    currAx = ax;
+                    currAy = ay;
                     time += deltaTime;
                 }
             }
@@ -173,8 +175,10 @@ public class BeemanVoyager {
                 iterNum = i;
             }
             */
-            FileGenerator.addPlanets(voyager, planets, fileOutputStream);
-            //i++;
+            if(i%300 == 0) {
+                FileGenerator.addPlanets(voyager, planets, fileOutputStream);
+            }
+            i++;
         }
 
         //System.out.println("Min dist: " + minDist + " Mes: " + iterNum);

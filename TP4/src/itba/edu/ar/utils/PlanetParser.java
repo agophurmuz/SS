@@ -16,7 +16,7 @@ public class PlanetParser {
     public static final double EARTH_MASS = 5.9722E24;
     public static final double JUPITER_MASS = 1.89813E27;
     public static final double SATURN_MASS = 5.68319E26;
-    private static final double SUN_MASS = 1.988544E30;
+    public static final double SUN_MASS = 1.988544E30;
 
     public List<Body> parseFile(String path,String fileBaseName, int monthNumber, int planetsInSystem) throws FileNotFoundException {
 

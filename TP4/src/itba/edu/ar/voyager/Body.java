@@ -7,7 +7,7 @@ import java.util.List;
 
 public class Body extends Particle {
 
-    protected static final double G = 6.693 * 10E-11;
+    protected static final double G = 6.693E-11;
     private BodyType type;
 
     public Body(double vX, double vY, Position position, double mass, BodyType type) {
