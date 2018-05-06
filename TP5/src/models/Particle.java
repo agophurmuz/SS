@@ -12,7 +12,6 @@ public class Particle {
     private double vy;
     private double radius;
     private double mass;
-    private double a;
     private double prevAccX;
     private double prevAccY;
     private double fx;

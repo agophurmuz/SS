@@ -4,11 +4,9 @@ package methods;
 import models.Cell;
 import models.Domain;
 import models.Particle;
+import models.Position;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class CellIndexMethod {
 
@@ -93,5 +91,51 @@ public class CellIndexMethod {
 
     public void resetParticles(List<Particle> nextParticles) {
         this.domain = new Domain(L, M, nextParticles);
+    }
+
+    public void addWallParticleContact(Map<Particle, Set<Particle>> neighbors, List<Particle> particles){
+        for (Particle p : particles) {
+            List<Particle> newParticles = getWallParticleContact(p);
+            if(!neighbors.containsKey(p)) {
+                neighbors.put(p, new HashSet<Particle>());
+            }
+            neighbors.get(p).addAll(newParticles);
+        }
+    }
+
+    public List<Particle> getWallParticleContact(Particle particle) {
+        Particle p;
+        List<Particle> result = new ArrayList<>();
+        if(particle.getX() - particle.getRadius() < 0) {
+            //fixme id particle, le estoy poniendo 0
+            // choco con pared Izq
+            double x = -particle.getRadius();
+            p = new Particle(0, new Position(x, particle.getY()), 0, 0, particle.getRadius(), particle.getMass());
+            p.setWall(true);
+            result.add(p);
+
+            // choco con pared Derecha
+        } else if (particle.getX() + particle.getRadius() >= L) {
+            double x = particle.getRadius() + L;
+            p = new Particle(0, new Position(x, particle.getY()), 0, 0, particle.getRadius(), particle.getMass());
+            p.setWall(true);
+            result.add(p);
+
+            // choco con pared piso
+        } else if(particle.getY() - particle.getRadius() < 0) {
+            double y = -particle.getRadius();
+            p = new Particle(0, new Position(particle.getX(), y), 0, 0, particle.getRadius(), particle.getMass());
+            p.setWall(true);
+            result.add(p);
+
+            // choco con pared techo
+        } else if (particle.getY() + particle.getRadius() >= L) {
+            double y = particle.getRadius() + L;
+            p = new Particle(0, new Position(particle.getX(), y), 0, 0, particle.getRadius(), particle.getMass());
+            p.setWall(true);
+            result.add(p);
+        }
+
+        return result;
     }
 }

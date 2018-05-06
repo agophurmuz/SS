@@ -29,10 +29,24 @@ public class FileGenerator {
         }
     }
 
+    public static void addWalls(FileOutputStream fileOutputStream, int cant, double mass, int L) {
+        try {
+
+            StringBuilder sb = new StringBuilder();
+            sb.append(cant + "\t" +  0 + "\t" + 0 + "\t" + 0 + "\t" + 0 + "\n");
+            sb.append(cant + "\t" +  0 + "\t" + L + "\t" + 0 + "\t" + 0 + "\n");
+            sb.append(cant + "\t" +  L + "\t" + 0 + "\t" + 0 + "\t" + 0 + "\n");
+            sb.append(cant + "\t" +  L + "\t" + L + "\t" + 0 + "\t" + 0 + "\n");
+            fileOutputStream.write(sb.toString().getBytes());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public static void addHeader(FileOutputStream fileOutputStream, int cantParticles) {
         try {
             StringBuilder sb = new StringBuilder();
-            sb.append(cantParticles+ "\n");
+            sb.append((cantParticles)+ "\n");
             sb.append("id" + "\t" +  "x" + "\t" + "y" + "\t" + "vx" + "\t" + "vy" + "\n");
             fileOutputStream.write(sb.toString().getBytes());
         } catch (IOException e) {

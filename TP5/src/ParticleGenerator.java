@@ -7,12 +7,12 @@ import java.util.List;
 public class ParticleGenerator {
 
     public static List<Particle> particlesGenerator(double massParticle, double minDiameter,
-                                                    double maxDiameter, int cantParticles, double L) {
+                                                    double maxDiameter, int cantParticles, double L, double W) {
         List<Particle> particles = new ArrayList<>();
 
         double diameter = (Math.random() * (maxDiameter - minDiameter)) + minDiameter;
         double r = diameter / 2;
-        double x1 = Math.random() * (L - (2 * r)) + r;
+        double x1 = Math.random() * (W - (2 * r)) + r;
         double y1 = Math.random() * (L - (2 * r )) + r;
         double vx1 = Math.random(); //* 2 * v - v;
         double vy1 = Math.random(); //* 2 * v - v;
@@ -27,7 +27,7 @@ public class ParticleGenerator {
                 //do {
                 double diameter1 = (Math.random() * (maxDiameter - minDiameter)) + minDiameter;
                 double r2 = diameter / 2;
-                x2 = Math.random() * (L - (2 * r2)) + r2;
+                x2 = Math.random() * (W - (2 * r2)) + r2;
                 y2 = Math.random() * (L - (2 * r2)) + r2;
                 //}while (x2>L || y2>L || x2>0 || y2>0 );
                 int j = 0;

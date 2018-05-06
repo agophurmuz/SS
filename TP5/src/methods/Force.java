@@ -43,11 +43,11 @@ public class Force {
     }
 
     private double superposition(Particle p1, Particle p2) {
-        return p1.getRadius() + p2.getRadius() - Math.pow(getDistance(p1, p2), 2);
+        return p1.getRadius() + p2.getRadius() - getDistance(p1, p2);
     }
 
     private double superpositionPrime(Particle p1, Particle p2) {
-        return Math.pow(p1.getVx() - p2.getVx(), 2) + Math.pow(p1.getVy() - p2.getVy(), 2);
+        return -(Math.sqrt(Math.pow(p1.getVx() - p2.getVx(), 2) + Math.pow(p1.getVy() - p2.getVy(), 2)));
     }
 
 
