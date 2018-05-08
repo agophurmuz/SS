@@ -22,8 +22,8 @@ public class Force {
             double totalY = 0;
             for (Particle p : neighbors) {
                 if (particle.getId() != p.getId()) {
-                    totalX -= getForceReceivedFrom(particle, p, k, gama) * (particle.getX() - p.getX()) / getDistance(particle, p);
-                    totalY -= getForceReceivedFrom(particle, p, k, gama) * (particle.getY() - p.getY()) / getDistance(particle, p);
+                    totalX += getForceReceivedFrom(particle, p, k, gama) * (p.getX() - particle.getX()) / getDistance(particle, p);
+                    totalY += getForceReceivedFrom(particle, p, k, gama) * (p.getY() - particle.getY()) / getDistance(particle, p);
                 }
             }
             particle.setFx(totalX);
@@ -34,7 +34,12 @@ public class Force {
     }
 
     private double getForceReceivedFrom(Particle particle, Particle p, double k, double gama) {
-        return (-k * superposition(particle, p) - (gama * superpositionPrime(particle, p)));
+        double sup = superposition(particle, p);
+        //System.out.println("Particle x: " + particle.getX() +" y: "+ particle.getY() + " sup: " + sup );
+        if(sup < 0){
+            return 0;
+        }
+        return (-k * sup); //- (gama * superpositionPrime(particle, p)));
     }
 
     private double getDistance(Particle p1, Particle p2) {

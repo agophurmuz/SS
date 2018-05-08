@@ -24,7 +24,7 @@ public class app {
         double k = 1E4;
         double gama = 100.0;
         double totalTime = 5.0;
-        double deltaTime = 1E-5;
+        double deltaTime = 1E-4;
 
         FileOutputStream fileOutputStream = FileGenerator.createOutputFilePoints("granular.xyz");
         //List<Particle> particles = ParticleGenerator.particlesGenerator(particlesMass, D/7, D/5, cantParticles, L, W);
@@ -36,8 +36,8 @@ public class app {
         //CellIndexMethod method = new CellIndexMethod(BoundaryCondition.NON_PERIODIC, M, L, rc, particles);
         Beeman beeman = new Beeman(new Force(k, gama), totalTime, deltaTime);
         double time = 0;
-        Particle particle1 = new Particle(0, new Position(1,5), 0.2, 0, 1, particlesMass);
-        Particle particle2 = new Particle(1, new Position(2,5), -0.2, 0, 1, particlesMass);
+        Particle particle1 = new Particle(0, new Position(0.1,5), 0.02, 0, 0.1, particlesMass);
+        Particle particle2 = new Particle(1, new Position(0.4,5), -0.02, 0, 0.1, particlesMass);
         FileGenerator.addParticle(fileOutputStream, particle1);
         FileGenerator.addParticle(fileOutputStream, particle2);
         while (time <= totalTime) {
@@ -52,6 +52,7 @@ public class app {
                 nextParticles.add(nextP);
                 FileGenerator.addParticle(fileOutputStream, nextP);
             }*/
+
 
             FileGenerator.addParticle(fileOutputStream, particle1);
             FileGenerator.addParticle(fileOutputStream, particle2);

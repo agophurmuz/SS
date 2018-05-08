@@ -22,7 +22,7 @@ public class FileGenerator {
 
             StringBuilder sb = new StringBuilder();
             sb.append(particle.getId() + "\t" +  particle.getPosition().getX() + "\t" + particle.getPosition().getY() + "\t"
-                    + particle.getVx() + "\t" + particle.getVy() + "\n");
+                    + particle.getVx() + "\t" + particle.getVy() + "\t" + particle.getRadius() + "\n");
             fileOutputStream.write(sb.toString().getBytes());
         } catch (IOException e) {
             e.printStackTrace();
@@ -33,10 +33,10 @@ public class FileGenerator {
         try {
 
             StringBuilder sb = new StringBuilder();
-            sb.append(cant + "\t" +  0 + "\t" + 0 + "\t" + 0 + "\t" + 0 + "\n");
-            sb.append(cant + "\t" +  0 + "\t" + L + "\t" + 0 + "\t" + 0 + "\n");
-            sb.append(cant + "\t" +  L + "\t" + 0 + "\t" + 0 + "\t" + 0 + "\n");
-            sb.append(cant + "\t" +  L + "\t" + L + "\t" + 0 + "\t" + 0 + "\n");
+            sb.append(cant + "\t" +  0 + "\t" + 0 + "\t" + 0 + "\t" + 0 + "\t" + 1 + "\n");
+            sb.append(cant + "\t" +  0 + "\t" + L + "\t" + 0 + "\t" + 0 + "\t" + 1 + "\n");
+            sb.append(cant + "\t" +  L + "\t" + 0 + "\t" + 0 + "\t" + 0 + "\t" + 1 + "\n");
+            sb.append(cant + "\t" +  L + "\t" + L + "\t" + 0 + "\t" + 0 + "\t" + 1 + "\n");
             fileOutputStream.write(sb.toString().getBytes());
         } catch (IOException e) {
             e.printStackTrace();
@@ -47,7 +47,7 @@ public class FileGenerator {
         try {
             StringBuilder sb = new StringBuilder();
             sb.append((cantParticles)+ "\n");
-            sb.append("id" + "\t" +  "x" + "\t" + "y" + "\t" + "vx" + "\t" + "vy" + "\n");
+            sb.append("id" + "\t" +  "x" + "\t" + "y" + "\t" + "vx" + "\t" + "vy" + "\t" + "radius" + "\n");
             fileOutputStream.write(sb.toString().getBytes());
         } catch (IOException e) {
             e.printStackTrace();

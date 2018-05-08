@@ -54,6 +54,7 @@ public class Beeman {
     public Particle moveParticle(Particle particle, Set<Particle> neighbors) {
 
         force.setForces(particle, neighbors);
+        //System.out.println("Particula: " + particle.getId() + " force: " + particle.getFx() + ", " + particle.getFy());
 
         double x = calculatePositionX(particle);
         double y = calculatePositionY(particle);
