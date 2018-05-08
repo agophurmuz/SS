@@ -16,7 +16,7 @@ public class ParticleGenerator {
         double y1 = Math.random() * (L - (2 * r )) + r;
         double vx1 = Math.random(); //* 2 * v - v;
         double vy1 = Math.random(); //* 2 * v - v;
-        particles.add(new Particle(0, new Position(x1, y1), vx1, vy1, r, massParticle));
+        particles.add(new Particle(0, new Position(x1, y1), vx1, vy1, 0.1, massParticle));
 
         for (int i = 1; i < cantParticles; i++) {
             boolean validLocation = false;
@@ -34,7 +34,7 @@ public class ParticleGenerator {
                 validLocation = true;
                 while (j < particles.size() && validLocation) {
                     validLocation = isValidLocation(particles.get(j).getX(), particles.get(j).getY(),
-                            particles.get(j).getRadius(), x2, y2, r2);
+                            particles.get(j).getRadius(), x2, y2, 0.1);
                     j++;
                 }
             }
@@ -43,7 +43,7 @@ public class ParticleGenerator {
             vx = Math.random(); //* 2 * v - v;
             vy = Math.random(); //* 2 * v - v;
 
-            particles.add(new Particle(i, new Position(x2, y2), vx, vy, r, massParticle));
+            particles.add(new Particle(i, new Position(x2, y2), vx, vy, 0.1, massParticle));
         }
         return particles;
     }

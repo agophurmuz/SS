@@ -15,14 +15,16 @@ public class CellIndexMethod {
     private int L;
     private double rc;
     private Domain domain;
+    private int W;
 
-    public CellIndexMethod(BoundaryCondition boundaryCondition, int M, int L, double rc, List<Particle> particleList) {
+    public CellIndexMethod(BoundaryCondition boundaryCondition, int M, int L, double rc, List<Particle> particleList, int W) {
         this.M = M;
         this.rc = rc;
         this.L = L;
         validateParameters();
         this.domain = new Domain(L, M, particleList);
         changeBoundaryConditionsStrategy(boundaryCondition);
+        this.W = W;
     }
 
     public void changeBoundaryConditionsStrategy(BoundaryCondition boundaryCondition) {
@@ -95,43 +97,45 @@ public class CellIndexMethod {
 
     public void addWallParticleContact(Map<Particle, Set<Particle>> neighbors, List<Particle> particles){
         for (Particle p : particles) {
-            List<Particle> newParticles = getWallParticleContact(p);
-            if(!neighbors.containsKey(p)) {
-                neighbors.put(p, new HashSet<Particle>());
-            }
+            Set<Particle> newParticles = getWallParticleContact(p);
+            //if(!neighbors.containsKey(p)) {
+              //  neighbors.put(p, new HashSet<Particle>());
+                //System.out.println(p.getId() + " " + p.getX() + " " + p.getY());
+                //System.out.println(neighbors.size());
+           // }
             neighbors.get(p).addAll(newParticles);
         }
     }
 
-    public List<Particle> getWallParticleContact(Particle particle) {
+    public Set<Particle> getWallParticleContact(Particle particle) {
         Particle p;
-        List<Particle> result = new ArrayList<>();
+        Set<Particle> result = new HashSet<>();
         if(particle.getX() - particle.getRadius() < 0) {
             //fixme id particle, le estoy poniendo 0
             // choco con pared Izq
             double x = -particle.getRadius();
-            p = new Particle(0, new Position(x, particle.getY()), 0, 0, particle.getRadius(), particle.getMass());
+            p = new Particle(111, new Position(x, particle.getY()), 0, 0, particle.getRadius(), particle.getMass());
             p.setWall(true);
             result.add(p);
 
             // choco con pared Derecha
-        } else if (particle.getX() + particle.getRadius() >= L) {
-            double x = particle.getRadius() + L;
-            p = new Particle(0, new Position(x, particle.getY()), 0, 0, particle.getRadius(), particle.getMass());
+        } else if (particle.getX() + particle.getRadius() >= W) {
+            double x = W + particle.getRadius();
+            p = new Particle(112, new Position(x, particle.getY()), 0, 0, particle.getRadius(), particle.getMass());
             p.setWall(true);
             result.add(p);
 
             // choco con pared piso
-        } else if(particle.getY() - particle.getRadius() < 0) {
+        } if (particle.getY() - particle.getRadius() < 0) {
             double y = -particle.getRadius();
-            p = new Particle(0, new Position(particle.getX(), y), 0, 0, particle.getRadius(), particle.getMass());
+            p = new Particle(113, new Position(particle.getX(), y), 0, 0, particle.getRadius(), particle.getMass());
             p.setWall(true);
             result.add(p);
 
             // choco con pared techo
         } else if (particle.getY() + particle.getRadius() >= L) {
-            double y = particle.getRadius() + L;
-            p = new Particle(0, new Position(particle.getX(), y), 0, 0, particle.getRadius(), particle.getMass());
+            double y = L + particle.getRadius();
+            p = new Particle(114, new Position(particle.getX(), y), 0, 0, particle.getRadius(), particle.getMass());
             p.setWall(true);
             result.add(p);
         }

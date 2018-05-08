@@ -144,5 +144,12 @@ public class Particle {
     public int hashCode() {
         return Objects.hash(getId());
     }
+
+    @Override
+    public String toString() {
+        return id + "\t" + position.toString();
+    }
+
+
 }
 

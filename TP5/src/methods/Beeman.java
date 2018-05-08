@@ -10,11 +10,16 @@ public class Beeman {
     private double totalTime;
     private double deltaTime;
     private Force force;
+    private int L;
+    private int W;
+    private static double coeff = 0.99;
 
-    public Beeman(Force force, double totalTime, double deltaTime) {
+    public Beeman(Force force, double totalTime, double deltaTime, int L, int W) {
         this.totalTime = totalTime;
         this.deltaTime = deltaTime;
         this.force = force;
+        this.L = L;
+        this.W = W;
     }
 
     private double calculatePositionX(Particle particle) {
@@ -56,8 +61,8 @@ public class Beeman {
         force.setForces(particle, neighbors);
         //System.out.println("Particula: " + particle.getId() + " force: " + particle.getFx() + ", " + particle.getFy());
 
-        double x = calculatePositionX(particle);
-        double y = calculatePositionY(particle);
+        double x = adjustToWallsX(calculatePositionX(particle), particle.getRadius());
+        double y = adjustToWallsY(calculatePositionY(particle), particle.getRadius());
         Position newPosition = new Position(x, y);
 
         double vx = calculateVelocityX(particle);
@@ -68,6 +73,27 @@ public class Beeman {
 
         return new Particle(particle.getId(), newPosition, vx, vy, particle.getRadius(), particle.getMass(), prevAccX, prevAccY);
 
+    }
+
+    private double adjustToWallsY(double y, double r) {
+        //piso
+        if(y - r < 0) {
+            return r*coeff;
+        }
+        // techo
+        if (y + r >= L ) {
+            return L - (r*coeff);
+        }
+        return y;
+    }
+
+    private double adjustToWallsX(double x, double r) {
+        if(x - r < 0) {
+            return r*coeff;
+        } if (x + r >= W ) {
+            return W - (r*coeff);
+        }
+        return x;
     }
 
 }

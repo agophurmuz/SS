@@ -22,7 +22,7 @@ public class app {
         int M = 5;
         double rc = maxDiameter;
         double k = 1E4;
-        double gama = 100.0;
+        double gama = 5.0;
         double totalTime = 5.0;
         double deltaTime = 1E-4;
 
@@ -34,28 +34,32 @@ public class app {
         }
         FileGenerator.addWalls(fileOutputStream, particles.size(), particlesMass, L);*/
         //CellIndexMethod method = new CellIndexMethod(BoundaryCondition.NON_PERIODIC, M, L, rc, particles);
-        Beeman beeman = new Beeman(new Force(k, gama), totalTime, deltaTime);
+        Beeman beeman = new Beeman(new Force(k, gama, deltaTime), totalTime, deltaTime, L, W);
         double time = 0;
         Particle particle1 = new Particle(0, new Position(0.1,5), 0.02, 0, 0.1, particlesMass);
         Particle particle2 = new Particle(1, new Position(0.4,5), -0.02, 0, 0.1, particlesMass);
         FileGenerator.addParticle(fileOutputStream, particle1);
         FileGenerator.addParticle(fileOutputStream, particle2);
+        int i = 0;
         while (time <= totalTime) {
             //TODO volver al iniicio en Y
             //List<Particle> nextParticles = new ArrayList<>();
             //Map<Particle, Set<Particle>> neighbors = method.getParticleNeighbors();
             //TODO chocar contra paredes
             //method.addWallParticleContact(neighbors, particles);
-            FileGenerator.addHeader(fileOutputStream, 2);
+
             /*for (Particle p : particles) {
                 Particle nextP = beeman.moveParticle(p, neighbors.get(p));
                 nextParticles.add(nextP);
                 FileGenerator.addParticle(fileOutputStream, nextP);
             }*/
 
-
-            FileGenerator.addParticle(fileOutputStream, particle1);
-            FileGenerator.addParticle(fileOutputStream, particle2);
+            if(i%100 == 0){
+                FileGenerator.addHeader(fileOutputStream, 2);
+                FileGenerator.addParticle(fileOutputStream, particle1);
+                FileGenerator.addParticle(fileOutputStream, particle2);
+            }
+            i++;
             Set<Particle> set1 = new HashSet<>();
             set1.add(particle2);
             Set<Particle> set2 = new HashSet<>();
