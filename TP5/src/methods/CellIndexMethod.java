@@ -98,11 +98,6 @@ public class CellIndexMethod {
     public void addWallParticleContact(Map<Particle, Set<Particle>> neighbors, List<Particle> particles){
         for (Particle p : particles) {
             Set<Particle> newParticles = getWallParticleContact(p);
-            //if(!neighbors.containsKey(p)) {
-              //  neighbors.put(p, new HashSet<Particle>());
-                //System.out.println(p.getId() + " " + p.getX() + " " + p.getY());
-                //System.out.println(neighbors.size());
-           // }
             neighbors.get(p).addAll(newParticles);
         }
     }
@@ -126,7 +121,7 @@ public class CellIndexMethod {
             result.add(p);
 
             // choco con pared piso
-        } if (particle.getY() - particle.getRadius() < 0) {
+        } else if (particle.getY() - particle.getRadius() < 0) {
             double y = -particle.getRadius();
             p = new Particle(113, new Position(particle.getX(), y), 0, 0, particle.getRadius(), particle.getMass());
             p.setWall(true);

@@ -22,8 +22,12 @@ public class appParticles {
         double rc = 2 * 0.1;
         double k = 1E4;
         double gama = 5.0;
+        //double gama = 2 * Math.sqrt(k * particlesMass);
         double totalTime = 5.0;
-        double deltaTime = 1E-4;
+        //double deltaTime = 1E-4;
+        double deltaTime = 3E-5;
+        //double deltaTime = 0.1 * Math.sqrt(particlesMass/k);
+        double delta2 = 100 * deltaTime;
 
         FileOutputStream fileOutputStream = FileGenerator.createOutputFilePoints("granular.xyz");
         FileOutputStream fileOutputStream1 = FileGenerator.createOutputFilePoints("neighbors.xyz");
@@ -41,10 +45,18 @@ public class appParticles {
         //FileGenerator.addParticle(fileOutputStream, particle1);
         //FileGenerator.addParticle(fileOutputStream, particle2);
         int i = 0;
+        /*Map<Particle, Set<Particle>> neighbors = method.getParticleNeighbors();
+        for (Particle p : neighbors.keySet()) {
+            FileGenerator.addPointsToFile(fileOutputStream1, neighbors, p);
+        }*/
+
         while (time <= totalTime) {
             //TODO volver al iniicio en Y
             List<Particle> nextParticles = new ArrayList<>();
             Map<Particle, Set<Particle>> neighbors = method.getParticleNeighbors();
+            for (Particle p : neighbors.keySet()) {
+                FileGenerator.addPointsToFile(fileOutputStream1, neighbors, p);
+            }
             //TODO chocar contra paredes
             method.addWallParticleContact(neighbors, particles);
             if(i%100 == 0) {
@@ -55,8 +67,8 @@ public class appParticles {
                 nextParticles.add(nextP);
                 if(i%100 == 0) {
                     FileGenerator.addParticle(fileOutputStream, nextP);
-                    FileGenerator.addPointsToFile(fileOutputStream1, neighbors, nextP);
                 }
+                //FileGenerator.addPointsToFile(fileOutputStream1, neighbors, p);
             }
             //FileGenerator.addParticle(fileOutputStream, particle1);
             //FileGenerator.addParticle(fileOutputStream, particle2);
@@ -72,11 +84,12 @@ public class appParticles {
             }
             i++;
 
-            particles = nextParticles;
+            particles = new ArrayList<>();
+            particles.addAll(nextParticles);
             method.resetParticles(nextParticles);
             time += deltaTime;
         }
         //FileGenerator.addCorners(fileOutputStream, particles.size(), L);
-        System.out.println(time);
+        //System.out.println(time);
     }
 }

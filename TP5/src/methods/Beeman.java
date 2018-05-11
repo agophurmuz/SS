@@ -61,8 +61,8 @@ public class Beeman {
         force.setForces(particle, neighbors);
         //System.out.println("Particula: " + particle.getId() + " force: " + particle.getFx() + ", " + particle.getFy());
 
-        double x = adjustToWallsX(calculatePositionX(particle), particle.getRadius());
-        double y = adjustToWallsY(calculatePositionY(particle), particle.getRadius());
+        double x = calculatePositionX(particle);
+        double y = calculatePositionY(particle);
         Position newPosition = new Position(x, y);
 
         double vx = calculateVelocityX(particle);
@@ -72,28 +72,5 @@ public class Beeman {
         double prevAccY = particle.getFy() / particle.getMass();
 
         return new Particle(particle.getId(), newPosition, vx, vy, particle.getRadius(), particle.getMass(), prevAccX, prevAccY);
-
     }
-
-    private double adjustToWallsY(double y, double r) {
-        //piso
-        if(y - r < 0) {
-            return r*coeff;
-        }
-        // techo
-        if (y + r >= L ) {
-            return L - (r*coeff);
-        }
-        return y;
-    }
-
-    private double adjustToWallsX(double x, double r) {
-        if(x - r < 0) {
-            return r*coeff;
-        } if (x + r >= W ) {
-            return W - (r*coeff);
-        }
-        return x;
-    }
-
 }

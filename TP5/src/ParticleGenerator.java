@@ -40,8 +40,8 @@ public class ParticleGenerator {
             }
             double vx;
             double vy;
-            vx = Math.random(); //* 2 * v - v;
-            vy = Math.random(); //* 2 * v - v;
+            vx = 0;//Math.random(); //* 2 * v - v;
+            vy = 0;//Math.random(); //* 2 * v - v;
 
             particles.add(new Particle(i, new Position(x2, y2), vx, vy, 0.1, massParticle));
         }

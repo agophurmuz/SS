@@ -37,7 +37,7 @@ public class app {
         Beeman beeman = new Beeman(new Force(k, gama, deltaTime), totalTime, deltaTime, L, W);
         double time = 0;
         Particle particle1 = new Particle(0, new Position(0.1,5), 0.02, 0, 0.1, particlesMass);
-        Particle particle2 = new Particle(1, new Position(0.4,5), -0.02, 0, 0.1, particlesMass);
+        Particle particle2 = new Particle(1, new Position(0.4,4.9), -0.02, 0, 0.1, particlesMass);
         FileGenerator.addParticle(fileOutputStream, particle1);
         FileGenerator.addParticle(fileOutputStream, particle2);
         int i = 0;
