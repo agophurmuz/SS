@@ -51,7 +51,7 @@ public class Force {
 
         try {
             double totalX = 0;
-            double totalY = 0;//particle.getMass() * G;
+            double totalY = particle.getMass() * G;
             for (Particle p : neighbors) {
                 if (particle.getId() != p.getId()) {
                     sup = superposition(particle, p);

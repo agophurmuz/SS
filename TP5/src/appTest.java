@@ -15,13 +15,13 @@ public class appTest {
         double particlesMass = 0.01;
         double maxDiameter = 0.3;
         double minDiameter = 0.2;
-        int cantParticles = 100;
+        int cantParticles = 10;
 
         int D = 3;
         int M = 5;
         double rc = 2 * 0.1;
         double k = 1E4;
-        double gama = 14.0;
+        double gama = 5.0;
         //double gama = 2 * Math.sqrt(k * particlesMass);
         double totalTime = 5.0;
         //double deltaTime = 1E-4;
@@ -32,10 +32,10 @@ public class appTest {
 
         FileOutputStream fileOutputStream = FileGenerator.createOutputFilePoints("granular.xyz");
         FileOutputStream fileOutputStream1 = FileGenerator.createOutputFilePoints("neighbors.xyz");
-        //List<Particle> particles = ParticleGenerator.particlesGenerator(particlesMass, D/7, D/5, cantParticles, L, W);
-        List<Particle> particles = new ArrayList<>();
-        particles.add(new Particle(0, new Position(3.0, 0.5), 0, -0.8, 0.1, particlesMass));
-        particles.add(new Particle(1, new Position(3.5, 0.3), 0, -0.8, 0.1, particlesMass));
+        List<Particle> particles = ParticleGenerator.particlesGenerator(particlesMass, D/7, D/5, cantParticles, L, W);
+        //List<Particle> particles = new ArrayList<>();
+        //particles.add(new Particle(0, new Position(3.0, 0.5), 0, -0.8, 0.1, particlesMass));
+        //particles.add(new Particle(1, new Position(3.5, 0.3), 0, -0.8, 0.1, particlesMass));
         //FileGenerator.addHeader(fileOutputStream, particles.size());
         //for (Particle p : particles) {
         //    FileGenerator.addParticle(fileOutputStream, p);
