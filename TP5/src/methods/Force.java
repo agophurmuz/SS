@@ -83,8 +83,8 @@ public class Force {
             return 0;
         }
         double prev = getPrevSup(particle,p);
-        //return (-k * sup) - (gama * ((sup - prev) / deltaTime));
-        return (-k * sup) - gama * relativeSpeed(particle,p);
+        return (-k * sup) - (gama * ((sup - prev) / deltaTime));
+        //return (-k * sup) - gama * relativeSpeed(particle,p);
     }
 
     private double relativeSpeed(Particle p1, Particle p2){
