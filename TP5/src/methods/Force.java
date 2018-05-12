@@ -58,7 +58,6 @@ public class Force {
                     totalX += getForceReceivedFrom(particle, p, k, gama) * getNormalXVector(particle,p);
                     totalY += getForceReceivedFrom(particle, p, k, gama) * getNormalYVector(particle,p);
                     addSuperposition(particle,p,sup);
-                    System.out.println(totalY);
                 }
             }
             particle.setFx(totalX);
