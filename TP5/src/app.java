@@ -8,7 +8,7 @@ import java.util.*;
 public class app {
 
     static final double L = 5.0;
-    static final int W = 3;
+    static final double W = 3.0;
     static final boolean open = true;
     static final double D = 0.5;
 
@@ -93,13 +93,13 @@ public class app {
 
         }
         if (open) {
-            if (particle.getY() - particle.getRadius() < (L / 10)) {
-                if (particle.getX() - particle.getRadius() < (W / 2 - D / 2)) {
+            if (particle.getY() - particle.getRadius() < 0) {
+                if (particle.getX() - particle.getRadius() < ((W / 2) - (D / 2))) {
                     double y = -particle.getRadius();
                     p = new Particle(113, new Position(particle.getX(), y), 0, 0, particle.getRadius(), particle.getMass());
                     p.setWall(true);
                     result.add(p);
-                } else if (particle.getX() + particle.getRadius() > (W / 2 + D / 2)) {
+                } else if (particle.getX() + particle.getRadius() > ((W / 2) + (D / 2))) {
                     double y = -particle.getRadius();
                     p = new Particle(113, new Position(particle.getX(), y), 0, 0, particle.getRadius(), particle.getMass());
                     p.setWall(true);
@@ -107,7 +107,7 @@ public class app {
                 }
             }
         } else {
-            if (particle.getY() - particle.getRadius() < (L / 10)) {
+            if (particle.getY() - particle.getRadius() < 0) {
                 double y = -particle.getRadius();
                 p = new Particle(113, new Position(particle.getX(), y), 0, 0, particle.getRadius(), particle.getMass());
                 p.setWall(true);

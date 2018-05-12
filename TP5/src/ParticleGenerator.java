@@ -8,7 +8,7 @@ import java.util.List;
 public class ParticleGenerator {
 
     private static int continuousInvalidLocations;
-    private static final Integer MAX_PARTICLES = 20;
+    private static final Integer MAX_PARTICLES = 200;
 
 
     /**
@@ -33,13 +33,11 @@ public class ParticleGenerator {
         for (int i = 1; reachedCutCondition(i,particleAmount); i++) {
             continuousInvalidLocations = 0;
             boolean validLocation = false;
-            System.out.println("Particles: " + i);
             double x2 = 0;
             double y2 = 0;
             double r2 = 0;
             while (!isFullDomain() && !validLocation) {
                 continuousInvalidLocations++;
-                System.out.println(continuousInvalidLocations);
                 // Se chequea si el x2 e y2 estan en el rango correcto
                 double diameter1 = (Math.random() * (maxDiameter - minDiameter)) + minDiameter;
                 r2 = diameter1 / 2;
