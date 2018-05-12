@@ -7,17 +7,18 @@ import java.util.*;
 
 public class appTest {
 
-    static final int L = 10;
-    static final int W = 6;
+    static final int L = 5;
+    static final int W = 2;
     static final boolean open = true;
-    static final double D = 2;
+    static final double D = 0.5;
+    static final double l = 5.0;
 
     public static void main(String[] args) {
 
         double particlesMass = 0.01;
         double maxDiameter = 0.03;
         double minDiameter = 0.02;
-        int cantParticles = 20;
+        int cantParticles = 10;
 
         int M = 5;
         //double rc = 2 * 0.1;
@@ -30,7 +31,7 @@ public class appTest {
         double deltaTime = 3E-5;
         //double deltaTime = 0.1 * Math.sqrt(particlesMass/k);
         double delta2 = 100 * deltaTime;
-        double l = 10.0 + L/10.0;
+        double l = 10.0;
 
         FileOutputStream fileOutputStream = FileGenerator.createOutputFilePoints("granular.xyz");
         List<Particle> particles = ParticleGenerator.particlesGenerator(particlesMass, minDiameter, maxDiameter, cantParticles, L, W);
@@ -61,12 +62,6 @@ public class appTest {
             }
             i++;
 
-            for (Particle p : nextParticles) {
-                if(p.isOutOfSilo()) {
-                    realocate(p);
-                }
-            }
-
             particles = new ArrayList<>();
             particles.addAll(nextParticles);
             method.reloadMatrix(nextParticles);
@@ -74,17 +69,6 @@ public class appTest {
         }
     }
 
-    private static void realocate(Particle p) {
-        p.setVx(0);
-        p.setVy(0);
-        p.setPrevAccX(0);
-        p.setPrevAccY(0);
-        p.setFx(0);
-        p.setFy(0);
-        double x = Math.random() * (W - (2 * p.getRadius())) + p.getRadius();
-        double y = L;
-        p.setPosition(new Position(x, y));
-    }
 
     public static void addWallParticleContact(Map<Particle, Set<Particle>> neighbors, List<Particle> particles){
         for (Particle p : particles) {
@@ -114,7 +98,7 @@ public class appTest {
 
         }
         if (open) {
-            if (particle.getY() - particle.getRadius() < (L / 10)) {
+            if (particle.getY() - particle.getRadius() < 0) {
                 if (particle.getX() - particle.getRadius() < (W / 2 - D / 2)) {
                     double y = -particle.getRadius();
                     p = new Particle(113, new Position(particle.getX(), y), 0, 0, particle.getRadius(), particle.getMass());
@@ -126,12 +110,11 @@ public class appTest {
                     p.setWall(true);
                     result.add(p);
                 }
-            } else if(particle.getY() - particle.getRadius() < 0){
+            } /*else if(particle.getY() - particle.getRadius() < -(l/10)){
                 particle.setOutOfSilo(true);
-                System.out.println("out silo");
-            }
+            }*/
         } else {
-            if (particle.getY() - particle.getRadius() < (L/10)) {
+            if (particle.getY() - particle.getRadius() < 0) {
                 double y = -particle.getRadius();
                 p = new Particle(113, new Position(particle.getX(), y), 0, 0, particle.getRadius(), particle.getMass());
                 p.setWall(true);

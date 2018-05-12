@@ -1,7 +1,5 @@
 package models;
 
-import methods.Force;
-
 import java.util.Objects;
 
 public class Particle {
@@ -17,7 +15,6 @@ public class Particle {
     private double fx;
     private double fy;
     private boolean isWall;
-    private boolean outOfSilo = false;
 
     public Particle(int id, Position position, double vx, double vy, double radius, double mass) {
         this.id = id;
@@ -39,14 +36,6 @@ public class Particle {
         this.mass = mass;
         this.prevAccX = prevAccX;
         this.prevAccY = prevAccY;
-    }
-
-    public boolean isOutOfSilo() {
-        return outOfSilo;
-    }
-
-    public void setOutOfSilo(boolean outOfSilo) {
-        this.outOfSilo = outOfSilo;
     }
 
     public int getId() {

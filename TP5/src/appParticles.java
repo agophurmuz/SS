@@ -31,19 +31,22 @@ public class appParticles {
 
         FileOutputStream fileOutputStream = FileGenerator.createOutputFilePoints("granular.xyz");
         FileOutputStream fileOutputStream1 = FileGenerator.createOutputFilePoints("neighbors.xyz");
-        List<Particle> particles = ParticleGenerator.particlesGenerator(particlesMass, D/7, D/5, cantParticles, L, W);
-        FileGenerator.addHeader(fileOutputStream, particles.size());
-        for (Particle p : particles) {
-            FileGenerator.addParticle(fileOutputStream, p);
-        }
-        FileGenerator.addWalls(fileOutputStream, particles.size(), particlesMass, L, W);
+        //List<Particle> particles = ParticleGenerator.particlesGenerator(particlesMass, D/7, D/5, cantParticles, L, W);
+        //FileGenerator.addHeader(fileOutputStream, particles.size());
+        //for (Particle p : particles) {
+        //    FileGenerator.addParticle(fileOutputStream, p);
+        //}
+        //FileGenerator.addWalls(fileOutputStream, particles.size(), particlesMass, L, W);
+        List<Particle> particles = new ArrayList<>();
+        Particle particle1 = new Particle(0, new Position(1,5), 0.02, 0, 1, particlesMass);
+        Particle particle2 = new Particle(1, new Position(2,5), -0.02, 0, 1, particlesMass);
+        FileGenerator.addParticle(fileOutputStream, particle1);
+        FileGenerator.addParticle(fileOutputStream, particle2);
+        particles.add(particle1);
+        particles.add(particle2);
         CellIndexMethod method = new CellIndexMethod(BoundaryCondition.NON_PERIODIC, M, L, rc, particles, W);
         Beeman beeman = new Beeman(new Force(k, gama, deltaTime), totalTime, deltaTime, L, W);
         double time = 0;
-        //Particle particle1 = new Particle(0, new Position(1,5), 0.02, 0, 1, particlesMass);
-        //Particle particle2 = new Particle(1, new Position(2,5), -0.02, 0, 1, particlesMass);
-        //FileGenerator.addParticle(fileOutputStream, particle1);
-        //FileGenerator.addParticle(fileOutputStream, particle2);
         int i = 0;
         /*Map<Particle, Set<Particle>> neighbors = method.getParticleNeighbors();
         for (Particle p : neighbors.keySet()) {
