@@ -7,19 +7,18 @@ import java.util.*;
 
 public class app {
 
-    static final int L = 10;
-    static final int W = 6;
+    static final double L = 5.0;
+    static final int W = 3;
     static final boolean open = true;
-    static final double D = 2;
+    static final double D = 0.5;
 
     public static void main(String[] args) {
 
         double particlesMass = 0.01;
         double maxDiameter = 0.03;
         double minDiameter = 0.02;
-        int cantParticles = 20;
 
-        int M = 5;
+        int M = 1;
         //double rc = 2 * 0.1;
         double rc = maxDiameter;
         double k = 1E4;
@@ -30,10 +29,9 @@ public class app {
         double deltaTime = 3E-5;
         //double deltaTime = 0.1 * Math.sqrt(particlesMass/k);
         double delta2 = 100 * deltaTime;
-        double l = 10.0 + L / 10.0;
 
         FileOutputStream fileOutputStream = FileGenerator.createOutputFilePoints("granular.xyz");
-        List<Particle> particles = ParticleGenerator.particlesGenerator(particlesMass, minDiameter, maxDiameter, cantParticles, L, W);
+        List<Particle> particles = ParticleGenerator.generateParticles(particlesMass, minDiameter, maxDiameter, L, W);
         CellIndexMethod method = new CellIndexMethod(false, M, L, rc, particles);
         Beeman beeman = new Beeman(new ForceCalculation(k, gama, deltaTime), deltaTime);
         double time = 0;

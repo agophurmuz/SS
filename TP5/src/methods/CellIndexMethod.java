@@ -16,7 +16,7 @@ public class CellIndexMethod {
     protected boolean periodicBoundaryCondition = false;
 
 
-    public CellIndexMethod(boolean periodicBoundaryCondition, int M, int L, double rc, List<Particle> particles) {
+    public CellIndexMethod(boolean periodicBoundaryCondition, int M, double L, double rc, List<Particle> particles) {
         this.M = M;
         this.rc = rc;
         this.L = L;
@@ -25,7 +25,6 @@ public class CellIndexMethod {
         this.periodicBoundaryCondition = periodicBoundaryCondition;
         populateDomain(M, particles);
     }
-
 
     private void validateParameters() {
         if (M <= 0) {
