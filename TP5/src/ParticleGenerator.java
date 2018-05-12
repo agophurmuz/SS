@@ -13,7 +13,7 @@ public class ParticleGenerator {
         double diameter = (Math.random() * (maxDiameter - minDiameter)) + minDiameter;
         double r = diameter / 2;
         double x1 = Math.random() * (W - (2 * r)) + r;
-        double y1 = Math.random() * ((L - L/10) - (2 * r )) + r + (L/10);
+        double y1 = Math.random() * ((L - L / 10) - (2 * r)) + r + (L / 10);
         double vx1 = Math.random(); //* 2 * v - v;
         double vy1 = Math.random(); //* 2 * v - v;
         particles.add(new Particle(0, new Position(x1, y1), vx1, vy1, r, massParticle));
@@ -29,7 +29,7 @@ public class ParticleGenerator {
                 double diameter1 = (Math.random() * (maxDiameter - minDiameter)) + minDiameter;
                 r2 = diameter1 / 2;
                 x2 = Math.random() * (W - (2 * r2)) + r2;
-                y2 = Math.random() * ((L - L/10) - (2 * r2)) + r2 + (L/10);
+                y2 = Math.random() * ((L - L / 10) - (2 * r2)) + r2 + (L / 10);
                 //}while (x2>L || y2>L || x2>0 || y2>0 );
                 int j = 0;
                 validLocation = true;

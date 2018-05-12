@@ -1,7 +1,5 @@
 package models;
 
-import methods.Force;
-
 import java.util.Objects;
 
 public class Particle {
