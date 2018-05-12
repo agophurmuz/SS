@@ -32,7 +32,7 @@ public class FileGenerator {
         }
     }
 
-    public static void addWalls(FileOutputStream fileOutputStream, int cant, double mass, int L, int W) {
+    public static void addWalls(FileOutputStream fileOutputStream, int cant, double mass, double L, int W) {
         try {
 
             StringBuilder sb = new StringBuilder();

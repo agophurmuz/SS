@@ -1,7 +1,4 @@
-import methods.Beeman;
-import methods.BoundaryCondition;
-import methods.CellIndexMethod;
-import methods.Force;
+import methods.*;
 import models.Particle;
 import models.Position;
 
@@ -10,71 +7,113 @@ import java.util.*;
 
 public class app {
 
+    static final double L = 5.0;
+    static final int W = 3;
+    static final boolean open = true;
+    static final double D = 0.5;
+
     public static void main(String[] args) {
 
         double particlesMass = 0.01;
-        double maxDiameter = 0.3;
-        double minDiameter = 0.2;
-        int cantParticles = 10;
-        int L = 10;
-        int W = 5;
-        int D = 3;
-        int M = 5;
+        double maxDiameter = 0.03;
+        double minDiameter = 0.02;
+
+        int M = 1;
+        //double rc = 2 * 0.1;
         double rc = maxDiameter;
         double k = 1E4;
         double gama = 5.0;
+        //double gama = 2 * Math.sqrt(k * particlesMass);
         double totalTime = 5.0;
-        double deltaTime = 1E-4;
+        //double deltaTime = 1E-4;
+        double deltaTime = 3E-5;
+        //double deltaTime = 0.1 * Math.sqrt(particlesMass/k);
+        double delta2 = 100 * deltaTime;
 
         FileOutputStream fileOutputStream = FileGenerator.createOutputFilePoints("granular.xyz");
-        //List<Particle> particles = ParticleGenerator.particlesGenerator(particlesMass, D/7, D/5, cantParticles, L, W);
-        FileGenerator.addHeader(fileOutputStream, 2);
-        /*for (Particle p : particles) {
-            FileGenerator.addParticle(fileOutputStream, p);
-        }
-        FileGenerator.addWalls(fileOutputStream, particles.size(), particlesMass, L);*/
-        //CellIndexMethod method = new CellIndexMethod(BoundaryCondition.NON_PERIODIC, M, L, rc, particles);
-        Beeman beeman = new Beeman(new Force(k, gama, deltaTime), totalTime, deltaTime, L, W);
+        List<Particle> particles = ParticleGenerator.generateParticles(particlesMass, minDiameter, maxDiameter, L, W, 10);
+        CellIndexMethod method = new CellIndexMethod(false, M, L, rc, particles);
+        Beeman beeman = new Beeman(new ForceCalculation(k, gama, deltaTime), deltaTime, L, W);
         double time = 0;
-        Particle particle1 = new Particle(0, new Position(0.1,5), 0.02, 0, 0.1, particlesMass);
-        Particle particle2 = new Particle(1, new Position(0.4,4.9), -0.02, 0, 0.1, particlesMass);
-        FileGenerator.addParticle(fileOutputStream, particle1);
-        FileGenerator.addParticle(fileOutputStream, particle2);
         int i = 0;
-        while (time <= totalTime) {
-            //TODO volver al iniicio en Y
-            //List<Particle> nextParticles = new ArrayList<>();
-            //Map<Particle, Set<Particle>> neighbors = method.getParticleNeighbors();
-            //TODO chocar contra paredes
-            //method.addWallParticleContact(neighbors, particles);
 
-            /*for (Particle p : particles) {
+        while (time <= totalTime) {
+            List<Particle> nextParticles = new ArrayList<>();
+            Map<Particle, Set<Particle>> neighbors = method.getParticleNeighbors(particles);
+            addWallParticleContact(neighbors, particles);
+            if (i % 200 == 0) {
+                FileGenerator.addHeader(fileOutputStream, particles.size());
+            }
+            for (Particle p : particles) {
                 Particle nextP = beeman.moveParticle(p, neighbors.get(p));
                 nextParticles.add(nextP);
-                FileGenerator.addParticle(fileOutputStream, nextP);
-            }*/
+                if (i % 200 == 0) {
+                    FileGenerator.addParticle(fileOutputStream, nextP);
+                }
+            }
 
-            if(i%100 == 0){
-                FileGenerator.addHeader(fileOutputStream, 2);
-                FileGenerator.addParticle(fileOutputStream, particle1);
-                FileGenerator.addParticle(fileOutputStream, particle2);
+            if (i % 200 == 0) {
+                FileGenerator.addWalls(fileOutputStream, particles.size(), particlesMass, L, W);
             }
             i++;
-            Set<Particle> set1 = new HashSet<>();
-            set1.add(particle2);
-            Set<Particle> set2 = new HashSet<>();
-            set2.add(particle1);
-            particle1 = beeman.moveParticle(particle1, set1);
-            particle2 = beeman.moveParticle(particle2, set2);
 
 
-            //FileGenerator.addWalls(fileOutputStream, particles.size(), particlesMass, L);
-
-            //particles = nextParticles;
-            //method.resetParticles(nextParticles);
+            particles = new ArrayList<>();
+            particles.addAll(nextParticles);
+            method.resetParticles(nextParticles);
             time += deltaTime;
         }
-        //FileGenerator.addCorners(fileOutputStream, particles.size(), L);
-        System.out.println(time);
+    }
+
+
+    public static void addWallParticleContact(Map<Particle, Set<Particle>> neighbors, List<Particle> particles) {
+        for (Particle p : particles) {
+            Set<Particle> newParticles = getWallParticleContact(p);
+            neighbors.get(p).addAll(newParticles);
+        }
+    }
+
+    public static Set<Particle> getWallParticleContact(Particle particle) {
+        Particle p;
+        Set<Particle> result = new HashSet<>();
+        if (particle.getX() - particle.getRadius() < 0) {
+            // choco con pared Izq
+            double x = -particle.getRadius();
+            p = new Particle(111, new Position(x, particle.getY()), 0, 0, particle.getRadius(), particle.getMass());
+            p.setWall(true);
+            result.add(p);
+
+            // choco con pared Derecha
+        } else if (particle.getX() + particle.getRadius() >= W) {
+            double x = W + particle.getRadius();
+            p = new Particle(112, new Position(x, particle.getY()), 0, 0, particle.getRadius(), particle.getMass());
+            p.setWall(true);
+            result.add(p);
+
+
+        }
+        if (open) {
+            if (particle.getY() - particle.getRadius() < (L / 10)) {
+                if (particle.getX() - particle.getRadius() < (W / 2 - D / 2)) {
+                    double y = -particle.getRadius();
+                    p = new Particle(113, new Position(particle.getX(), y), 0, 0, particle.getRadius(), particle.getMass());
+                    p.setWall(true);
+                    result.add(p);
+                } else if (particle.getX() + particle.getRadius() > (W / 2 + D / 2)) {
+                    double y = -particle.getRadius();
+                    p = new Particle(113, new Position(particle.getX(), y), 0, 0, particle.getRadius(), particle.getMass());
+                    p.setWall(true);
+                    result.add(p);
+                }
+            }
+        } else {
+            if (particle.getY() - particle.getRadius() < (L / 10)) {
+                double y = -particle.getRadius();
+                p = new Particle(113, new Position(particle.getX(), y), 0, 0, particle.getRadius(), particle.getMass());
+                p.setWall(true);
+                result.add(p);
+            }
+        }
+        return result;
     }
 }

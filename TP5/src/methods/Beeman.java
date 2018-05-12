@@ -7,17 +7,14 @@ import java.util.Set;
 
 public class Beeman {
 
-    private double totalTime;
     private double deltaTime;
-    private Force force;
-    private int L;
-    private int W;
-    private static double coeff = 0.99;
+    private ForceCalculation forceCalculation;
+    private double L;
+    private double W;
 
-    public Beeman(Force force, double totalTime, double deltaTime, int L, int W) {
-        this.totalTime = totalTime;
+    public Beeman(ForceCalculation forceCalculation, double deltaTime, double L, double W) {
         this.deltaTime = deltaTime;
-        this.force = force;
+        this.forceCalculation = forceCalculation;
         this.L = L;
         this.W = W;
     }
@@ -32,11 +29,6 @@ public class Beeman {
                 - (particle.getPrevAccY() * Math.pow(deltaTime, 2)) / 6;
     }
 
-
-    protected String getName() {
-        return "Beeman";
-    }
-
     private double calculateAccelerationX(Particle particle) {
         return particle.getFx() / particle.getMass();
     }
@@ -48,18 +40,18 @@ public class Beeman {
 
     private double calculateVelocityX(Particle particle) {
         return particle.getVx() + ((calculateAccelerationX(particle) * deltaTime) / 3
-                + (5 * calculateAccelerationX(particle) * deltaTime) / 6 - (particle.getPrevAccX() * deltaTime) / 6 );
+                + (5 * calculateAccelerationX(particle) * deltaTime) / 6 - (particle.getPrevAccX() * deltaTime) / 6);
     }
 
     private double calculateVelocityY(Particle particle) {
         return particle.getVy() + ((calculateAccelerationY(particle) * deltaTime) / 3
-                + (5 * calculateAccelerationY(particle) * deltaTime) / 6 - (particle.getPrevAccY() * deltaTime) / 6 );
+                + (5 * calculateAccelerationY(particle) * deltaTime) / 6 - (particle.getPrevAccY() * deltaTime) / 6);
     }
 
     public Particle moveParticle(Particle particle, Set<Particle> neighbors) {
 
-        force.setForces(particle, neighbors);
-        //System.out.println("Particula: " + particle.getId() + " force: " + particle.getFx() + ", " + particle.getFy());
+        forceCalculation.setForces(particle, neighbors);
+        //System.out.println("Particula: " + particle.getId() + " forceCalculation: " + particle.getFx() + ", " + particle.getFy());
 
         double x = calculatePositionX(particle);
         double y = calculatePositionY(particle);
