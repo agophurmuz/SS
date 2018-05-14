@@ -36,10 +36,10 @@ public class FileGenerator {
         try {
 
             StringBuilder sb = new StringBuilder();
-            sb.append(cant + "\t" +  0 + "\t" + 0 + "\t" + 0 + "\t" + 0 + "\t" + 0.1 + "\n");
-            sb.append(cant + "\t" +  0 + "\t" + L + "\t" + 0 + "\t" + 0 + "\t" + 0.1 + "\n");
-            sb.append(cant + "\t" +  W + "\t" + 0 + "\t" + 0 + "\t" + 0 + "\t" + 0.1 + "\n");
-            sb.append(cant + "\t" +  W + "\t" + L + "\t" + 0 + "\t" + 0 + "\t" + 0.1 + "\n");
+            sb.append(cant + "\t" +  0 + "\t" + 0 + "\t" + 0 + "\t" + 0 + "\t" + 0.001 + "\n");
+            sb.append(cant + "\t" +  0 + "\t" + L + "\t" + 0 + "\t" + 0 + "\t" + 0.001 + "\n");
+            sb.append(cant + "\t" +  W + "\t" + 0 + "\t" + 0 + "\t" + 0 + "\t" + 0.001 + "\n");
+            sb.append(cant + "\t" +  W + "\t" + L + "\t" + 0 + "\t" + 0 + "\t" + 0.001 + "\n");
             fileOutputStream.write(sb.toString().getBytes());
         } catch (IOException e) {
             e.printStackTrace();
@@ -100,5 +100,15 @@ public class FileGenerator {
 
     private static String printLine(Particle particle, Color color) {
         return particle.toString() + "\t" + color.getRed() + "\t" + color.getGreen() + "\t" + color.getBlue() + "\n";
+    }
+
+    public static void addCaudal(FileOutputStream fileOutputStreamCaudal, double time, int caudal) {
+        try {
+            StringBuilder sb = new StringBuilder();
+            sb.append(time + "\t" +  caudal + "\n");
+            fileOutputStreamCaudal.write(sb.toString().getBytes());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

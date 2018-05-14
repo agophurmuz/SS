@@ -3,6 +3,7 @@ package methods;
 import models.Particle;
 import models.Position;
 
+import java.util.List;
 import java.util.Set;
 
 public class Beeman {
@@ -48,33 +49,21 @@ public class Beeman {
                 + (5 * calculateAccelerationY(particle) * deltaTime) / 6 - (particle.getPrevAccY() * deltaTime) / 6);
     }
 
-    public Particle moveParticle(Particle particle, Set<Particle> neighbors) {
+    public Particle moveParticle(Particle particle, Set<Particle> neighbors, List<Particle> particles) {
 
         forceCalculation.setForces(particle, neighbors);
         //System.out.println("Particula: " + particle.getId() + " forceCalculation: " + particle.getFx() + ", " + particle.getFy());
 
         double x = calculatePositionX(particle);
         double y = calculatePositionY(particle);
-        if(positionIsValid(x, y, particle.getRadius())) {
-            Position<Double> newPosition = new Position<>(x, y);
-            double vx = calculateVelocityX(particle);
-            double vy = calculateVelocityY(particle);
+        Position<Double> newPosition = new Position<>(x, y);
+        double vx = calculateVelocityX(particle);
+        double vy = calculateVelocityY(particle);
 
-            double prevAccX = particle.getFx() / particle.getMass();
-            double prevAccY = particle.getFy() / particle.getMass();
+        double prevAccX = particle.getFx() / particle.getMass();
+        double prevAccY = particle.getFy() / particle.getMass();
 
-            return new Particle(particle.getId(), newPosition, vx, vy, particle.getRadius(), particle.getMass(), prevAccX, prevAccY);
-        }
-        return realocatedParticle(particle.getId(), particle.getRadius(), particle.getMass());
+        return new Particle(particle.getId(), newPosition, vx, vy, particle.getRadius(), particle.getMass(), prevAccX, prevAccY);
     }
 
-    private Particle realocatedParticle(int id, double radius, double mass) {
-        double x = Math.random() * (W - (2 * radius) + radius);
-        double y = 3;
-        return new Particle(id, new Position(x, y), 0, 0, radius, mass, 0, 0);
-    }
-
-    private boolean positionIsValid(double x, double y, double r) {
-        return (y - r) > -(L/10);
-    }
 }
