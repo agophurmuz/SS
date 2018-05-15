@@ -110,21 +110,24 @@ public class app {
     }
 
     private static Particle realocatedParticle(Particle p, Set<Particle> particles) {
-        double x = Math.random() * (W - (2 * p.getRadius()) + p.getRadius());
-        Particle maxHeightParticle = getMaxHeightParticle(particles, x, p.getRadius());
-        double y;
-        if (maxHeightParticle == null) {
-            y = L;
-        } else {
-            y = maxHeightParticle.getY() + maxHeightParticle.getRadius();
-        }
-        y = y + 2 * p.getRadius();
+        double x,y;
+        int tries = 0;
+        do{
+            x = Math.random() * (W - (2 * p.getRadius()) + p.getRadius()+ 0.01);
+
+            Particle maxHeightParticle =getMaxHeightParticle(particles, x, p.getRadius());
+            if (tries>=10000 || maxHeightParticle == null ){
+                y = L*1.4+Math.random()*0.2 + p.getRadius();
+                break;
+            }else{
+                y = Math.min((Math.random()*L*0.25+0.9*L),maxHeightParticle.getY()+ maxHeightParticle.getRadius());
+            }
+
+            tries++;
+        }while(ParticleGenerator.isInvalidLocation(x,y,p.getRadius(),new ArrayList<>(particles)) );
+
         return new Particle(p.getId(), new Position(x, y), 0, 0, p.getRadius(), p.getMass(), 0, 0);
-        //p.setPosition(new Position(x, y ));
-        // p.setPrevAccY(0);
-        //p.setPrevAccX(0);
-        //p.setVy(0);
-        //p.setVx(0);
+
     }
 
     private static Particle getMaxHeightParticle(Set<Particle> particles, double x, double r) {
