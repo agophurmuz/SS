@@ -18,3 +18,4 @@ target/
 *.xyz
 *.txt
 *.csv
+*.tsv
