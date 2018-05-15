@@ -25,7 +25,7 @@ public class app {
         double particlesMass = 0.01;
         int caudal = 0;
 
-        int M = 1;
+        int M = 15;
         //double rc = 2 * 0.1;
         double rc = maxDiameter;
         double k = 1E5;
@@ -57,7 +57,7 @@ public class app {
         int i = 0;
 
         while (time <= totalTime) {
-            realocationParticles(particles, caudal);
+            particles = realocationParticles(particles, caudal);
             List<Particle> nextParticles = new ArrayList<>();
             Map<Particle, Set<Particle>> neighbors = method.getParticleNeighbors(particles);
             addWallParticleContact(neighbors, particles);
@@ -86,39 +86,43 @@ public class app {
             particles.addAll(nextParticles);
             method.resetParticles(nextParticles);
             time += deltaTime;
-
+            System.out.println(time/totalTime);
         }
             writeKineticEnergyLogFile(energyFileLog);
     }
 
-    private static void realocationParticles(List<Particle> particles, int caudal) {
+    private static List<Particle> realocationParticles(List<Particle> particles, int caudal) {
+        Set<Particle> newParticles = new HashSet<>(particles);
         for (Particle p : particles) {
             if(outOfSilo(p)){
-                realocatedParticle(p, particles);
+                newParticles.remove(p);
+               Particle realocParticle = realocatedParticle(p, newParticles);
+               newParticles.add(realocParticle);
                 caudal++;
             }
-
         }
+        return new ArrayList<>(newParticles);
     }
 
-    private static void realocatedParticle(Particle p, List<Particle> particles) {
+    private static Particle realocatedParticle(Particle p, Set<Particle> particles) {
         double x = Math.random() * (W - (2 * p.getRadius()) + p.getRadius());
         Particle maxHeightParticle = getMaxHeightParticle(particles, x, p.getRadius());
         double y;
         if(maxHeightParticle == null){
             y = L;
         } else {
-            y = Math.max(maxHeightParticle.getY() + maxHeightParticle.getRadius(), L);
+            y = maxHeightParticle.getY() + maxHeightParticle.getRadius();
         }
         y = y + 2 * p.getRadius();
-        p.setPosition(new Position(x, y ));
-        p.setPrevAccY(0);
-        p.setPrevAccX(0);
-        p.setVy(0);
-        p.setVx(0);
+        return new Particle(p.getId(), new Position(x, y), 0, 0, p.getRadius(), p.getMass(), 0, 0);
+        //p.setPosition(new Position(x, y ));
+       // p.setPrevAccY(0);
+        //p.setPrevAccX(0);
+        //p.setVy(0);
+        //p.setVx(0);
     }
 
-    private static Particle getMaxHeightParticle(List<Particle> particles, double x, double r) {
+    private static Particle getMaxHeightParticle(Set<Particle> particles, double x, double r) {
         double aux = 0;
         Particle p = null;
         for (Particle particle : particles) {
