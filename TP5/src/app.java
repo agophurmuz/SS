@@ -19,11 +19,11 @@ public class app {
     static final double maxDiameter = 0.03;
     static final double minDiameter = 0.02;
     static final double EPSILON = 0.00001;
+    static int caudal = 0;
 
     public static void main(String[] args) {
 
         double particlesMass = 0.01;
-        int caudal = 0;
 
         int M = 15;
         //double rc = 2 * 0.1;
@@ -36,17 +36,19 @@ public class app {
         double deltaTime = 1E-5;
         //double deltaTime = 0.1 * Math.sqrt(particlesMass/k);
         //double delta2 = 0.02;
-        double delta2 = 0.2;
+        double delta2 = 0.1;
         boolean energyPrint = true;
         boolean caudalPrint = false;
         boolean simulationPrint = true;
 
         FileOutputStream fileOutputStream = FileGenerator.createOutputFilePoints("granular.xyz");
-        FileOutputStream fileOutputStreamCaudal = FileGenerator.createOutputFilePoints("caudal.tsv");
-        List<String> energyFileLog= new ArrayList<String>();
+        List<String> energyFileLog = new ArrayList<String>();
         energyFileLog.add("Tiempo" + "\t" + "Energía" + "\t" + "Energía total");
+        List<String> caudalFileLog = new ArrayList<String>();
+        caudalFileLog.add("Tiempo" + "\t" + "Caudal");
         List<Particle> particles = ParticleGenerator.generateParticles(particlesMass, minDiameter, maxDiameter, L, W);
         FileGenerator.addHeader(fileOutputStream, particles.size());
+
         for (Particle p : particles) {
             FileGenerator.addParticle(fileOutputStream, p);
         }
@@ -57,7 +59,7 @@ public class app {
         int i = 0;
 
         while (time <= totalTime) {
-            particles = realocationParticles(particles, caudal);
+            particles = realocationParticles(particles);
             List<Particle> nextParticles = new ArrayList<>();
             Map<Particle, Set<Particle>> neighbors = method.getParticleNeighbors(particles);
             addWallParticleContact(neighbors, particles);
@@ -77,27 +79,30 @@ public class app {
             }
             i++;
 
-            if((Math.abs(time/delta2 - Math.round(time/delta2)) < EPSILON) && energyPrint) {
-                double energy = computeKineticEnergy(particles);
-                energyFileLog.add(Math.round(time * 1000.0) / 1000.0 + "\t" + energy + "\t" + (energy * particles.size()));
-            }
-
             particles = new ArrayList<>();
             particles.addAll(nextParticles);
             method.resetParticles(nextParticles);
+
+            if ((Math.abs(time / delta2 - Math.round(time / delta2)) < EPSILON) && energyPrint) {
+                double energy = computeKineticEnergy(particles);
+                energyFileLog.add(Math.round(time * 1000.0) / 1000.0 + "\t" + energy + "\t" + (energy * particles.size()));
+                caudalFileLog.add(Math.round(time * 1000.0) / 1000.0 + "\t" + caudal);
+            }
+
             time += deltaTime;
-            System.out.println(time/totalTime);
+            System.out.println(time / totalTime);
         }
-            writeKineticEnergyLogFile(energyFileLog);
+        writeKineticEnergyLogFile(energyFileLog);
+        writeCaudalLogFile(caudalFileLog);
     }
 
-    private static List<Particle> realocationParticles(List<Particle> particles, int caudal) {
+    private static List<Particle> realocationParticles(List<Particle> particles) {
         Set<Particle> newParticles = new HashSet<>(particles);
         for (Particle p : particles) {
-            if(outOfSilo(p)){
+            if (outOfSilo(p)) {
                 newParticles.remove(p);
-               Particle realocParticle = realocatedParticle(p, newParticles);
-               newParticles.add(realocParticle);
+                Particle realocParticle = realocatedParticle(p, newParticles);
+                newParticles.add(realocParticle);
                 caudal++;
             }
         }
@@ -108,7 +113,7 @@ public class app {
         double x = Math.random() * (W - (2 * p.getRadius()) + p.getRadius());
         Particle maxHeightParticle = getMaxHeightParticle(particles, x, p.getRadius());
         double y;
-        if(maxHeightParticle == null){
+        if (maxHeightParticle == null) {
             y = L;
         } else {
             y = maxHeightParticle.getY() + maxHeightParticle.getRadius();
@@ -116,7 +121,7 @@ public class app {
         y = y + 2 * p.getRadius();
         return new Particle(p.getId(), new Position(x, y), 0, 0, p.getRadius(), p.getMass(), 0, 0);
         //p.setPosition(new Position(x, y ));
-       // p.setPrevAccY(0);
+        // p.setPrevAccY(0);
         //p.setPrevAccX(0);
         //p.setVy(0);
         //p.setVx(0);
@@ -135,9 +140,8 @@ public class app {
     }
 
     private static boolean outOfSilo(Particle p) {
-        return (p.getY() - p.getRadius()) < -(L/10);
+        return (p.getY() - p.getRadius()) < -(L / 10);
     }
-
 
 
     public static void addWallParticleContact(Map<Particle, Set<Particle>> neighbors, List<Particle> particles) {
@@ -173,7 +177,7 @@ public class app {
                     p = new Particle(cantParticles + 3, new Position(particle.getX(), y), 0, 0, particle.getRadius(), particle.getMass());
                     p.setWall(true);
                     result.add(p);
-                } else if(isAtRightOpeningBorder(particle) && getDistance(particle, (W / 2) - (D / 2), maxDiameter) < particle.getRadius()) {
+                } else if (isAtRightOpeningBorder(particle) && getDistance(particle, (W / 2) - (D / 2), maxDiameter) < particle.getRadius()) {
                     double y = maxDiameter;
                     p = new Particle(cantParticles + 4, new Position((W / 2) - (D / 2), y), 0, 0, 0, particle.getMass());
                     p.setWall(true);
@@ -213,10 +217,10 @@ public class app {
     }
 
     private static double getDistance(Particle particle, double x, double y) {
-        return Math.sqrt(Math.pow(particle.getX() - x, 2) + Math.pow(particle.getY() - y , 2));
+        return Math.sqrt(Math.pow(particle.getX() - x, 2) + Math.pow(particle.getY() - y, 2));
     }
 
-    private static double computeKineticEnergy(List<Particle> particles){
+    private static double computeKineticEnergy(List<Particle> particles) {
         double kineticEnergy = 0;
         for (Particle p : particles) {
             // 1/2*m*pow(v,2) where v is sqrt(pow(vx,2)+pow(vy,2))
@@ -225,11 +229,20 @@ public class app {
         return kineticEnergy / particles.size();
     }
 
-    private static void writeKineticEnergyLogFile(List<String>lines){
+    private static void writeKineticEnergyLogFile(List<String> lines) {
         Path file = Paths.get("energy.tsv");
         try {
             Files.write(file, lines, Charset.forName("UTF-8"));
-        }catch (Exception e){
+        } catch (Exception e) {
+
+        }
+    }
+
+    private static void writeCaudalLogFile(List<String> caudalFileLog) {
+        Path file = Paths.get("caudal.tsv");
+        try {
+            Files.write(file, caudalFileLog, Charset.forName("UTF-8"));
+        } catch (Exception e) {
 
         }
     }
