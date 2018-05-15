@@ -8,15 +8,17 @@ import java.util.Set;
 public class ForceCalculation {
 
 
-    private double k;
+    private double kn;
+    private double kt;
     private double gama;
     private double sup;
     private double deltaTime;
     private static final double G = -10;
     private HashMap<String, Double> prevSuperpositions;
 
-    public ForceCalculation(double k, double gama, double deltaTime) {
-        this.k = k;
+    public ForceCalculation(double kn, double gama, double deltaTime) {
+        this.kn = kn;
+        this.kt = 2*kn;
         this.gama = gama;
         this.sup = 0;
         this.deltaTime = deltaTime;
@@ -52,8 +54,10 @@ public class ForceCalculation {
             for (Particle p : neighbors) {
                 if (particle.getId() != p.getId()) {
                     sup = superposition(particle, p);
-                    totalX += getForceReceivedFrom(particle, p, k, gama) * getNormalXVector(particle, p);
-                    totalY += getForceReceivedFrom(particle, p, k, gama) * getNormalYVector(particle, p);
+                    totalX += getNornalForceReceivedFrom(particle, p) * getNormalXVector(particle, p)
+                            + getTanForceReceivedFrom(particle, p) * (-getNormalYVector(particle, p));
+                    totalY += getNornalForceReceivedFrom(particle, p) * getNormalYVector(particle, p)
+                            + getTanForceReceivedFrom(particle, p) * getNormalXVector(particle, p);
                     addSuperposition(particle, p, sup);
                 }
             }
@@ -72,13 +76,22 @@ public class ForceCalculation {
         return (p.getY() - particle.getY()) / getDistance(particle, p);
     }
 
-    private double getForceReceivedFrom(Particle particle, Particle p, double k, double gama) {
+    private double getNornalForceReceivedFrom(Particle particle, Particle p) {
         if (sup < 0) {
             sup = 0;
             return 0;
         }
         double prev = getPrevSup(particle, p);
-        return (-k * sup) - (gama * ((sup - prev) / deltaTime));
+        return (-kn * sup) - (gama * ((sup - prev) / deltaTime));
+    }
+
+    private double getTanForceReceivedFrom(Particle particle, Particle p){
+        if(sup < 0) {
+            sup = 0;
+            return 0;
+        }
+        return -kt * sup * (((particle.getVx() - p.getVx()) * (-getNormalYVector(particle, p)))
+                + ((particle.getVy() - p.getVy()) * getNormalXVector(particle, p)));
     }
 
     private double getDistance(Particle p1, Particle p2) {

@@ -9,7 +9,7 @@ public class ParticleGenerator {
 
     private static int continuousInvalidLocations;
     private static final Integer MAX_PARTICLES = Integer.MAX_VALUE;
-    private static final int MAX_TRIES = 10000;
+    private static final int MAX_TRIES = 20000;
 
 
     /**

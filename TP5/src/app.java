@@ -12,7 +12,7 @@ import java.util.*;
 public class app {
 
     static final double L = 0.5;
-    static final double W = 0.3;
+    static final double W = 0.4;
     static final boolean open = true;
     static final double D = 0.15; //0.15, 0.18, 0.21, 0.24
     static final int framesToPrint = 200;
@@ -102,14 +102,13 @@ public class app {
     }
 
     private static void realocatedParticle(Particle p, List<Particle> particles) {
-
         double x = Math.random() * (W - (2 * p.getRadius()) + p.getRadius());
         Particle maxHeightParticle = getMaxHeightParticle(particles, x, p.getRadius());
         double y;
         if(maxHeightParticle == null){
             y = L;
         } else {
-            y = maxHeightParticle.getY() + maxHeightParticle.getRadius();
+            y = Math.max(maxHeightParticle.getY() + maxHeightParticle.getRadius(), L);
         }
         y = y + 2 * p.getRadius();
         p.setPosition(new Position(x, y ));
