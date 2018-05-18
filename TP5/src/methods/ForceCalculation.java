@@ -54,10 +54,10 @@ public class ForceCalculation {
             for (Particle p : neighbors) {
                 if (particle.getId() != p.getId()) {
                     sup = superposition(particle, p);
-                    totalX += getNornalForceReceivedFrom(particle, p) * getNormalXVector(particle, p)
-                            + getTanForceReceivedFrom(particle, p) * (-getNormalYVector(particle, p));
-                    totalY += getNornalForceReceivedFrom(particle, p) * getNormalYVector(particle, p)
-                            + getTanForceReceivedFrom(particle, p) * getNormalXVector(particle, p);
+                    totalX += getNornalForceReceivedFrom(particle, p) * getNormalXVector(particle, p);
+                            //+ getTanForceReceivedFrom(particle, p) * (-getNormalYVector(particle, p));
+                    totalY += getNornalForceReceivedFrom(particle, p) * getNormalYVector(particle, p);
+                            //+ getTanForceReceivedFrom(particle, p) * getNormalXVector(particle, p);
                     addSuperposition(particle, p, sup);
                 }
             }

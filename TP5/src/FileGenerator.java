@@ -25,7 +25,9 @@ public class FileGenerator {
 
             StringBuilder sb = new StringBuilder();
             sb.append(particle.getId() + "\t" +  particle.getX() + "\t" + particle.getY() + "\t"
-                    + particle.getVx() + "\t" + particle.getVy() + "\t" + particle.getRadius() + "\n");
+                    + particle.getVx() + "\t" + particle.getVy() + "\t" + particle.getRadius() + "\t"
+                    + ((Math.sqrt(Math.pow(particle.getFx(),2) + Math.pow(particle.getFy(),2)))/2*Math.PI*particle.getRadius()) + "\t"
+                    + 1 + "\t" + "\n");
             fileOutputStream.write(sb.toString().getBytes());
         } catch (IOException e) {
             e.printStackTrace();
@@ -49,7 +51,7 @@ public class FileGenerator {
     public static void addHeader(FileOutputStream fileOutputStream, int cantParticles) {
         try {
             StringBuilder sb = new StringBuilder();
-            sb.append((cantParticles + 4)+ "\n");
+            sb.append((cantParticles)+ "\n");
             sb.append("id" + "\t" +  "x" + "\t" + "y" + "\t" + "vx" + "\t" + "vy" + "\t" + "radius" + "\n");
             fileOutputStream.write(sb.toString().getBytes());
         } catch (IOException e) {

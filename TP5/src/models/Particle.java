@@ -38,6 +38,20 @@ public class Particle {
         this.prevAccY = prevAccY;
     }
 
+    public Particle(int id, Position position, double vx, double vy, double radius, double mass, double prevAccX,
+                    double prevAccY, double fx, double fy) {
+        this.id = id;
+        this.position = position;
+        this.vx = vx;
+        this.vy = vy;
+        this.radius = radius;
+        this.mass = mass;
+        this.prevAccX = prevAccX;
+        this.prevAccY = prevAccY;
+        this.fx = fx;
+        this.fy = fy;
+    }
+
     public int getId() {
         return id;
     }

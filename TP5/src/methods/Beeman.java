@@ -63,7 +63,10 @@ public class Beeman {
         double prevAccX = particle.getFx() / particle.getMass();
         double prevAccY = particle.getFy() / particle.getMass();
 
-        return new Particle(particle.getId(), newPosition, vx, vy, particle.getRadius(), particle.getMass(), prevAccX, prevAccY);
+        return new Particle(particle.getId(), newPosition, vx, vy, particle.getRadius(), particle.getMass(),
+                prevAccX, prevAccY, particle.getFx(), particle.getFy());
+        //return new Particle(particle.getId(), newPosition, vx, vy, particle.getRadius(), particle.getMass(),
+          //      prevAccX, prevAccY);
     }
 
 }

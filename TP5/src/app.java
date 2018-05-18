@@ -14,7 +14,7 @@ public class app {
     static final double L = 0.5;
     static final double W = 0.4;
     static final boolean open = true;
-    static final double D = 0.15; //0.15, 0.18, 0.21, 0.24
+    static final double D = 0.16; //0.15, 0.18, 0.21, 0.24
     static final int framesToPrint = 200;
     static final double maxDiameter = 0.03;
     static final double minDiameter = 0.02;
@@ -25,7 +25,7 @@ public class app {
 
         double particlesMass = 0.01;
 
-        int M = 15;
+        int M = 3;
         //double rc = 2 * 0.1;
         double rc = maxDiameter;
         double k = 1E5;
