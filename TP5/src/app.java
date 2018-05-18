@@ -14,7 +14,7 @@ public class app {
     static final double L = 0.5;
     static final double W = 0.4;
     static final boolean open = true;
-    static final double D = 0.15; //0.15, 0.18, 0.21, 0.24
+    static final double D = 0.08; //0.15, 0.18, 0.21, 0.24
     static final int framesToPrint = 200;
     static final double maxDiameter = 0.03;
     static final double minDiameter = 0.02;
@@ -25,7 +25,7 @@ public class app {
 
         double particlesMass = 0.01;
 
-        int M = 15;
+        int M = 4;
         //double rc = 2 * 0.1;
         double rc = maxDiameter;
         double k = 1E5;
@@ -36,17 +36,21 @@ public class app {
         double deltaTime = 1E-5;
         //double deltaTime = 0.1 * Math.sqrt(particlesMass/k);
         //double delta2 = 0.02;
-        double delta2 = 0.1;
+        double delta2 = 0.001;
+        double window = 0.1;
         boolean energyPrint = true;
         boolean caudalPrint = false;
         boolean simulationPrint = true;
+
 
         FileOutputStream fileOutputStream = FileGenerator.createOutputFilePoints("granular.xyz");
         List<String> energyFileLog = new ArrayList<String>();
         energyFileLog.add("Tiempo" + "\t" + "Energía" + "\t" + "Energía total");
         List<String> caudalFileLog = new ArrayList<String>();
-        caudalFileLog.add("Tiempo" + "\t" + "Caudal");
-        List<Particle> particles = ParticleGenerator.generateParticles(particlesMass, minDiameter, maxDiameter, L, W);
+        ArrayList<Integer> caudals = new ArrayList<>();
+        //caudalFileLog.add("Tiempo" + "\t" + "Caudal");
+
+        List<Particle> particles = ParticleGenerator.generateParticles(particlesMass, minDiameter, maxDiameter, L, W,30);
         FileGenerator.addHeader(fileOutputStream, particles.size());
 
         for (Particle p : particles) {
@@ -57,6 +61,7 @@ public class app {
         Beeman beeman = new Beeman(new ForceCalculation(k, gama, deltaTime), deltaTime, L, W);
         double time = 0;
         int i = 0;
+        int lastCaudal = 0;
 
         while (time <= totalTime) {
             particles = realocationParticles(particles);
@@ -87,14 +92,22 @@ public class app {
                 double energy = computeKineticEnergy(particles);
                 energyFileLog.add(Math.round(time * 1000.0) / 1000.0 + "\t" + energy + "\t" + (energy * particles.size()));
                 caudalFileLog.add(Math.round(time * 1000.0) / 1000.0 + "\t" + caudal);
+
+            }
+            if(time % delta2 == 0){
+                caudals.add(caudal-lastCaudal);
             }
 
+
+            lastCaudal = caudal;
             time += deltaTime;
             System.out.println(time / totalTime);
         }
+        ;
         writeKineticEnergyLogFile(energyFileLog);
-        writeCaudalLogFile(caudalFileLog);
+        writeCaudalLogFile(proccesSlidingWindow(caudals,window,delta2));
     }
+
 
     private static List<Particle> realocationParticles(List<Particle> particles) {
         Set<Particle> newParticles = new HashSet<>(particles);
@@ -249,5 +262,22 @@ public class app {
 
         }
     }
+    private static List<String> proccesSlidingWindow(ArrayList<Integer> caudals, double window, double delta2) {
+        int deltasInWindow = (int) (window/delta2);
+        double average;
+        ArrayList<Integer> averagedCaudals = new ArrayList<>();
+        List<String> caudalFileLog = new ArrayList<>();
+        for(int i=0;i<caudals.size()-deltasInWindow;i++){
+            int sum = 0;
+            for (int j=i;j<i+deltasInWindow;j++){
+                sum+=caudals.get(j);
+            }
+            average = sum/deltasInWindow;
+            caudalFileLog.add(i*delta2+ "\t" +average);
+            sum = 0;
+        }
+        return caudalFileLog;
+    }
+
 
 }
