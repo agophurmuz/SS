@@ -92,7 +92,6 @@ public class Silo {
             x = (Math.random() * (W - maxDiameter - maxDiameter)) + maxDiameter;
             y = Math.random() * 0.5 * L + 0.5*L;
             if(tries == 1000){
-                //tries = 0;
                 break;
             }
             tries++;
@@ -142,14 +141,14 @@ public class Silo {
                     p = new Particle(cantParticles + 3, new Position(particle.getX(), y), 0, 0, particle.getRadius(), particle.getMass());
                     p.setWall(true);
                     result.add(p);
-                } else if (isAtRightOpeningBorder(particle) && getDistance(particle, (W / 2) - (D / 2), maxDiameter) < particle.getRadius()) {
+                } else if (isAtRightOpeningBorder(particle) && getDistance(particle, (W / 2) - (D / 2), 0) < particle.getRadius()) {
                     double y = 0;
-                    p = new Particle(cantParticles + 4, new Position((W / 2) - (D / 2), y), 0, 0, particle.getRadius(), particle.getMass());
+                    p = new Particle(cantParticles + 4, new Position((W / 2) - (D / 2), y), 0, 0, 0, particle.getMass());
                     p.setWall(true);
                     result.add(p);
-                } else if (isAtLeftOpeningBorder(particle) && getDistance(particle, (W / 2) + (D / 2), maxDiameter) < particle.getRadius()) {
+                } else if (isAtLeftOpeningBorder(particle) && getDistance(particle, (W / 2) + (D / 2), 0) < particle.getRadius()) {
                     double y = 0;
-                    p = new Particle(cantParticles + 5, new Position((W / 2) + (D / 2), y), 0, 0, particle.getRadius(), particle.getMass());
+                    p = new Particle(cantParticles + 5, new Position((W / 2) + (D / 2), y), 0, 0, 0, particle.getMass());
                     p.setWall(true);
                     result.add(p);
                 }
