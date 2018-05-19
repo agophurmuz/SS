@@ -12,7 +12,7 @@ public class main {
         double L = 0.5;
         double W = 0.4;
         boolean open = true;
-        double D = 0.15;
+        double D = 0.24;
         int framesToPrint = 200;
         double maxDiameter = 0.03;
         double minDiameter = 0.02;
@@ -35,8 +35,7 @@ public class main {
         List<Particle> particles = ParticleGenerator.generateParticles(particlesMass, minDiameter, maxDiameter, L, W);
 
         CellIndexMethod method = new CellIndexMethod(false, M, L, rc, particles);
-        Beeman beeman = new Beeman(new ForceCalculation(k, gama, deltaTime), deltaTime, L, W);
-
+        Beeman beeman = new Beeman(deltaTime);
         Silo silo = new Silo(particles, method, beeman, totalTime, deltaTime, framesToPrint, open, L, W, D,
                 particlesMass, minDiameter, maxDiameter,delta2);
 

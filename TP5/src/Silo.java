@@ -1,5 +1,6 @@
 import methods.Beeman;
 import methods.CellIndexMethod;
+import methods.ForceCalculation;
 import models.Particle;
 import models.Position;
 
@@ -25,13 +26,14 @@ public class Silo {
     private double L;
     private double W;
     private double D;
-    private double particlesMass;
-    private double minDiameter;
+
     private double maxDiameter;
+    private ForceCalculation forceCalculation;
 
     public Silo(List<Particle> particles, CellIndexMethod cellIndexMethod, Beeman beeman, double totalTime,
                 double deltaTime, int framesToPrint, boolean open, double L, double W, double D, double particlesMass,
                 double minDiameter, double maxDiameter, double delta2) {
+
         this.particles = particles;
         this.cellIndexMethod = cellIndexMethod;
         this.beeman = beeman;
@@ -42,10 +44,9 @@ public class Silo {
         this.L = L;
         this.W = W;
         this.D = D;
-        this.particlesMass = particlesMass;
-        this.minDiameter = minDiameter;
         this.maxDiameter = maxDiameter;
         this.delta2 = delta2;
+        this.forceCalculation = forceCalculation;
     }
 
     public void runSilo() {
@@ -60,43 +61,65 @@ public class Silo {
             //
             realocationParticles(particles);
 
-            if (i % framesToPrint == 0) {
-                FileGenerator.addHeader(fileOutputStream, particles.size());
-                for (Particle p: particles) {
-                    //System.out.println("Particula: " + p.getId() + " forceCalculation: " + p.getFx() + ", " + p.getFy());
-                    FileGenerator.addParticle(fileOutputStream, p);
-                }
-                //FileGenerator.addWalls(fileOutputStream, particles.size(), particlesMass, L, W);
-            }
-
             List<Particle> nextParticles = new ArrayList<>();
+
+            // Calculamos vecinos para cada particula.
             Map<Particle, Set<Particle>> neighbors = cellIndexMethod.getParticleNeighbors(particles);
+
+            // Agregamos particulas ficticias en caso de contacto con paredes y bordes.
             addWallParticleContact(neighbors);
-            for (Particle p : particles) {
-                Particle nextP = beeman.moveParticle(p, neighbors.get(p), nextParticles);
-                nextParticles.add(nextP);
-            }
+
+            // Calculamos las fuerzas a las que están sometidas las particulas.
+            calculateParticlesForces(neighbors);
+
+            // Printeamos estado actual.
+            printActualState(fileOutputStream, i);
+
+            // Log caudals with sliding window 
+            logCaudalAndEnergy(time,caudals,energyFileLog);
+
+            //Movemos las partículas al siguiente estado.
+            moveParticles(neighbors, nextParticles);
+
+
+            //Actualizamos particulas con los nuevos estados.
+            updateParticesState(nextParticles);
 
             i++;
-
-            particles = new ArrayList<>();
-            particles.addAll(nextParticles);
-
-            if (Math.abs(time / delta2 - Math.round(time / delta2)) < deltaTime) {
-                System.out.println("Tiempo:"+time+"s, Caudal:"+caudal);
-                caudals.add(caudal);
-                double energy = computeKineticEnergy(particles);
-                energyFileLog.add(Math.round(time * 1000.0) / 1000.0 + "\t" + energy + "\t" + (energy * particles.size()));
-                caudal = 0;
-            }
-
-            cellIndexMethod.resetParticles(nextParticles);
-
             time += deltaTime;
             //System.out.println("Progress"+(time / totalTime)*100);
         }
         writeLogFileFromList(energyFileLog,"energy.tsv");
         writeLogFileFromList(proccesSlidingWindow(caudals,window,delta2),"caudals.tsv");
+    }
+
+    private void updateParticesState(List<Particle> nextParticles) {
+        particles = new ArrayList<>();
+        particles.addAll(nextParticles);
+        cellIndexMethod.resetParticles(nextParticles);
+    }
+
+    private void moveParticles(Map<Particle, Set<Particle>> neighbors, List<Particle> nextParticles ) {
+        for (Particle p : particles) {
+            Particle nextP = beeman.moveParticle(p, neighbors.get(p), nextParticles);
+            nextParticles.add(nextP);
+        }
+    }
+
+    private void printActualState(FileOutputStream fileOutputStream, int i) {
+        if (i % framesToPrint == 0) {
+            FileGenerator.addHeader(fileOutputStream, particles.size());
+            for (Particle p: particles) {
+                System.out.println("Particula: " + p.getId() + " forceCalculation: " + p.getFx() + ", " + p.getFy());
+                FileGenerator.addParticle(fileOutputStream, p);
+            }
+        }
+    }
+
+    private void calculateParticlesForces(Map<Particle, Set<Particle>> neighbors) {
+        for (Particle p : particles) {
+            forceCalculation.setForces(p, neighbors.get(p));
+        }
     }
 
     private void realocationParticles(List<Particle> particles) {
@@ -114,9 +137,8 @@ public class Silo {
         int tries = 0;
         do {
             x = (Math.random() * (W - maxDiameter - maxDiameter)) + maxDiameter;
-            y = Math.random() * 0.5 * L + 0.5*L;
-            if(tries == 1000){
-                //tries = 0;
+            y = Math.random() * 0.5 * L + 0.6*L;
+            if(tries == 10000){
                 break;
             }
             tries++;
@@ -166,14 +188,14 @@ public class Silo {
                     p = new Particle(cantParticles + 3, new Position(particle.getX(), y), 0, 0, particle.getRadius(), particle.getMass());
                     p.setWall(true);
                     result.add(p);
-                } else if (isAtRightOpeningBorder(particle) && getDistance(particle, (W / 2) - (D / 2), maxDiameter) < particle.getRadius()) {
+                } else if (isAtLeftOpeningBorder(particle)) {
                     double y = 0;
-                    p = new Particle(cantParticles + 4, new Position((W / 2) - (D / 2), y), 0, 0, particle.getRadius(), particle.getMass());
+                    p = new Particle(cantParticles + 4, new Position((W / 2) - (D / 2), y), 0, 0, 0, particle.getMass());
                     p.setWall(true);
                     result.add(p);
-                } else if (isAtLeftOpeningBorder(particle) && getDistance(particle, (W / 2) + (D / 2), maxDiameter) < particle.getRadius()) {
+                } else if (isAtRightOpeningBorder(particle)) {
                     double y = 0;
-                    p = new Particle(cantParticles + 5, new Position((W / 2) + (D / 2), y), 0, 0, particle.getRadius(), particle.getMass());
+                    p = new Particle(cantParticles + 5, new Position((W / 2) + (D / 2), y), 0, 0, 0, particle.getMass());
                     p.setWall(true);
                     result.add(p);
                 }
@@ -189,12 +211,14 @@ public class Silo {
         return result;
     }
 
-    private boolean isAtLeftOpeningBorder(Particle particle) {
-        return particle.getX() + particle.getRadius() >= ((W / 2) + (D / 2));
+    private boolean isAtRightOpeningBorder(Particle particle) {
+        double rightBorder = (W / 2) + (D / 2);
+        return (particle.getX() + particle.getRadius() >= rightBorder) && (particle.getX() < rightBorder);
     }
 
-    private boolean isAtRightOpeningBorder(Particle particle) {
-        return particle.getX() - particle.getRadius() <= ((W / 2) - (D / 2));
+    private boolean isAtLeftOpeningBorder(Particle particle) {
+        double leftBorder = (W / 2) - (D / 2);
+        return (particle.getX() - particle.getRadius() < leftBorder) && (particle.getX() > leftBorder);
     }
 
     private boolean isLeftOpeningFloor(Particle particle) {
@@ -205,9 +229,6 @@ public class Silo {
         return particle.getX() <= ((W / 2) - (D / 2));
     }
 
-    private double getDistance(Particle particle, double x, double y) {
-        return Math.sqrt(Math.pow(particle.getX() - x, 2) + Math.pow(particle.getY() - y, 2));
-    }
 
     private  List<String> proccesSlidingWindow(ArrayList<Integer> caudals, double window, double delta2) {
         int deltasInWindow = (int) (window/delta2);
@@ -244,4 +265,13 @@ public class Silo {
         return kineticEnergy / particles.size();
     }
 
+    private void logCaudalAndEnergy(double time,ArrayList<Integer>caudals,List<String> energyFileLog){
+        if (Math.abs(time / delta2 - Math.round(time / delta2)) < deltaTime) {
+            System.out.println("Tiempo:"+time+"s, Caudal:"+caudal);
+            caudals.add(caudal);
+            double energy = computeKineticEnergy(particles);
+            energyFileLog.add(Math.round(time * 1000.0) / 1000.0 + "\t" + energy + "\t" + (energy * particles.size()));
+            caudal = 0;
+        }
+    }
 }

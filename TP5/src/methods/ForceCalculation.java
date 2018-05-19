@@ -9,7 +9,6 @@ public class ForceCalculation {
 
 
     private double kn;
-    private double kt;
     private double gama;
     private double sup;
     private double deltaTime;
@@ -18,7 +17,6 @@ public class ForceCalculation {
 
     public ForceCalculation(double kn, double gama, double deltaTime) {
         this.kn = kn;
-        this.kt = 2*kn;
         this.gama = gama;
         this.sup = 0;
         this.deltaTime = deltaTime;
@@ -55,9 +53,7 @@ public class ForceCalculation {
                 if (particle.getId() != p.getId()) {
                     sup = superposition(particle, p);
                     totalX += getNornalForceReceivedFrom(particle, p) * getNormalXVector(particle, p);
-                            //+ getTanForceReceivedFrom(particle, p) * (-getNormalYVector(particle, p));
                     totalY += getNornalForceReceivedFrom(particle, p) * getNormalYVector(particle, p);
-                            //+ getTanForceReceivedFrom(particle, p) * getNormalXVector(particle, p);
                     addSuperposition(particle, p, sup);
                 }
             }
@@ -83,15 +79,6 @@ public class ForceCalculation {
         }
         double prev = getPrevSup(particle, p);
         return (-kn * sup) - (gama * ((sup - prev) / deltaTime));
-    }
-
-    private double getTanForceReceivedFrom(Particle particle, Particle p){
-        if(sup < 0) {
-            sup = 0;
-            return 0;
-        }
-        return -kt * sup * (((particle.getVx() - p.getVx()) * (-getNormalYVector(particle, p)))
-                + ((particle.getVy() - p.getVy()) * getNormalXVector(particle, p)));
     }
 
     private double getDistance(Particle p1, Particle p2) {

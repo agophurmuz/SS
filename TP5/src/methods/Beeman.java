@@ -9,15 +9,9 @@ import java.util.Set;
 public class Beeman {
 
     private double deltaTime;
-    private ForceCalculation forceCalculation;
-    private double L;
-    private double W;
 
-    public Beeman(ForceCalculation forceCalculation, double deltaTime, double L, double W) {
+    public Beeman(double deltaTime) {
         this.deltaTime = deltaTime;
-        this.forceCalculation = forceCalculation;
-        this.L = L;
-        this.W = W;
     }
 
     private double calculatePositionX(Particle particle) {
@@ -50,10 +44,6 @@ public class Beeman {
     }
 
     public Particle moveParticle(Particle particle, Set<Particle> neighbors, List<Particle> particles) {
-
-        forceCalculation.setForces(particle, neighbors);
-        //System.out.println("Particula: " + particle.getId() + " forceCalculation: " + particle.getFx() + ", " + particle.getFy());
-
         double x = calculatePositionX(particle);
         double y = calculatePositionY(particle);
         Position<Double> newPosition = new Position<>(x, y);
@@ -64,9 +54,7 @@ public class Beeman {
         double prevAccY = particle.getFy() / particle.getMass();
 
         return new Particle(particle.getId(), newPosition, vx, vy, particle.getRadius(), particle.getMass(),
-                prevAccX, prevAccY, particle.getFx(), particle.getFy());
-        //return new Particle(particle.getId(), newPosition, vx, vy, particle.getRadius(), particle.getMass(),
-          //      prevAccX, prevAccY);
+                prevAccX, prevAccY);
     }
 
 }
