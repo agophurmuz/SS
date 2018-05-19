@@ -10,9 +10,9 @@ public class main {
     public static void main(String[] args) {
 
         double L = 0.5;
-        double W = 0.3;
+        double W = 0.4;
         boolean open = true;
-        double D = 0.15;
+        double D = 0.24;
         int framesToPrint = 200;
         double maxDiameter = 0.03;
         double minDiameter = 0.02;

@@ -117,8 +117,8 @@ public class Silo {
         int tries = 0;
         do {
             x = (Math.random() * (W - maxDiameter - maxDiameter)) + maxDiameter;
-            y = Math.random() * 0.5 * L + 0.5*L;
-            if(tries == 1000){
+            y = Math.random() * 0.5 * L + 0.6*L;
+            if(tries == 10000){
                 break;
             }
             tries++;
