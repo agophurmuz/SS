@@ -1,5 +1,6 @@
 import methods.Beeman;
 import methods.CellIndexMethod;
+import methods.ForceCalculation;
 import models.Particle;
 import models.Position;
 
@@ -22,8 +23,9 @@ public class Silo {
     private double particlesMass;
     private double minDiameter;
     private double maxDiameter;
+    private ForceCalculation forceCalculation;
 
-    public Silo(List<Particle> particles, CellIndexMethod cellIndexMethod, Beeman beeman, double totalTime,
+    public Silo(ForceCalculation forceCalculation, List<Particle> particles, CellIndexMethod cellIndexMethod, Beeman beeman, double totalTime,
                 double deltaTime, int framesToPrint, boolean open, double L, double W, double D, double particlesMass,
                 double minDiameter, double maxDiameter) {
         this.particles = particles;
@@ -39,6 +41,7 @@ public class Silo {
         this.particlesMass = particlesMass;
         this.minDiameter = minDiameter;
         this.maxDiameter = maxDiameter;
+        this.forceCalculation = forceCalculation;
     }
 
     public void runSilo() {
@@ -48,31 +51,59 @@ public class Silo {
 
         while (time <= totalTime) {
             realocationParticles(particles);
-            if (i % framesToPrint == 0) {
-                FileGenerator.addHeader(fileOutputStream, particles.size());
-                for (Particle p: particles) {
-                    System.out.println("Particula: " + p.getId() + " forceCalculation: " + p.getFx() + ", " + p.getFy());
-                    FileGenerator.addParticle(fileOutputStream, p);
-                }
-                //FileGenerator.addWalls(fileOutputStream, particles.size(), particlesMass, L, W);
-            }
 
             List<Particle> nextParticles = new ArrayList<>();
+
+            // Calculamos vecinos para cada particula.
             Map<Particle, Set<Particle>> neighbors = cellIndexMethod.getParticleNeighbors(particles);
+
+            // Agregamos particulas ficticias en caso de contacto con paredes y bordes.
             addWallParticleContact(neighbors);
-            for (Particle p : particles) {
-                Particle nextP = beeman.moveParticle(p, neighbors.get(p), nextParticles);
-                nextParticles.add(nextP);
-            }
+
+            // Calculamos las fuerzas a las que están sometidas las particulas.
+            calculateParticlesForces(neighbors);
+
+            // Printeamos estado actual.
+            printActualState(fileOutputStream, i);
+
+            //Movemos las partículas al siguiente estado.
+            moveParticles(neighbors, nextParticles);
+
+            //Actualizamos particulas con los nuevos estados.
+            updateParticesState(nextParticles);
 
             i++;
-
-            particles = new ArrayList<>();
-            particles.addAll(nextParticles);
-            cellIndexMethod.resetParticles(nextParticles);
-
             time += deltaTime;
             System.out.println(time / totalTime);
+        }
+    }
+
+    private void updateParticesState(List<Particle> nextParticles) {
+        particles = new ArrayList<>();
+        particles.addAll(nextParticles);
+        cellIndexMethod.resetParticles(nextParticles);
+    }
+
+    private void moveParticles(Map<Particle, Set<Particle>> neighbors, List<Particle> nextParticles ) {
+        for (Particle p : particles) {
+            Particle nextP = beeman.moveParticle(p, neighbors.get(p), nextParticles);
+            nextParticles.add(nextP);
+        }
+    }
+
+    private void printActualState(FileOutputStream fileOutputStream, int i) {
+        if (i % framesToPrint == 0) {
+            FileGenerator.addHeader(fileOutputStream, particles.size());
+            for (Particle p: particles) {
+                System.out.println("Particula: " + p.getId() + " forceCalculation: " + p.getFx() + ", " + p.getFy());
+                FileGenerator.addParticle(fileOutputStream, p);
+            }
+        }
+    }
+
+    private void calculateParticlesForces(Map<Particle, Set<Particle>> neighbors) {
+        for (Particle p : particles) {
+            forceCalculation.setForces(p, neighbors.get(p));
         }
     }
 

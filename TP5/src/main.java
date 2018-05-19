@@ -35,9 +35,9 @@ public class main {
         List<Particle> particles = ParticleGenerator.generateParticles(particlesMass, minDiameter, maxDiameter, L, W);
 
         CellIndexMethod method = new CellIndexMethod(false, M, L, rc, particles);
-        Beeman beeman = new Beeman(new ForceCalculation(k, gama, deltaTime), deltaTime, L, W);
+        Beeman beeman = new Beeman(deltaTime, L, W);
 
-        Silo silo = new Silo(particles, method, beeman, totalTime, deltaTime, framesToPrint, open, L, W, D,
+        Silo silo = new Silo(new ForceCalculation(k, gama, deltaTime), particles, method, beeman, totalTime, deltaTime, framesToPrint, open, L, W, D,
                 particlesMass, minDiameter, maxDiameter);
 
         silo.runSilo();
