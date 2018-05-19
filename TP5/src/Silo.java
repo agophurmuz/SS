@@ -5,6 +5,10 @@ import models.Particle;
 import models.Position;
 
 import java.io.FileOutputStream;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 
 public class Silo {
@@ -14,8 +18,10 @@ public class Silo {
     private Beeman beeman;
     private double totalTime;
     private double deltaTime;
+    private double delta2;
     private int framesToPrint;
-    private  int caudal = 0;
+    private int caudal = 0;
+    private double window = 0.1;
     private boolean open;
     private double L;
     private double W;
@@ -24,8 +30,10 @@ public class Silo {
     private double maxDiameter;
     private ForceCalculation forceCalculation;
 
-    public Silo(ForceCalculation forceCalculation, List<Particle> particles, CellIndexMethod cellIndexMethod, Beeman beeman, double totalTime,
-                double deltaTime, int framesToPrint, boolean open, double L, double W, double D, double maxDiameter) {
+    public Silo(List<Particle> particles, CellIndexMethod cellIndexMethod, Beeman beeman, double totalTime,
+                double deltaTime, int framesToPrint, boolean open, double L, double W, double D, double particlesMass,
+                double minDiameter, double maxDiameter, double delta2) {
+
         this.particles = particles;
         this.cellIndexMethod = cellIndexMethod;
         this.beeman = beeman;
@@ -37,6 +45,7 @@ public class Silo {
         this.W = W;
         this.D = D;
         this.maxDiameter = maxDiameter;
+        this.delta2 = delta2;
         this.forceCalculation = forceCalculation;
     }
 
@@ -44,8 +53,12 @@ public class Silo {
         double time = 0;
         int i = 0;
         FileOutputStream fileOutputStream = FileGenerator.createOutputFilePoints("granular.xyz");
+        ArrayList<Integer> caudals = new ArrayList<>();
+        List<String> energyFileLog = new ArrayList<>();
+        energyFileLog.add("Tiempo" + "\t" + "Energía" + "\t" + "Energía total");
 
         while (time <= totalTime) {
+            //
             realocationParticles(particles);
 
             List<Particle> nextParticles = new ArrayList<>();
@@ -62,16 +75,22 @@ public class Silo {
             // Printeamos estado actual.
             printActualState(fileOutputStream, i);
 
+            // Log caudals with sliding window 
+            logCaudalAndEnergy(time,caudals,energyFileLog);
+
             //Movemos las partículas al siguiente estado.
             moveParticles(neighbors, nextParticles);
+
 
             //Actualizamos particulas con los nuevos estados.
             updateParticesState(nextParticles);
 
             i++;
             time += deltaTime;
-            System.out.println(time / totalTime);
+            //System.out.println("Progress"+(time / totalTime)*100);
         }
+        writeLogFileFromList(energyFileLog,"energy.tsv");
+        writeLogFileFromList(proccesSlidingWindow(caudals,window,delta2),"caudals.tsv");
     }
 
     private void updateParticesState(List<Particle> nextParticles) {
@@ -107,7 +126,8 @@ public class Silo {
         for (Particle p : particles) {
             if (outOfSilo(p)) {
                 realocatedParticle(p, particles);
-                caudal++;
+                caudal+=1;
+
             }
         }
     }
@@ -209,4 +229,49 @@ public class Silo {
         return particle.getX() <= ((W / 2) - (D / 2));
     }
 
+
+    private  List<String> proccesSlidingWindow(ArrayList<Integer> caudals, double window, double delta2) {
+        int deltasInWindow = (int) (window/delta2);
+        double average;
+        int sum = 0;
+        ArrayList<Integer> averagedCaudals = new ArrayList<>();
+        List<String> caudalFileLog = new ArrayList<>();
+        caudalFileLog.add("Tiempo"+ "\t" +"Caudal promediado");
+        for(int i=0;i<caudals.size()-deltasInWindow;i++){
+            for (int j=i;j<i+deltasInWindow;j++){
+                sum+=caudals.get(j);
+            }
+            average = (double)sum/deltasInWindow;
+            caudalFileLog.add(i*delta2+ "\t" +average);
+            sum = 0;
+        }
+        return caudalFileLog;
+    }
+
+    private  void writeLogFileFromList(List<String> fileLog,String filename) {
+        Path file = Paths.get(filename);
+        try {
+            Files.write(file, fileLog, Charset.forName("UTF-8"));
+        } catch (Exception e) {
+
+        }
+    }
+    private double computeKineticEnergy(List<Particle> particles) {
+        double kineticEnergy = 0;
+        for (Particle p : particles) {
+            // 1/2*m*pow(v,2) where v is sqrt(pow(vx,2)+pow(vy,2))
+            kineticEnergy += (1.0 / 2.0) * p.getMass() * (Math.pow(p.getVx(), 2) + Math.pow(p.getVy(), 2));
+        }
+        return kineticEnergy / particles.size();
+    }
+
+    private void logCaudalAndEnergy(double time,ArrayList<Integer>caudals,List<String> energyFileLog){
+        if (Math.abs(time / delta2 - Math.round(time / delta2)) < deltaTime) {
+            System.out.println("Tiempo:"+time+"s, Caudal:"+caudal);
+            caudals.add(caudal);
+            double energy = computeKineticEnergy(particles);
+            energyFileLog.add(Math.round(time * 1000.0) / 1000.0 + "\t" + energy + "\t" + (energy * particles.size()));
+            caudal = 0;
+        }
+    }
 }
