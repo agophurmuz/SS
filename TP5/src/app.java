@@ -54,7 +54,7 @@ public class app {
         }
         FileGenerator.addWalls(fileOutputStream, particles.size(), particlesMass, L, W);
         CellIndexMethod method = new CellIndexMethod(false, M, L, rc, particles);
-        Beeman beeman = new Beeman(deltaTime, L, W);
+        Beeman beeman = new Beeman(deltaTime);
         double time = 0;
         int i = 0;
 

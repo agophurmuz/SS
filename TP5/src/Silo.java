@@ -20,14 +20,12 @@ public class Silo {
     private double L;
     private double W;
     private double D;
-    private double particlesMass;
-    private double minDiameter;
+
     private double maxDiameter;
     private ForceCalculation forceCalculation;
 
     public Silo(ForceCalculation forceCalculation, List<Particle> particles, CellIndexMethod cellIndexMethod, Beeman beeman, double totalTime,
-                double deltaTime, int framesToPrint, boolean open, double L, double W, double D, double particlesMass,
-                double minDiameter, double maxDiameter) {
+                double deltaTime, int framesToPrint, boolean open, double L, double W, double D, double maxDiameter) {
         this.particles = particles;
         this.cellIndexMethod = cellIndexMethod;
         this.beeman = beeman;
@@ -38,8 +36,6 @@ public class Silo {
         this.L = L;
         this.W = W;
         this.D = D;
-        this.particlesMass = particlesMass;
-        this.minDiameter = minDiameter;
         this.maxDiameter = maxDiameter;
         this.forceCalculation = forceCalculation;
     }
@@ -211,10 +207,6 @@ public class Silo {
 
     private boolean isRightOpeningFloor(Particle particle) {
         return particle.getX() <= ((W / 2) - (D / 2));
-    }
-
-    private double getDistance(Particle particle, double x, double y) {
-        return Math.sqrt(Math.pow(particle.getX() - x, 2) + Math.pow(particle.getY() - y, 2));
     }
 
 }

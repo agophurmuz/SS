@@ -1,9 +1,9 @@
 import methods.Beeman;
-import methods.CellIndexMethod;
-import methods.ForceCalculation;
-import models.Particle;
+        import methods.CellIndexMethod;
+        import methods.ForceCalculation;
+        import models.Particle;
 
-import java.util.List;
+        import java.util.List;
 
 public class main {
 
@@ -19,7 +19,7 @@ public class main {
 
         double particlesMass = 0.01;
 
-        int M = 3;
+        int M = 15;
         //double rc = 2 * 0.1;
         double rc = maxDiameter;
         double k = 1E5;
@@ -35,10 +35,9 @@ public class main {
         List<Particle> particles = ParticleGenerator.generateParticles(particlesMass, minDiameter, maxDiameter, L, W);
 
         CellIndexMethod method = new CellIndexMethod(false, M, L, rc, particles);
-        Beeman beeman = new Beeman(deltaTime, L, W);
+        Beeman beeman = new Beeman(deltaTime);
 
-        Silo silo = new Silo(new ForceCalculation(k, gama, deltaTime), particles, method, beeman, totalTime, deltaTime, framesToPrint, open, L, W, D,
-                particlesMass, minDiameter, maxDiameter);
+        Silo silo = new Silo(new ForceCalculation(k, gama, deltaTime), particles, method, beeman, totalTime, deltaTime, framesToPrint, open, L, W, D, maxDiameter);
 
         silo.runSilo();
     }

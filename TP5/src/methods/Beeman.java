@@ -9,13 +9,9 @@ import java.util.Set;
 public class Beeman {
 
     private double deltaTime;
-    private double L;
-    private double W;
 
-    public Beeman(double deltaTime, double L, double W) {
+    public Beeman(double deltaTime) {
         this.deltaTime = deltaTime;
-        this.L = L;
-        this.W = W;
     }
 
     private double calculatePositionX(Particle particle) {
