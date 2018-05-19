@@ -141,12 +141,12 @@ public class Silo {
                     p = new Particle(cantParticles + 3, new Position(particle.getX(), y), 0, 0, particle.getRadius(), particle.getMass());
                     p.setWall(true);
                     result.add(p);
-                } else if (isAtRightOpeningBorder(particle) && getDistance(particle, (W / 2) - (D / 2), 0) < particle.getRadius()) {
+                } else if (isAtLeftOpeningBorder(particle)) {
                     double y = 0;
                     p = new Particle(cantParticles + 4, new Position((W / 2) - (D / 2), y), 0, 0, 0, particle.getMass());
                     p.setWall(true);
                     result.add(p);
-                } else if (isAtLeftOpeningBorder(particle) && getDistance(particle, (W / 2) + (D / 2), 0) < particle.getRadius()) {
+                } else if (isAtRightOpeningBorder(particle)) {
                     double y = 0;
                     p = new Particle(cantParticles + 5, new Position((W / 2) + (D / 2), y), 0, 0, 0, particle.getMass());
                     p.setWall(true);
@@ -164,12 +164,14 @@ public class Silo {
         return result;
     }
 
-    private boolean isAtLeftOpeningBorder(Particle particle) {
-        return particle.getX() + particle.getRadius() >= ((W / 2) + (D / 2));
+    private boolean isAtRightOpeningBorder(Particle particle) {
+        double rightBorder = (W / 2) + (D / 2);
+        return (particle.getX() + particle.getRadius() >= rightBorder) && (particle.getX() < rightBorder);
     }
 
-    private boolean isAtRightOpeningBorder(Particle particle) {
-        return particle.getX() - particle.getRadius() <= ((W / 2) - (D / 2));
+    private boolean isAtLeftOpeningBorder(Particle particle) {
+        double leftBorder = (W / 2) - (D / 2);
+        return (particle.getX() - particle.getRadius() < leftBorder) && (particle.getX() > leftBorder);
     }
 
     private boolean isLeftOpeningFloor(Particle particle) {
