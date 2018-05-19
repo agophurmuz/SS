@@ -1,5 +1,6 @@
 package models;
 
+import java.awt.*;
 import java.util.Objects;
 
 public class Particle {
@@ -15,6 +16,7 @@ public class Particle {
     private double fx;
     private double fy;
     private boolean isWall;
+    private Color color;
 
     public Particle(int id, Position position, double vx, double vy, double radius, double mass) {
         this.id = id;
@@ -46,16 +48,14 @@ public class Particle {
         return fx;
     }
 
-    public void setFx(double fx) {
+    public void setForces(double fx, double fy) {
         this.fx = fx;
+        this.fy = fy;
+        this.color = calculateColor();
     }
 
     public double getFy() {
         return fy;
-    }
-
-    public void setFy(double fy) {
-        this.fy = fy;
     }
 
     public double getPrevAccX() {
@@ -72,10 +72,6 @@ public class Particle {
 
     public void setPrevAccY(double prevAccY) {
         this.prevAccY = prevAccY;
-    }
-
-    public Position getPosition() {
-        return position;
     }
 
     public void setPosition(Position position) {
@@ -102,16 +98,8 @@ public class Particle {
         return radius;
     }
 
-    public void setRadius(double radius) {
-        this.radius = radius;
-    }
-
     public double getMass() {
         return mass;
-    }
-
-    public void setMass(double mass) {
-        this.mass = mass;
     }
 
     public double getX() {
@@ -120,10 +108,6 @@ public class Particle {
 
     public double getY() {
         return position.getY().doubleValue();
-    }
-
-    public boolean isWall() {
-        return isWall;
     }
 
     public void setWall(boolean wall) {
@@ -148,6 +132,28 @@ public class Particle {
         return id + "\t" + position.toString();
     }
 
+    private Color calculateColor(){
+        float minAngle = -240f/255; //corresponds to blue
+        float maxAngle = -360f/255; //corresponds to red
+        float preassure = calculatePreasure();
+        float angle = preassure*maxAngle + (1-preassure)*minAngle;
+        return new Color(Color.HSBtoRGB(angle, 1, 0.5f));
+    }
 
+    private float calculatePreasure() {
+        return (float) Math.sqrt(Math.pow(fx,2)+Math.pow(fy,2)) / (float)(2*Math.PI*radius);
+    }
+
+    public int getRed(){
+        return color.getRed();
+    }
+
+    public int getGreen(){
+        return color.getGreen();
+    }
+
+    public int getBlue(){
+        return color.getBlue();
+    }
 }
 

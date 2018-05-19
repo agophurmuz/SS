@@ -57,8 +57,7 @@ public class ForceCalculation {
                     addSuperposition(particle, p, sup);
                 }
             }
-            particle.setFx(totalX);
-            particle.setFy(totalY);
+            particle.setForces(totalX, totalY);
         } catch (NullPointerException npe) {
             npe.printStackTrace();
         }

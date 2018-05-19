@@ -110,7 +110,6 @@ public class Silo {
         if (i % framesToPrint == 0) {
             FileGenerator.addHeader(fileOutputStream, particles.size());
             for (Particle p: particles) {
-                System.out.println("Particula: " + p.getId() + " forceCalculation: " + p.getFx() + ", " + p.getFy());
                 FileGenerator.addParticle(fileOutputStream, p);
             }
         }

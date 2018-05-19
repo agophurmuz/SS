@@ -24,10 +24,12 @@ public class FileGenerator {
         try {
 
             StringBuilder sb = new StringBuilder();
+            // id x y vx vy radius R G B
             sb.append(particle.getId() + "\t" +  particle.getX() + "\t" + particle.getY() + "\t"
                     + particle.getVx() + "\t" + particle.getVy() + "\t" + particle.getRadius() + "\t"
-                    + ((Math.sqrt(Math.pow(particle.getFx(),2) + Math.pow(particle.getFy(),2)))/2*Math.PI*particle.getRadius()) + "\t"
-                    + 1 + "\t" + "\n");
+                    + particle.getRed() + "\t"
+                    + particle.getGreen() + "\t"
+                    + particle.getBlue() + "\t" + "\n");
             fileOutputStream.write(sb.toString().getBytes());
         } catch (IOException e) {
             e.printStackTrace();
@@ -54,61 +56,6 @@ public class FileGenerator {
             sb.append((cantParticles)+ "\n");
             sb.append("id" + "\t" +  "x" + "\t" + "y" + "\t" + "vx" + "\t" + "vy" + "\t" + "radius" + "\n");
             fileOutputStream.write(sb.toString().getBytes());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static void addCorners(FileOutputStream fileOutputStream, int cantParticles, int L) {
-        try {
-            StringBuilder sb = new StringBuilder();
-            sb.append(cantParticles + "\t" + 0 + "\t" + 0 + "\t" + 0 + "\t" + 0 + "\n");
-            sb.append((cantParticles + 1) + "\t" + 0 + "\t" + L + "\t" + 0 + "\t" + 0 + "\n");
-            sb.append((cantParticles + 2) + "\t" + L + "\t" + 0 + "\t" + 0 + "\t" + 0 + "\n");
-            sb.append((cantParticles + 3) + "\t" + L + "\t" + L + "\t" + 0 + "\t" + 0 + "\n");
-            fileOutputStream.write(sb.toString().getBytes());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static void addPointsToFile(FileOutputStream fileOutputStream, Map<Particle, Set<Particle>> particles, Particle particle) {
-
-        try {
-
-            StringBuilder sb = new StringBuilder();
-            Set<Particle> neighbors = particles.get(particle);
-            sb.append(particles.keySet().size() + "\n");
-            sb.append("id" + "\t" +  "x" + "\t" + "y" + "\t" + "R" + "\t" + "G" + "\t" + "B" + "\n");
-            //id x y R G B
-            for (Particle p : particles.keySet()) {
-                if(p.equals(particle)){
-                    sb.append(printLine(p, Color.YELLOW));
-                    //neighbors = particles.get(p);
-                    for (Particle n : neighbors) {
-                        sb.append(printLine(n, Color.RED));
-                    }
-                } else if(!neighbors.contains(p)){
-                    sb.append(printLine(p, Color.GREEN));
-                }
-            }
-
-            fileOutputStream.write(sb.toString().getBytes());
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private static String printLine(Particle particle, Color color) {
-        return particle.toString() + "\t" + color.getRed() + "\t" + color.getGreen() + "\t" + color.getBlue() + "\n";
-    }
-
-    public static void addCaudal(FileOutputStream fileOutputStreamCaudal, double time, int caudal) {
-        try {
-            StringBuilder sb = new StringBuilder();
-            sb.append(time + "\t" +  caudal + "\n");
-            fileOutputStreamCaudal.write(sb.toString().getBytes());
         } catch (IOException e) {
             e.printStackTrace();
         }
