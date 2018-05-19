@@ -30,7 +30,7 @@ public class Silo {
     private double maxDiameter;
     private ForceCalculation forceCalculation;
 
-    public Silo(List<Particle> particles, CellIndexMethod cellIndexMethod, Beeman beeman, double totalTime,
+    public Silo(ForceCalculation forceCalculation, List<Particle> particles, CellIndexMethod cellIndexMethod, Beeman beeman, double totalTime,
                 double deltaTime, int framesToPrint, boolean open, double L, double W, double D, double particlesMass,
                 double minDiameter, double maxDiameter, double delta2) {
 

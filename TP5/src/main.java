@@ -36,7 +36,7 @@ public class main {
 
         CellIndexMethod method = new CellIndexMethod(false, M, L, rc, particles);
         Beeman beeman = new Beeman(deltaTime);
-        Silo silo = new Silo(particles, method, beeman, totalTime, deltaTime, framesToPrint, open, L, W, D,
+        Silo silo = new Silo(new ForceCalculation(k, gama, deltaTime), particles, method, beeman, totalTime, deltaTime, framesToPrint, open, L, W, D,
                 particlesMass, minDiameter, maxDiameter,delta2);
 
         silo.runSilo();
