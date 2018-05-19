@@ -9,7 +9,6 @@ public class ForceCalculation {
 
 
     private double kn;
-    private double kt;
     private double gama;
     private double sup;
     private double deltaTime;
@@ -18,7 +17,6 @@ public class ForceCalculation {
 
     public ForceCalculation(double kn, double gama, double deltaTime) {
         this.kn = kn;
-        this.kt = 2*kn;
         this.gama = gama;
         this.sup = 0;
         this.deltaTime = deltaTime;
