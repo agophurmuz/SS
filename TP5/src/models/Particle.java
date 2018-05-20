@@ -1,9 +1,7 @@
 package models;
 
-import generators.ColorGenerator;
-
-import java.awt.*;
 import java.util.Objects;
+import javafx.scene.paint.Color;
 
 public class Particle {
 
@@ -20,6 +18,10 @@ public class Particle {
     private boolean isWall;
     private Color color;
     private float preasure;
+    private final static double MIN_PREASSURE_IN_COLOR_INTERVAL = 0 ;
+    private final static double MAX_PREASSURE_IN_COLOR_INTERVAL = 150 ;
+    private final static double GREEN_HUE = Color.GREEN.getHue() ;
+    private final static double RED_HUE = Color.RED.getHue() ;
 
     public Particle(int id, Position position, double vx, double vy, double radius, double mass) {
         this.id = id;
@@ -54,7 +56,10 @@ public class Particle {
     public void setForces(double fx, double fy) {
         this.fx = fx;
         this.fy = fy;
-        this.color = calculateColor();
+        this.preasure = calculatePreasure();
+        MaxPressure.getInstance().setMaxPreassure(preasure);
+        MaxPressure.getInstance().setMinPreassure(preasure);
+        this.color = getColorForPreassure(preasure);
     }
 
     public double getFy() {
@@ -135,29 +140,28 @@ public class Particle {
         return id + "\t" + position.toString();
     }
 
-    private Color calculateColor(){
-        float minAngle = -240f/255; //corresponds to blue
-        float maxAngle = -360f/255; //corresponds to red
-        this.preasure = calculatePreasure();
-        int zarlanga = (int)((255/200) * (preasure));
-        //float angle = preasure*maxAngle + (1-preasure)*minAngle;
-        //return new Color(Color.HSBtoRGB(angle, 1, 0.5f));
-        return new Color((int) (preasure%255), 0,0);
+    private Color getColorForPreassure(double preassure) {
+        if (preassure > MAX_PREASSURE_IN_COLOR_INTERVAL) {
+            return Color.DARKRED ;
+        }
+        double hue = GREEN_HUE + (RED_HUE - GREEN_HUE) * (preassure - MIN_PREASSURE_IN_COLOR_INTERVAL) / (MAX_PREASSURE_IN_COLOR_INTERVAL - MIN_PREASSURE_IN_COLOR_INTERVAL) ;
+        return Color.hsb(hue, 1.0, 1.0);
     }
+
 
     private float calculatePreasure() {
         return (float) Math.sqrt(Math.pow(fx,2)+Math.pow((fy+(10*mass)),2)) / (float)(2*Math.PI*radius);
     }
 
-    public int getRed(){
+    public double getRed() {
         return color.getRed();
     }
 
-    public int getGreen(){
+    public double getGreen(){
         return color.getGreen();
     }
 
-    public int getBlue(){
+    public double getBlue(){
         return color.getBlue();
     }
 
