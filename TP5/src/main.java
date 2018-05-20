@@ -12,7 +12,7 @@ public class main {
         double L = 0.5;
         double W = 0.4;
         boolean open = true;
-        double D = 0.24;
+        double D = 0.15;
         int framesToPrint = 200;
         double maxDiameter = 0.03;
         double minDiameter = 0.02;
@@ -25,7 +25,7 @@ public class main {
         double k = 1E5;
         //double gama = 20.0;
         double gama = 2 * Math.sqrt(k * particlesMass);
-        double totalTime = 10.0;
+        double totalTime = 5.0;
         //double deltaTime = 1E-4;
         double deltaTime = 1E-5;
         //double deltaTime = 0.1 * Math.sqrt(particlesMass/k);
@@ -40,5 +40,22 @@ public class main {
                 particlesMass, minDiameter, maxDiameter,delta2);
 
         silo.runSilo();
+
+        float maxPreassure =0;
+        float minPreassure =Float.MAX_VALUE;
+
+        for (Particle p: particles) {
+            float particlePreasure = p.getPreasure();
+            if(particlePreasure > maxPreassure) {
+                maxPreassure = particlePreasure;
+            }
+
+            if(particlePreasure < minPreassure){
+                minPreassure = particlePreasure;
+            }
+        }
+
+        System.out.println("Max Preasure: "+maxPreassure);
+        System.out.println("Min Preasure: "+minPreassure);
     }
 }

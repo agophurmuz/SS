@@ -27,8 +27,9 @@ public class FileGenerator {
             // id x y vx vy radius R G B
             sb.append(particle.getId() + "\t" +  particle.getX() + "\t" + particle.getY() + "\t"
                     + particle.getVx() + "\t" + particle.getVy() + "\t" + particle.getRadius() + "\t"
-                    + particle.getRed() + "\t"
-                    + particle.getGreen() + "\t"
+                    //+ (int) particle.getPreasure()+ "\t"
+                    + particle.getRed()+ "\t"
+                    + particle.getGreen()+ "\t"
                     + particle.getBlue() + "\t" + "\n");
             fileOutputStream.write(sb.toString().getBytes());
         } catch (IOException e) {

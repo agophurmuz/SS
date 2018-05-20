@@ -1,5 +1,7 @@
 package models;
 
+import generators.ColorGenerator;
+
 import java.awt.*;
 import java.util.Objects;
 
@@ -17,6 +19,7 @@ public class Particle {
     private double fy;
     private boolean isWall;
     private Color color;
+    private float preasure;
 
     public Particle(int id, Position position, double vx, double vy, double radius, double mass) {
         this.id = id;
@@ -135,13 +138,15 @@ public class Particle {
     private Color calculateColor(){
         float minAngle = -240f/255; //corresponds to blue
         float maxAngle = -360f/255; //corresponds to red
-        float preassure = calculatePreasure();
-        float angle = preassure*maxAngle + (1-preassure)*minAngle;
-        return new Color(Color.HSBtoRGB(angle, 1, 0.5f));
+        this.preasure = calculatePreasure();
+        int zarlanga = (int)((255/200) * (preasure));
+        //float angle = preasure*maxAngle + (1-preasure)*minAngle;
+        //return new Color(Color.HSBtoRGB(angle, 1, 0.5f));
+        return new Color((int) (preasure%255), 0,0);
     }
 
     private float calculatePreasure() {
-        return (float) Math.sqrt(Math.pow(fx,2)+Math.pow(fy,2)) / (float)(2*Math.PI*radius);
+        return (float) Math.sqrt(Math.pow(fx,2)+Math.pow((fy+(10*mass)),2)) / (float)(2*Math.PI*radius);
     }
 
     public int getRed(){
@@ -154,6 +159,10 @@ public class Particle {
 
     public int getBlue(){
         return color.getBlue();
+    }
+
+    public float getPreasure() {
+        return preasure;
     }
 }
 
