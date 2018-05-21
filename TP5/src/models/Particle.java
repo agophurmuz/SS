@@ -57,8 +57,6 @@ public class Particle {
         this.fx = fx;
         this.fy = fy;
         this.preasure = calculatePreasure();
-        MaxPressure.getInstance().setMaxPreassure(preasure);
-        MaxPressure.getInstance().setMinPreassure(preasure);
         this.color = getColorForPreassure(preasure);
     }
 
