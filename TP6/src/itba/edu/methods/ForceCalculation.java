@@ -65,16 +65,12 @@ public class ForceCalculation {
                     totalY += getNornalForceReceivedFrom(particle, p) * getNormalYVector(particle, p);
                     addSuperposition(particle, p, sup);
 
-                    totalX  -= getSocialForce(particle, p) * getNormalXVector(particle, p);
-                   totalY  -= getSocialForce(particle, p) * getNormalYVector(particle, p);
+                    totalX  += getSocialForce(particle, p) * getNormalXVector(particle, p);
+                   totalY  += getSocialForce(particle, p) * getNormalYVector(particle, p);
                 }
             }
 
             particle.setForces(totalX, totalY);
-            System.out.println("Particle: " + particle.getId()+ " Force x: " + totalX);
-            System.out.println("Particle: " + particle.getId()+ " x: " + particle.getX());
-            System.out.println("Particle: " + particle.getId()+ " Force y: " + totalY);
-            System.out.println("Particle: " + particle.getId()+ " y: " + particle.getY());
         } catch (NullPointerException npe) {
             npe.printStackTrace();
         }
@@ -82,7 +78,7 @@ public class ForceCalculation {
 
     private double getSocialForce(Particle particle, Particle p) {
         // ya contemplado sup en getNornalForceReceivedFrom
-        return A * Math.exp((-sup) / B);
+        return -1*(A * Math.exp((-sup) / B));
     }
 
     private double getDrivingForceY(Particle particle, Particle target) {

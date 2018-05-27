@@ -20,26 +20,19 @@ public class main {
         int framesToPrint = 200;
         double maxDiameter = 0.7;
         double minDiameter = 0.5;
-
         double particlesMass = 80.0;
-
         int M = 15;
-        //double rc = 2 * 0.1;
         double rc = maxDiameter;
         double k = 1E5;
-        //double gama = 20.0;
         double gama = 2 * Math.sqrt(k * particlesMass);
         double totalTime = 10.0;
-        //double deltaTime = 1E-4;
         double deltaTime = 1E-5;
-        //double deltaTime = 0.1 * Math.sqrt(particlesMass/k);
-        //double delta2 = 0.02;
         double delta2 = 0.001;
         double accelerationTime = 0.5;
         double A = 2000;
         double B = 0.08;
         double desiredV = 6.0;
-        Particle target = new Particle(1000, new Position<>(W/2, 0.0), 0.0, 0.0, 0.0, 0.0, 0);
+        Particle target = new Particle(1000, new Position<>(W/2, -L/10), 0.0, 0.0, 0.0, 0.0, 0);
 
         List<Particle> particles = ParticleGenerator.generateParticles(particlesMass, minDiameter, maxDiameter, L, W, desiredV, 100);
 
@@ -50,8 +43,8 @@ public class main {
 
         silo.runSilo();
 
-        float maxPreassure =0;
-        float minPreassure =Float.MAX_VALUE;
+        float maxPreassure = 0;
+        float minPreassure = Float.MAX_VALUE;
 
         for (Particle p: particles) {
             float particlePreasure = p.getSpeed();
