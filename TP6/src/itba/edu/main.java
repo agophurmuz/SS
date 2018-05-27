@@ -54,7 +54,7 @@ public class main {
         float minPreassure =Float.MAX_VALUE;
 
         for (Particle p: particles) {
-            float particlePreasure = p.getPreasure();
+            float particlePreasure = p.getSpeed();
             if(particlePreasure > maxPreassure) {
                 maxPreassure = particlePreasure;
             }
@@ -64,7 +64,7 @@ public class main {
             }
         }
 
-        System.out.println("Max Preasure: "+maxPreassure);
-        System.out.println("Min Preasure: "+minPreassure);
+        System.out.println("Max Speed: "+maxPreassure);
+        System.out.println("Min Speed: "+minPreassure);
     }
 }

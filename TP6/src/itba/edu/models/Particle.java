@@ -18,9 +18,9 @@ public class Particle {
     private double fy;
     private boolean isWall;
     private Color color;
-    private float preasure;
-    private final static double MIN_PREASSURE_IN_COLOR_INTERVAL = 0 ;
-    private final static double MAX_PREASSURE_IN_COLOR_INTERVAL = 150 ;
+    private float speed;
+    private final static double MIN_SPEED_IN_COLOR_INTERVAL = 0 ;
+    private final static double MAX_SPEED_IN_COLOR_INTERVAL = 10 ;
     private final static double GREEN_HUE = Color.GREEN.getHue() ;
     private final static double RED_HUE = Color.RED.getHue() ;
     private double desiredV;
@@ -59,8 +59,8 @@ public class Particle {
     public void setForces(double fx, double fy) {
         this.fx = fx;
         this.fy = fy;
-        this.preasure = calculatePreasure();
-        this.color = getColorForPreassure(preasure);
+        this.speed = calculateSpeed();
+        this.color = getColorForSpeed(speed);
     }
 
     public double getFy() {
@@ -141,17 +141,17 @@ public class Particle {
         return id + "\t" + position.toString();
     }
 
-    private Color getColorForPreassure(double preassure) {
-        if (preassure > MAX_PREASSURE_IN_COLOR_INTERVAL) {
+    private Color getColorForSpeed(double preassure) {
+        if (preassure > MAX_SPEED_IN_COLOR_INTERVAL) {
             return Color.DARKRED ;
         }
-        double hue = GREEN_HUE + (RED_HUE - GREEN_HUE) * (preassure - MIN_PREASSURE_IN_COLOR_INTERVAL) / (MAX_PREASSURE_IN_COLOR_INTERVAL - MIN_PREASSURE_IN_COLOR_INTERVAL) ;
+        double hue = GREEN_HUE + (RED_HUE - GREEN_HUE) * (preassure - MIN_SPEED_IN_COLOR_INTERVAL) / (MAX_SPEED_IN_COLOR_INTERVAL - MIN_SPEED_IN_COLOR_INTERVAL) ;
         return Color.hsb(hue, 1.0, 1.0);
     }
 
 
-    private float calculatePreasure() {
-        return (float) Math.sqrt(Math.pow(fx,2)+Math.pow((fy+(10*mass)),2)) / (float)(2*Math.PI*radius);
+    private float calculateSpeed() {
+        return (float) Math.sqrt(Math.pow(vx,2)+Math.pow((vy+(10*mass)),2));
     }
 
     public double getRed() {
@@ -166,8 +166,8 @@ public class Particle {
         return color.getBlue();
     }
 
-    public float getPreasure() {
-        return preasure;
+    public float getSpeed() {
+        return speed;
     }
 
     public double getDesiredV() {
