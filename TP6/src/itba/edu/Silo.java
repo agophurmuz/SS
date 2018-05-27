@@ -22,7 +22,7 @@ public class Silo {
     private double deltaTime;
     private double delta2;
     private int framesToPrint;
-    private int caudal = 0;
+    private int exitedParticules = 0;
     private double window = 0.1;
     private boolean open;
     private double L;
@@ -59,7 +59,9 @@ public class Silo {
         List<String> energyFileLog = new ArrayList<>();
         energyFileLog.add("Tiempo" + "\t" + "Energía" + "\t" + "Energía total");
 
-        while (time <= totalTime) {
+        while (time <= totalTime && !particles.isEmpty()) {
+
+            removeExitedParticles();
 
             List<Particle> nextParticles = new ArrayList<>();
 
@@ -76,7 +78,7 @@ public class Silo {
             printActualState(fileOutputStream, i);
 
             // Log caudals with sliding window 
-            logCaudalAndEnergy(time,caudals,energyFileLog);
+            //logCaudalAndEnergy(time,caudals,energyFileLog);
 
             //Movemos las partículas al siguiente estado.
             moveParticles(neighbors, nextParticles);
@@ -90,6 +92,18 @@ public class Silo {
         }
         writeLogFileFromList(energyFileLog,"energy.tsv");
         writeLogFileFromList(proccesSlidingWindow(caudals,window,delta2),"caudals.tsv");
+    }
+
+    private void removeExitedParticles() {
+        List <Particle> particlesInRoom = new ArrayList<>();
+        for (Particle p : particles) {
+            if (!outOfSilo(p)) {
+                particlesInRoom.add(p);
+            }else{
+                exitedParticules ++;
+            }
+        }
+        particles = particlesInRoom;
     }
 
     private void updateParticesState(List<Particle> nextParticles) {
@@ -111,6 +125,7 @@ public class Silo {
             for (Particle p: particles) {
                 FileGenerator.addParticle(fileOutputStream, p);
             }
+            FileGenerator.addWalls(fileOutputStream,particles.size(),L,W);
         }
     }
 
@@ -148,8 +163,9 @@ public class Silo {
             p = new Particle(cantParticles + 2, new Position(x, particle.getY()), 0, 0, particle.getRadius(), particle.getMass(), 0);
             p.setWall(true);
             result.add(p);
-
-
+        }else if (particle.getY() + particle.getRadius() >= L){
+            //Choco con el techo
+            addWallParticle(result,particle,cantParticles,particle.getX(),L+particle.getRadius());
         }
         if (open) {
             if (particle.getY() - particle.getRadius() < 0) {
@@ -179,6 +195,13 @@ public class Silo {
             }
         }
         return result;
+    }
+
+    private void addWallParticle(Set<Particle> result, Particle currentParticle, int cantParticles, double x, double y){
+        Particle p;
+        p = new Particle(cantParticles + 6, new Position(x, y), 0, 0, currentParticle.getRadius(), currentParticle.getMass(), 0);
+        p.setWall(true);
+        result.add(p);
     }
 
     private boolean isAtRightOpeningBorder(Particle particle) {
@@ -235,7 +258,7 @@ public class Silo {
         return kineticEnergy / particles.size();
     }
 
-    private void logCaudalAndEnergy(double time,ArrayList<Integer>caudals,List<String> energyFileLog){
+    /*private void logCaudalAndEnergy(double time,ArrayList<Integer>caudals,List<String> energyFileLog){
         if (Math.abs(time / delta2 - Math.round(time / delta2)) < deltaTime) {
             //System.out.println("Tiempo:"+time+"s, Caudal:"+caudal);
             caudals.add(caudal);
@@ -243,5 +266,5 @@ public class Silo {
             energyFileLog.add(Math.round(time * 1000.0) / 1000.0 + "\t" + energy + "\t" + (energy * particles.size()));
             caudal = 0;
         }
-    }
+    }*/
 }

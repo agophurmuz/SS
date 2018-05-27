@@ -29,7 +29,7 @@ public class main {
         double k = 1E5;
         //double gama = 20.0;
         double gama = 2 * Math.sqrt(k * particlesMass);
-        double totalTime = 5.0;
+        double totalTime = 10.0;
         //double deltaTime = 1E-4;
         double deltaTime = 1E-5;
         //double deltaTime = 0.1 * Math.sqrt(particlesMass/k);
@@ -41,7 +41,7 @@ public class main {
         double desiredV = 6.0;
         Particle target = new Particle(1000, new Position<>(W/2, 0.0), 0.0, 0.0, 0.0, 0.0, 0);
 
-        List<Particle> particles = ParticleGenerator.generateParticles(particlesMass, minDiameter, maxDiameter, L, W, desiredV, 20);
+        List<Particle> particles = ParticleGenerator.generateParticles(particlesMass, minDiameter, maxDiameter, L, W, desiredV, 100);
 
         CellIndexMethod method = new CellIndexMethod(false, M, L, rc, particles);
         Beeman beeman = new Beeman(deltaTime);

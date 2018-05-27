@@ -58,17 +58,17 @@ public class ForceCalculation {
         try {
             double totalX = getDrivingForceX(particle, target);
             double totalY = getDrivingForceY(particle, target);
-            /*for (Particle p : neighbors) {
+            for (Particle p : neighbors) {
                 if (particle.getId() != p.getId()) {
                     sup = superposition(particle, p);
                     totalX += getNornalForceReceivedFrom(particle, p) * getNormalXVector(particle, p);
                     totalY += getNornalForceReceivedFrom(particle, p) * getNormalYVector(particle, p);
                     addSuperposition(particle, p, sup);
 
-                    //totalX  -= getSocialForce(particle, p) * getNormalXVector(particle, p);
-                   //totalY  -= getSocialForce(particle, p) * getNormalYVector(particle, p);
+                    totalX  -= getSocialForce(particle, p) * getNormalXVector(particle, p);
+                   totalY  -= getSocialForce(particle, p) * getNormalYVector(particle, p);
                 }
-            }*/
+            }
 
             particle.setForces(totalX, totalY);
             System.out.println("Particle: " + particle.getId()+ " Force x: " + totalX);
@@ -86,7 +86,7 @@ public class ForceCalculation {
     }
 
     private double getDrivingForceY(Particle particle, Particle target) {
-        return particle.getMass() * (((particle.getDesiredV() * getNormalYVector(particle, target)) - particle.getVx())/accelerationTime);
+        return particle.getMass() * (((particle.getDesiredV() * getNormalYVector(particle, target)) - particle.getVy())/accelerationTime);
     }
 
     private double getDrivingForceX(Particle particle, Particle target) {

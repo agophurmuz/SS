@@ -37,14 +37,14 @@ public class FileGenerator {
         }
     }
 
-    public static void addWalls(FileOutputStream fileOutputStream, int cant, double mass, double L, double W) {
+    public static void addWalls(FileOutputStream fileOutputStream, int cant, double L, double W) {
         try {
 
             StringBuilder sb = new StringBuilder();
-            sb.append(cant + "\t" +  0 + "\t" + 0 + "\t" + 0 + "\t" + 0 + "\t" + 0.001 + "\n");
-            sb.append(cant + "\t" +  0 + "\t" + L + "\t" + 0 + "\t" + 0 + "\t" + 0.001 + "\n");
-            sb.append(cant + "\t" +  W + "\t" + 0 + "\t" + 0 + "\t" + 0 + "\t" + 0.001 + "\n");
-            sb.append(cant + "\t" +  W + "\t" + L + "\t" + 0 + "\t" + 0 + "\t" + 0.001 + "\n");
+            sb.append(cant + "\t" +  0 + "\t" + 0 + "\t" + 0 + "\t" + 0 + "\t" + 0.001 + "\t" + 0+ "\t" + 0+ "\t" + 0+ "\n");
+            sb.append(cant + "\t" +  0 + "\t" + L + "\t" + 0 + "\t" + 0 + "\t" + 0.001 + "\t" + 0+ "\t" + 0+ "\t" + 0+ "\n");
+            sb.append(cant + "\t" +  W + "\t" + 0 + "\t" + 0 + "\t" + 0 + "\t" + 0.001 + "\t" + 0+ "\t" + 0+ "\t" + 0+ "\n");
+            sb.append(cant + "\t" +  W + "\t" + L + "\t" + 0 + "\t" + 0 + "\t" + 0.001 + "\t" + 0+ "\t" + 0+ "\t" + 0+ "\n");
             fileOutputStream.write(sb.toString().getBytes());
         } catch (IOException e) {
             e.printStackTrace();
@@ -54,7 +54,7 @@ public class FileGenerator {
     public static void addHeader(FileOutputStream fileOutputStream, int cantParticles) {
         try {
             StringBuilder sb = new StringBuilder();
-            sb.append((cantParticles)+ "\n");
+            sb.append((cantParticles+4)+ "\n");
             sb.append("id" + "\t" +  "x" + "\t" + "y" + "\t" + "vx" + "\t" + "vy" + "\t" + "radius" + "\n");
             fileOutputStream.write(sb.toString().getBytes());
         } catch (IOException e) {
