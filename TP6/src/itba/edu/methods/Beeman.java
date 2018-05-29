@@ -51,6 +51,8 @@ public class Beeman {
         double vx = calculateVelocityX(particle);
         double vy = calculateVelocityY(particle);
 
+        //System.out.println("vx: " + vx + " vy: " + vy);
+
         double prevAccX = particle.getFx() / particle.getMass();
         double prevAccY = particle.getFy() / particle.getMass();
 

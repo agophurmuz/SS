@@ -19,6 +19,7 @@ public class ForceCalculation {
     private double accelerationTime;
     private double A;
     private double B;
+    private double desiredV = 6.0;
 
     public ForceCalculation(double kn, double gama, double deltaTime, Particle target, double accelerationTime, double A, double B) {
         this.kn = kn;
@@ -64,9 +65,10 @@ public class ForceCalculation {
                     totalX += getNornalForceReceivedFrom(particle, p) * getNormalXVector(particle, p);
                     totalY += getNornalForceReceivedFrom(particle, p) * getNormalYVector(particle, p);
                     addSuperposition(particle, p, sup);
-
-                    totalX  += getSocialForce(particle, p) * getNormalXVector(particle, p);
-                   totalY  += getSocialForce(particle, p) * getNormalYVector(particle, p);
+                    if(!p.isWall()) {
+                        totalX += getSocialForce(particle, p) * getNormalXVector(particle, p);
+                        totalY += getSocialForce(particle, p) * getNormalYVector(particle, p);
+                    }
                 }
             }
 
@@ -78,16 +80,29 @@ public class ForceCalculation {
 
     private double getSocialForce(Particle particle, Particle p) {
         // ya contemplado sup en getNornalForceReceivedFrom
-        return -1*(A * Math.exp((-sup) / B));
+        double auxS = superposition(particle, p);
+        return -1*(A * Math.exp((auxS) / B));
     }
 
     private double getDrivingForceY(Particle particle, Particle target) {
-        return particle.getMass() * (((particle.getDesiredV() * getNormalYVector(particle, target)) - particle.getVy())/accelerationTime);
+        //System.out.println("desiredV: " + particle.getDesiredV() + " eTy: " + getEtargetY(particle, target) + " prod: " + particle.getDesiredV() * getEtargetY(particle, target) + " vy: " + particle.getVy());
+        return particle.getMass() * (((particle.getDesiredV() * getEtargetY(particle, target)) - particle.getVy())/accelerationTime);
     }
 
     private double getDrivingForceX(Particle particle, Particle target) {
-        return particle.getMass() * (((particle.getDesiredV() * getNormalXVector(particle, target)) - particle.getVx())/accelerationTime);
+        //System.out.println("desiredV: " + particle.getDesiredV() + " eTx: " + getEtargetX(particle, target) + " prod: " + particle.getDesiredV() * getEtargetX(particle, target) + " vx: " + particle.getVx());
+        return particle.getMass() * (((particle.getDesiredV() * getEtargetX(particle, target)) - particle.getVx())/accelerationTime);
     }
+
+    private double getEtargetY(Particle particle, Particle target) {
+        return (target.getY() - particle.getY())/(getDistance(target, particle));
+    }
+
+    private double getEtargetX(Particle particle, Particle target) {
+        return (target.getX() - particle.getX())/(getDistance(target, particle));
+    }
+
+
 
     private double getNormalXVector(Particle particle, Particle p) {
         return (p.getX() - particle.getX()) / getDistance(particle, p);

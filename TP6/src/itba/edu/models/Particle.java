@@ -23,7 +23,7 @@ public class Particle {
     private final static double MAX_SPEED_IN_COLOR_INTERVAL = 10 ;
     private final static double GREEN_HUE = Color.GREEN.getHue() ;
     private final static double RED_HUE = Color.RED.getHue() ;
-    private double desiredV;
+    private double desiredV = 6.0 ;
 
     public Particle(int id, Position position, double vx, double vy, double radius, double mass, double desiredV) {
         this.id = id;
@@ -121,6 +121,10 @@ public class Particle {
 
     public void setWall(boolean wall) {
         isWall = wall;
+    }
+
+    public boolean isWall() {
+        return isWall;
     }
 
     @Override

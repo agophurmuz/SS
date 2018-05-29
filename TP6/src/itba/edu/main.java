@@ -34,7 +34,7 @@ public class main {
         double desiredV = 6.0;
         Particle target = new Particle(1000, new Position<>(W/2, -L/10), 0.0, 0.0, 0.0, 0.0, 0);
 
-        List<Particle> particles = ParticleGenerator.generateParticles(particlesMass, minDiameter, maxDiameter, L, W, desiredV, 100);
+        List<Particle> particles = ParticleGenerator.generateParticles(particlesMass, minDiameter, maxDiameter, L, W, desiredV, 200);
 
         CellIndexMethod method = new CellIndexMethod(false, M, L, rc, particles);
         Beeman beeman = new Beeman(deltaTime);
