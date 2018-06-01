@@ -13,7 +13,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 
-public class Silo {
+public class Room {
 
     private List<Particle> particles;
     private CellIndexMethod cellIndexMethod;
@@ -32,7 +32,7 @@ public class Silo {
     private double maxDiameter;
     private ForceCalculation forceCalculation;
 
-    public Silo(ForceCalculation forceCalculation, List<Particle> particles, CellIndexMethod cellIndexMethod, Beeman beeman, double totalTime,
+    public Room(ForceCalculation forceCalculation, List<Particle> particles, CellIndexMethod cellIndexMethod, Beeman beeman, double totalTime,
                 double deltaTime, int framesToPrint, boolean open, double L, double W, double D, double particlesMass,
                 double minDiameter, double maxDiameter, double delta2) {
 
@@ -51,7 +51,7 @@ public class Silo {
         this.forceCalculation = forceCalculation;
     }
 
-    public void runSilo() {
+    public void evacuate() {
         double time = 0;
         int i = 0;
         FileOutputStream fileOutputStream = FileGenerator.createOutputFilePoints("granular.xyz");
@@ -97,7 +97,7 @@ public class Silo {
     private void removeExitedParticles() {
         List <Particle> particlesInRoom = new ArrayList<>();
         for (Particle p : particles) {
-            if (!outOfSilo(p)) {
+            if (!outOfRoom(p)) {
                 particlesInRoom.add(p);
             }else{
                 exitedParticules ++;
@@ -135,7 +135,7 @@ public class Silo {
         }
     }
 
-    private boolean outOfSilo(Particle p) {
+    private boolean outOfRoom(Particle p) {
         return (p.getY() - p.getRadius()) < -(L / 10);
     }
 
@@ -249,6 +249,7 @@ public class Silo {
 
         }
     }
+
     private double computeKineticEnergy(List<Particle> particles) {
         double kineticEnergy = 0;
         for (Particle p : particles) {
