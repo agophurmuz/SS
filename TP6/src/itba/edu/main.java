@@ -25,16 +25,17 @@ public class main {
         double rc = maxDiameter;
         double k = 1E5;
         double gama = 2 * Math.sqrt(k * particlesMass);
-        double totalTime = 10.0;
-        double deltaTime = 1E-5;
-        double delta2 = 0.001;
+        double totalTime = 5.0;
+        double deltaTime = 1E-6;
+        double delta2 = 0.1;
         double accelerationTime = 0.5;
         double A = 2000;
         double B = 0.08;
         double desiredV = 6.0;
+        double startTime = System.currentTimeMillis() / 1000;
         Particle target = new Particle(1000, new Position<>(W/2, -L/10), 0.0, 0.0, 0.0, 0.0, 0);
 
-        List<Particle> particles = ParticleGenerator.generateParticles(particlesMass, minDiameter, maxDiameter, L, W, desiredV, 200);
+        List<Particle> particles = ParticleGenerator.generateParticles(particlesMass, minDiameter, maxDiameter, L, W, desiredV, 50);
 
         CellIndexMethod method = new CellIndexMethod(false, M, L, rc, particles);
         Beeman beeman = new Beeman(deltaTime);
@@ -42,22 +43,6 @@ public class main {
                 particlesMass, minDiameter, maxDiameter,delta2);
 
         silo.runSilo();
-
-        float maxPreassure = 0;
-        float minPreassure = Float.MAX_VALUE;
-
-        for (Particle p: particles) {
-            float particlePreasure = p.getSpeed();
-            if(particlePreasure > maxPreassure) {
-                maxPreassure = particlePreasure;
-            }
-
-            if(particlePreasure < minPreassure){
-                minPreassure = particlePreasure;
-            }
-        }
-
-        System.out.println("Max Speed: "+maxPreassure);
-        System.out.println("Min Speed: "+minPreassure);
+        System.out.println("Tiempo de corrida: "+((System.currentTimeMillis() / 1000)-startTime)/60);
     }
 }

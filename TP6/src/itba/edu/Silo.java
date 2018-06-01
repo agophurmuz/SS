@@ -28,6 +28,7 @@ public class Silo {
     private double L;
     private double W;
     private double D;
+    private double maxSpeed = 0;
 
     private double maxDiameter;
     private ForceCalculation forceCalculation;
@@ -56,10 +57,8 @@ public class Silo {
         int i = 0;
         FileOutputStream fileOutputStream = FileGenerator.createOutputFilePoints("granular.xyz");
         ArrayList<Integer> caudals = new ArrayList<>();
-        List<String> energyFileLog = new ArrayList<>();
-        energyFileLog.add("Tiempo" + "\t" + "Energía" + "\t" + "Energía total");
 
-        while (time <= totalTime && !particles.isEmpty()) {
+        while (!particles.isEmpty()) {
 
             removeExitedParticles();
 
@@ -74,8 +73,8 @@ public class Silo {
             // Calculamos las fuerzas a las que están sometidas las particulas.
             calculateParticlesForces(neighbors);
 
-            // Printeamos estado actual.
-            printActualState(fileOutputStream, i);
+            // Printeamos cada delta2
+            printState(fileOutputStream,time);
 
             // Log caudals with sliding window 
             //logCaudalAndEnergy(time,caudals,energyFileLog);
@@ -83,6 +82,8 @@ public class Silo {
             //Movemos las partículas al siguiente estado.
             moveParticles(neighbors, nextParticles);
 
+            //Calcular la máxima velocidad de una partícula en la corrida y la asigna si es mayor a la mayor hasta ahora
+            getMaxSpeed();
 
             //Actualizamos particulas con los nuevos estados.
             updateParticesState(nextParticles);
@@ -90,8 +91,17 @@ public class Silo {
             i++;
             time += deltaTime;
         }
-        writeLogFileFromList(energyFileLog,"energy.tsv");
-        writeLogFileFromList(proccesSlidingWindow(caudals,window,delta2),"caudals.tsv");
+
+        System.out.println("Max speed:"+maxSpeed);
+        System.out.println("Tiempo de simulación: "+time);
+    }
+
+    private void getMaxSpeed() {
+        for (Particle p : particles) {
+            if (p.getSpeed() > maxSpeed) {
+                maxSpeed = p.getSpeed();
+            }
+        }
     }
 
     private void removeExitedParticles() {
@@ -119,8 +129,8 @@ public class Silo {
         }
     }
 
-    private void printActualState(FileOutputStream fileOutputStream, int i) {
-        if (i % framesToPrint == 0) {
+    private void printState(FileOutputStream fileOutputStream,double time){
+        if( time % delta2 < 1E-6){
             FileGenerator.addHeader(fileOutputStream, particles.size());
             for (Particle p: particles) {
                 FileGenerator.addParticle(fileOutputStream, p);
@@ -249,15 +259,6 @@ public class Silo {
 
         }
     }
-    private double computeKineticEnergy(List<Particle> particles) {
-        double kineticEnergy = 0;
-        for (Particle p : particles) {
-            // 1/2*m*pow(v,2) where v is sqrt(pow(vx,2)+pow(vy,2))
-            kineticEnergy += (1.0 / 2.0) * p.getMass() * (Math.pow(p.getVx(), 2) + Math.pow(p.getVy(), 2));
-        }
-        return kineticEnergy / particles.size();
-    }
-
     /*private void logCaudalAndEnergy(double time,ArrayList<Integer>caudals,List<String> energyFileLog){
         if (Math.abs(time / delta2 - Math.round(time / delta2)) < deltaTime) {
             //System.out.println("Tiempo:"+time+"s, Caudal:"+caudal);

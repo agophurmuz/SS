@@ -19,8 +19,8 @@ public class Particle {
     private boolean isWall;
     private Color color;
     private float speed;
-    private final static double MIN_SPEED_IN_COLOR_INTERVAL = 0 ;
-    private final static double MAX_SPEED_IN_COLOR_INTERVAL = 10 ;
+    private final static double MIN_SPEED_IN_COLOR_INTERVAL = 0.0 ;
+    private final static double MAX_SPEED_IN_COLOR_INTERVAL = 6.0 ;
     private final static double GREEN_HUE = Color.GREEN.getHue() ;
     private final static double RED_HUE = Color.RED.getHue() ;
     private double desiredV = 6.0 ;
@@ -155,7 +155,7 @@ public class Particle {
 
 
     private float calculateSpeed() {
-        return (float) Math.sqrt(Math.pow(vx,2)+Math.pow((vy+(10*mass)),2));
+        return (float) Math.sqrt(Math.pow(vx,2)+Math.pow((vy),2));
     }
 
     public double getRed() {
