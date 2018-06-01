@@ -24,7 +24,7 @@ public class main {
         int M = 15;
         double rc = maxDiameter;
         double k = 1E5;
-        double gama = 2 * Math.sqrt(k * particlesMass);
+        double gama = 10 * 2 * Math.sqrt(k * particlesMass);
         double totalTime = 5.0;
         double deltaTime = 1E-6;
         double delta2 = 0.1;
@@ -33,13 +33,13 @@ public class main {
         double B = 0.08;
         double desiredV = 6.0;
         double startTime = System.currentTimeMillis() / 1000;
-        Particle target = new Particle(1000, new Position<>(W/2, -L/10), 0.0, 0.0, 0.0, 0.0, 0);
+
 
         List<Particle> particles = ParticleGenerator.generateParticles(particlesMass, minDiameter, maxDiameter, L, W, desiredV, 50);
 
         CellIndexMethod method = new CellIndexMethod(false, M, L, rc, particles);
         Beeman beeman = new Beeman(deltaTime);
-        Silo silo = new Silo(new ForceCalculation(k, gama, deltaTime, target, accelerationTime, A, B), particles, method, beeman, totalTime, deltaTime, framesToPrint, open, L, W, D,
+        Silo silo = new Silo(new ForceCalculation(k, gama, deltaTime, accelerationTime, A, B), particles, method, beeman, totalTime, deltaTime, framesToPrint, open, L, W, D,
                 particlesMass, minDiameter, maxDiameter,delta2);
 
         silo.runSilo();

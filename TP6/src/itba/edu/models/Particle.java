@@ -181,5 +181,9 @@ public class Particle {
     public void setDesiredV(double desiredV) {
         this.desiredV = desiredV;
     }
+
+    public Position getPosition() {
+        return position;
+    }
 }
 

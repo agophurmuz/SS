@@ -141,8 +141,18 @@ public class Silo {
 
     private void calculateParticlesForces(Map<Particle, Set<Particle>> neighbors) {
         for (Particle p : particles) {
-            forceCalculation.setForces(p, neighbors.get(p));
+            forceCalculation.setForces(p, neighbors.get(p), getTarget(p));
         }
+    }
+
+    private Position<Double> getTarget(Particle p) {
+        if(p.getX() >= 0 && p.getX()<= (W/2 - D/2)){
+            return new Position(W/2 - D/2 + maxDiameter, 0.0);
+        }
+        if(p.getX() >= (W/2 + D/2) && p.getX() <= W) {
+            return new Position(W/2 + D/2 - maxDiameter, 0.0);
+        }
+        return new Position(p.getX(), -L/10);
     }
 
     private boolean outOfSilo(Particle p) {
