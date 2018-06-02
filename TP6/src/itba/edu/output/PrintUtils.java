@@ -1,5 +1,6 @@
 package itba.edu.output;
 
+import java.io.File;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -8,6 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PrintUtils {
+
+    private  static final String PATH = "./outputFiles/";
 
     //TODO: MAKE IT GENERIC
     private static List<String> proccesSlidingWindow(ArrayList<Integer> caudals, double window, double delta2) {
@@ -28,12 +31,26 @@ public class PrintUtils {
         return caudalFileLog;
     }
 
-    public static void writeLogFileFromList(List<String> fileLog,String filename) {
-        Path file = Paths.get(filename);
+    public static void writeLogFileFromList(List<String> fileLog,String filename, String batchIdentifier) {
+
+        String directoryName = PATH.concat(batchIdentifier);
+
+        Path file = Paths.get(directoryName+"/"+ filename);
         try {
             Files.write(file, fileLog, Charset.forName("UTF-8"));
         } catch (Exception e) {
 
         }
     }
+
+    public static void createFolder(String batchIdentifier) {
+        String directoryName = PATH.concat(batchIdentifier);
+
+        File directory = new File(directoryName);
+        if (! directory.exists()){
+            directory.mkdirs();
+        }
+    }
+
+
 }

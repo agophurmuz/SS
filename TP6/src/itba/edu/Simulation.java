@@ -21,8 +21,6 @@ public class Simulation {
     private Beeman beeman;
     private double deltaTime;
     private double delta2;
-    private int exitedParticules = 0;
-    private double window = 0.1;
     private boolean open;
     private double L;
     private double W;
@@ -31,10 +29,11 @@ public class Simulation {
     private double maxDiameter;
     private ForceCalculation forceCalculation;
     private List<String> particlesExitTimes;
+    private String outputFilename;
 
     public Simulation(ForceCalculation forceCalculation, List<Particle> particles, CellIndexMethod cellIndexMethod, Beeman beeman,
                       double deltaTime, boolean open, double L, double W, double D, double particlesMass,
-                      double minDiameter, double maxDiameter, double delta2) {
+                      double minDiameter, double maxDiameter, double delta2,String outputFilename) {
 
         this.particles = particles;
         this.cellIndexMethod = cellIndexMethod;
@@ -47,12 +46,13 @@ public class Simulation {
         this.maxDiameter = maxDiameter;
         this.delta2 = delta2;
         this.forceCalculation = forceCalculation;
+        this.outputFilename = outputFilename;
     }
 
     public void runSimulation() {
         double simulationTime = 0;
         int i = 0;
-        FileOutputStream fileOutputStream = FileGenerator.createOutputFilePoints("granular.xyz");
+        FileOutputStream fileOutputStream = FileGenerator.createOutputFilePoints(outputFilename);
         particlesExitTimes = new ArrayList<>();
 
         while (!particles.isEmpty()) {
@@ -105,8 +105,6 @@ public class Simulation {
                 particlesInRoom.add(p);
             }else{
                 particlesExitTimes.add(((Double)time).toString());
-                System.out.println(time);
-                exitedParticules ++;
             }
         }
         particles = particlesInRoom;
@@ -241,4 +239,10 @@ public class Simulation {
     public List<String> getParticlesExitTimes() {
         return particlesExitTimes;
     }
+
+    public String getLastExitedPersonTime(){
+        return particlesExitTimes.get(particlesExitTimes.size()-1);
+    }
+
+
 }

@@ -5,8 +5,8 @@ import itba.edu.methods.CellIndexMethod;
 import itba.edu.methods.ForceCalculation;
 import itba.edu.models.Particle;
 import itba.edu.output.PrintUtils;
-
-
+import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 public class main {
@@ -32,31 +32,46 @@ public class main {
 
         double startTime = System.currentTimeMillis() / 1000;
 
+        runSimulations(1,1.0,2.0,0.1);
 
-/*        List<Particle> particles = ParticleGenerator.generateParticles(particlesMass, minDiameter, maxDiameter, L, W, desiredV, 50);
-
-        CellIndexMethod method = new CellIndexMethod(false, M, L, rc, particles);
-        Beeman beeman = new Beeman(deltaTime);
-        Simulation simulation = new Simulation(new ForceCalculation(k, gama, deltaTime, accelerationTime, A, B), particles, method, beeman, totalTime, deltaTime, open, L, W, D,
-                particlesMass, minDiameter, maxDiameter,delta2);
-
-        simulation.runSimulation();*/
-        runSimulations(2);
         System.out.println("Tiempo de corrida: "+((System.currentTimeMillis() / 1000)-startTime)/60);
     }
 
-    private static void runSimulations(int amountOfSimulations){
-        double desiredV = 1.5;
+    /***
+     * Run one batch of #amountOfSimulations simulations for an specified desired v
+     * @param amountOfSimulations
+     * @param desiredV
+     */
+    private static void runSimulations(int amountOfSimulations, double desiredV){
         List<Particle> particles = ParticleGenerator.generateParticles(particlesMass, minDiameter, maxDiameter, L, W, desiredV, 5);
         CellIndexMethod method = new CellIndexMethod(false, M, L, rc, particles);
         Beeman beeman = new Beeman(deltaTime);
+        List<String> lastExitedPerson = new ArrayList<>();
+        String batchIdentifier = "sim-"+ new Timestamp(System.currentTimeMillis());
+        PrintUtils.createFolder(batchIdentifier);
 
         Simulation currentSimulation;
         for(int i=0;i<amountOfSimulations;i++){
             currentSimulation = new Simulation(new ForceCalculation(k, gama, deltaTime, accelerationTime, A, B), particles, method, beeman, deltaTime, open, L, W, D,
-                    particlesMass, minDiameter, maxDiameter,delta2);
+                    particlesMass, minDiameter, maxDiameter,delta2,"./outputFiles/"+batchIdentifier + "/simulacion-"+i+"-v-"+Math.round(desiredV)+".xyz");
             currentSimulation.runSimulation();
-            PrintUtils.writeLogFileFromList(currentSimulation.getParticlesExitTimes(),"./outputFiles/Descarga-Simulacion"+i+".tsv");
+            PrintUtils.writeLogFileFromList(currentSimulation.getParticlesExitTimes(),"Descarga-Simulacion"+i+".tsv", batchIdentifier);
+            lastExitedPerson.add(currentSimulation.getLastExitedPersonTime());
+        }
+        PrintUtils.writeLogFileFromList(lastExitedPerson,"Tiempos-de-salidas-ultima-persona-"+Math.round(desiredV)+".tsv",batchIdentifier);
+    }
+
+    /***
+     * Run various batches of #amountOfSimulations simulations for many v's from startDesiredV to endDesiredV in steps of step
+     * @param amountOfSimulationsPerBatch
+     * @param startDesiredV
+     * @param endDesiredV
+     * @param step
+     */
+    private static void runSimulations(int amountOfSimulationsPerBatch,double startDesiredV, double endDesiredV,double step){
+        for(double v= startDesiredV; v<endDesiredV;v+=step){
+            runSimulations(amountOfSimulationsPerBatch,v);
         }
     }
+
 }
