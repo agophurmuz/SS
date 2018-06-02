@@ -5,6 +5,7 @@ import itba.edu.methods.CellIndexMethod;
 import itba.edu.methods.ForceCalculation;
 import itba.edu.models.Particle;
 import itba.edu.models.Position;
+import itba.edu.output.FileGenerator;
 
 import java.io.FileOutputStream;
 import java.nio.charset.Charset;
@@ -13,36 +14,31 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 
-public class Silo {
+public class Simulation {
 
     private List<Particle> particles;
     private CellIndexMethod cellIndexMethod;
     private Beeman beeman;
-    private double totalTime;
     private double deltaTime;
     private double delta2;
-    private int framesToPrint;
-    private int exitedParticules = 0;
-    private double window = 0.1;
     private boolean open;
     private double L;
     private double W;
     private double D;
     private double maxSpeed = 0;
-
     private double maxDiameter;
     private ForceCalculation forceCalculation;
+    private List<String> particlesExitTimes;
+    private String outputFilename;
 
-    public Silo(ForceCalculation forceCalculation, List<Particle> particles, CellIndexMethod cellIndexMethod, Beeman beeman, double totalTime,
-                double deltaTime, int framesToPrint, boolean open, double L, double W, double D, double particlesMass,
-                double minDiameter, double maxDiameter, double delta2) {
+    public Simulation(ForceCalculation forceCalculation, List<Particle> particles, CellIndexMethod cellIndexMethod, Beeman beeman,
+                      double deltaTime, boolean open, double L, double W, double D, double particlesMass,
+                      double minDiameter, double maxDiameter, double delta2,String outputFilename) {
 
         this.particles = particles;
         this.cellIndexMethod = cellIndexMethod;
         this.beeman = beeman;
-        this.totalTime = totalTime;
         this.deltaTime = deltaTime;
-        this.framesToPrint = framesToPrint;
         this.open = open;
         this.L = L;
         this.W = W;
@@ -50,17 +46,18 @@ public class Silo {
         this.maxDiameter = maxDiameter;
         this.delta2 = delta2;
         this.forceCalculation = forceCalculation;
+        this.outputFilename = outputFilename;
     }
 
-    public void runSilo() {
-        double time = 0;
+    public void runSimulation() {
+        double simulationTime = 0;
         int i = 0;
-        FileOutputStream fileOutputStream = FileGenerator.createOutputFilePoints("granular.xyz");
-        ArrayList<Integer> caudals = new ArrayList<>();
+        FileOutputStream fileOutputStream = FileGenerator.createOutputFilePoints(outputFilename);
+        particlesExitTimes = new ArrayList<>();
 
         while (!particles.isEmpty()) {
 
-            removeExitedParticles();
+            removeExitedParticles(simulationTime);
 
             List<Particle> nextParticles = new ArrayList<>();
 
@@ -74,29 +71,26 @@ public class Silo {
             calculateParticlesForces(neighbors);
 
             // Printeamos cada delta2
-            printState(fileOutputStream,time);
-
-            // Log caudals with sliding window 
-            //logCaudalAndEnergy(time,caudals,energyFileLog);
+            printState(fileOutputStream,simulationTime);
 
             //Movemos las partículas al siguiente estado.
             moveParticles(neighbors, nextParticles);
 
             //Calcular la máxima velocidad de una partícula en la corrida y la asigna si es mayor a la mayor hasta ahora
-            getMaxSpeed();
+            getSimulationMaxSpeed();
 
             //Actualizamos particulas con los nuevos estados.
             updateParticesState(nextParticles);
 
             i++;
-            time += deltaTime;
+            simulationTime += deltaTime;
         }
 
         System.out.println("Max speed:"+maxSpeed);
-        System.out.println("Tiempo de simulación: "+time);
+        System.out.println("Tiempo de simulación: "+simulationTime);
     }
 
-    private void getMaxSpeed() {
+    private void getSimulationMaxSpeed() {
         for (Particle p : particles) {
             if (p.getSpeed() > maxSpeed) {
                 maxSpeed = p.getSpeed();
@@ -104,13 +98,13 @@ public class Silo {
         }
     }
 
-    private void removeExitedParticles() {
+    private void removeExitedParticles(double time) {
         List <Particle> particlesInRoom = new ArrayList<>();
         for (Particle p : particles) {
-            if (!outOfSilo(p)) {
+            if (!isOutOfRoom(p)) {
                 particlesInRoom.add(p);
             }else{
-                exitedParticules ++;
+                particlesExitTimes.add(((Double)time).toString());
             }
         }
         particles = particlesInRoom;
@@ -146,16 +140,16 @@ public class Silo {
     }
 
     private Position<Double> getTarget(Particle p) {
-        if(p.getX() >= 0 && p.getX()<= (W/2 - D/2)){
-            return new Position(W/2 - D/2 + maxDiameter, 0.0);
+        if(p.getX() >= 0 && p.getX()<= (W/2 - D/2) && p.getY()>0){
+            return new Position(W/2 - D/2 + maxDiameter, maxDiameter);
         }
-        if(p.getX() >= (W/2 + D/2) && p.getX() <= W) {
-            return new Position(W/2 + D/2 - maxDiameter, 0.0);
+        if(p.getX() >= (W/2 + D/2) && p.getX() <= W && p.getY()>0) {
+            return new Position(W/2 + D/2 - maxDiameter, maxDiameter);
         }
         return new Position(p.getX(), -L/10);
     }
 
-    private boolean outOfSilo(Particle p) {
+    private boolean isOutOfRoom(Particle p) {
         return (p.getY() - p.getRadius()) < -(L / 10);
     }
 
@@ -219,7 +213,7 @@ public class Silo {
 
     private void addWallParticle(Set<Particle> result, Particle currentParticle, int cantParticles, double x, double y){
         Particle p;
-        p = new Particle(cantParticles + 6, new Position(x, y), 0, 0, currentParticle.getRadius(), currentParticle.getMass(), 0);
+        p = new Particle(cantParticles + 7, new Position(x, y), 0, 0, currentParticle.getRadius(), currentParticle.getMass(), 0);
         p.setWall(true);
         result.add(p);
     }
@@ -242,40 +236,13 @@ public class Silo {
         return particle.getX() <= ((W / 2) - (D / 2));
     }
 
-
-    private  List<String> proccesSlidingWindow(ArrayList<Integer> caudals, double window, double delta2) {
-        int deltasInWindow = (int) (window/delta2);
-        double average;
-        int sum = 0;
-        ArrayList<Integer> averagedCaudals = new ArrayList<>();
-        List<String> caudalFileLog = new ArrayList<>();
-        caudalFileLog.add("Tiempo"+ "\t" +"Caudal promediado");
-        for(int i=0;i<caudals.size()-deltasInWindow;i++){
-            for (int j=i;j<i+deltasInWindow;j++){
-                sum+=caudals.get(j);
-            }
-            average = (double)sum/deltasInWindow;
-            caudalFileLog.add(i*delta2+ "\t" +average);
-            sum = 0;
-        }
-        return caudalFileLog;
+    public List<String> getParticlesExitTimes() {
+        return particlesExitTimes;
     }
 
-    private  void writeLogFileFromList(List<String> fileLog,String filename) {
-        Path file = Paths.get(filename);
-        try {
-            Files.write(file, fileLog, Charset.forName("UTF-8"));
-        } catch (Exception e) {
-
-        }
+    public String getLastExitedPersonTime(){
+        return particlesExitTimes.get(particlesExitTimes.size()-1);
     }
-    /*private void logCaudalAndEnergy(double time,ArrayList<Integer>caudals,List<String> energyFileLog){
-        if (Math.abs(time / delta2 - Math.round(time / delta2)) < deltaTime) {
-            //System.out.println("Tiempo:"+time+"s, Caudal:"+caudal);
-            caudals.add(caudal);
-            double energy = computeKineticEnergy(particles);
-            energyFileLog.add(Math.round(time * 1000.0) / 1000.0 + "\t" + energy + "\t" + (energy * particles.size()));
-            caudal = 0;
-        }
-    }*/
+
+
 }
