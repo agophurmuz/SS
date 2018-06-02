@@ -20,10 +20,10 @@ public class Particle {
     private Color color;
     private float speed;
     private final static double MIN_SPEED_IN_COLOR_INTERVAL = 0.0 ;
-    private final static double MAX_SPEED_IN_COLOR_INTERVAL = 6.0 ;
+    private final static double MAX_SPEED_IN_COLOR_INTERVAL = 3.0 ;
     private final static double GREEN_HUE = Color.GREEN.getHue() ;
     private final static double RED_HUE = Color.RED.getHue() ;
-    private double desiredV = 6.0 ;
+    private double desiredV = 1.5 ;
 
     public Particle(int id, Position position, double vx, double vy, double radius, double mass, double desiredV) {
         this.id = id;
