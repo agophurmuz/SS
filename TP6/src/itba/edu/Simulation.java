@@ -143,10 +143,10 @@ public class Simulation {
 
     private Position<Double> getTarget(Particle p) {
         if(p.getX() >= 0 && p.getX()<= (W/2 - D/2) && p.getY()>0){
-            return new Position(W/2 - D/2 + maxDiameter, 0.0);
+            return new Position(W/2 - D/2 + 1/2, 0.0);
         }
         if(p.getX() >= (W/2 + D/2) && p.getX() <= W && p.getY()>0) {
-            return new Position(W/2 + D/2 - maxDiameter, 0.0);
+            return new Position(W/2 + D/2 - 1/2, 0.0);
         }
         return new Position(p.getX(), -L/10);
     }
