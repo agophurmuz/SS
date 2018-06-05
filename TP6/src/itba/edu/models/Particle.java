@@ -23,7 +23,7 @@ public class Particle {
     private final static double MAX_SPEED_IN_COLOR_INTERVAL = 2.0 ;
     private final static double GREEN_HUE = Color.GREEN.getHue() ;
     private final static double RED_HUE = Color.RED.getHue() ;
-    private double desiredV = 1.5 ;
+    private double desiredV;
 
     public Particle(int id, Position position, double vx, double vy, double radius, double mass, double desiredV) {
         this.id = id;
@@ -37,7 +37,7 @@ public class Particle {
         this.desiredV = desiredV;
     }
 
-    public Particle(int id, Position position, double vx, double vy, double radius, double mass, double prevAccX, double prevAccY) {
+    public Particle(int id, Position position, double vx, double vy, double radius, double mass, double prevAccX, double prevAccY, double desiredV) {
         this.id = id;
         this.position = position;
         this.vx = vx;
@@ -46,6 +46,7 @@ public class Particle {
         this.mass = mass;
         this.prevAccX = prevAccX;
         this.prevAccY = prevAccY;
+        this.desiredV = desiredV;
     }
 
     public int getId() {

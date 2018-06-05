@@ -20,8 +20,8 @@ public class main {
     public static int M = 15;
     public static double rc = maxDiameter;
     public static double k = 1E5;
-    public static double gama = 0.001 * 2 * Math.sqrt(k * particlesMass);
-    public static double deltaTime = 1E-6;
+    public static double gama = 2 * Math.sqrt(k * particlesMass);
+    public static double deltaTime = 1E-4;
     public static double delta2 = 0.1;
     public static double accelerationTime = 0.5;
     public static double A = 2000;
@@ -43,7 +43,7 @@ public class main {
      * @param desiredV
      */
     private static void runSimulations(int amountOfSimulations, double desiredV){
-        List<Particle> particles = ParticleGenerator.generateParticles(particlesMass, minDiameter, maxDiameter, L, W, desiredV, 5);
+        List<Particle> particles = ParticleGenerator.generateParticles(particlesMass, minDiameter, maxDiameter, L, W, desiredV, 100);
         CellIndexMethod method = new CellIndexMethod(false, M, L, rc, particles);
         Beeman beeman = new Beeman(deltaTime);
         List<String> lastExitedPerson = new ArrayList<>();
@@ -53,7 +53,7 @@ public class main {
         Simulation currentSimulation;
         for(int i=0;i<amountOfSimulations;i++){
             currentSimulation = new Simulation(new ForceCalculation(k, gama, deltaTime, accelerationTime, A, B), particles, method, beeman, deltaTime, open, L, W, D,
-                    particlesMass, minDiameter, maxDiameter,delta2,"./outputFiles/"+batchIdentifier + "/simulacion-"+i+"-v-"+Math.round(desiredV)+".xyz");
+                    particlesMass, minDiameter, maxDiameter,delta2,"./outputFiles/"+batchIdentifier + "/simulacion-"+i+"-v-"+Math.round(desiredV)+".xyz", desiredV);
             currentSimulation.runSimulation();
             PrintUtils.writeLogFileFromList(currentSimulation.getParticlesExitTimes(),"Descarga-Simulacion"+i+".tsv", batchIdentifier);
             lastExitedPerson.add(currentSimulation.getLastExitedPersonTime());

@@ -30,10 +30,11 @@ public class Simulation {
     private ForceCalculation forceCalculation;
     private List<String> particlesExitTimes;
     private String outputFilename;
+    private double desiredV;
 
     public Simulation(ForceCalculation forceCalculation, List<Particle> particles, CellIndexMethod cellIndexMethod, Beeman beeman,
                       double deltaTime, boolean open, double L, double W, double D, double particlesMass,
-                      double minDiameter, double maxDiameter, double delta2,String outputFilename) {
+                      double minDiameter, double maxDiameter, double delta2,String outputFilename, double desiredV) {
 
         this.particles = particles;
         this.cellIndexMethod = cellIndexMethod;
@@ -47,6 +48,7 @@ public class Simulation {
         this.delta2 = delta2;
         this.forceCalculation = forceCalculation;
         this.outputFilename = outputFilename;
+        this.desiredV = desiredV;
     }
 
     public void runSimulation() {
@@ -74,7 +76,7 @@ public class Simulation {
             printState(fileOutputStream,simulationTime);
 
             //Movemos las partículas al siguiente estado.
-            moveParticles(neighbors, nextParticles);
+            moveParticles(neighbors, nextParticles, desiredV);
 
             //Calcular la máxima velocidad de una partícula en la corrida y la asigna si es mayor a la mayor hasta ahora
             getSimulationMaxSpeed();
@@ -116,15 +118,15 @@ public class Simulation {
         cellIndexMethod.resetParticles(nextParticles);
     }
 
-    private void moveParticles(Map<Particle, Set<Particle>> neighbors, List<Particle> nextParticles ) {
+    private void moveParticles(Map<Particle, Set<Particle>> neighbors, List<Particle> nextParticles, double desiredV) {
         for (Particle p : particles) {
-            Particle nextP = beeman.moveParticle(p, neighbors.get(p), nextParticles);
+            Particle nextP = beeman.moveParticle(p, neighbors.get(p), nextParticles, desiredV);
             nextParticles.add(nextP);
         }
     }
 
     private void printState(FileOutputStream fileOutputStream,double time){
-        if( time % delta2 < 1E-6){
+        if( Math.abs(time / delta2 - Math.round(time / delta2)) < deltaTime){
             FileGenerator.addHeader(fileOutputStream, particles.size());
             for (Particle p: particles) {
                 FileGenerator.addParticle(fileOutputStream, p);
@@ -141,10 +143,10 @@ public class Simulation {
 
     private Position<Double> getTarget(Particle p) {
         if(p.getX() >= 0 && p.getX()<= (W/2 - D/2) && p.getY()>0){
-            return new Position(W/2 - D/2 + maxDiameter, maxDiameter);
+            return new Position(W/2 - D/2 + maxDiameter, 0.0);
         }
         if(p.getX() >= (W/2 + D/2) && p.getX() <= W && p.getY()>0) {
-            return new Position(W/2 + D/2 - maxDiameter, maxDiameter);
+            return new Position(W/2 + D/2 - maxDiameter, 0.0);
         }
         return new Position(p.getX(), -L/10);
     }

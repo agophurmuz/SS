@@ -44,7 +44,7 @@ public class Beeman {
                 + (5 * calculateAccelerationY(particle) * deltaTime) / 6 - (particle.getPrevAccY() * deltaTime) / 6);
     }
 
-    public Particle moveParticle(Particle particle, Set<Particle> neighbors, List<Particle> particles) {
+    public Particle moveParticle(Particle particle, Set<Particle> neighbors, List<Particle> particles, double desiredV) {
         double x = calculatePositionX(particle);
         double y = calculatePositionY(particle);
         Position<Double> newPosition = new Position<>(x, y);
@@ -57,7 +57,7 @@ public class Beeman {
         double prevAccY = particle.getFy() / particle.getMass();
 
         return new Particle(particle.getId(), newPosition, vx, vy, particle.getRadius(), particle.getMass(),
-                prevAccX, prevAccY);
+                prevAccX, prevAccY, desiredV);
     }
 
 }
