@@ -13,7 +13,7 @@ import java.util.List;
 public class main {
 
     public static double G = 6.693E-11;
-    public static double deltaTime2 = 6000;
+    public static double deltaTime2 = 600000;
     public static double deltaTime = 60;
     public static double totalTime = 126144000;
     public static double voyagerMass = 721;

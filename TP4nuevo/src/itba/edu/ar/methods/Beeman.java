@@ -40,7 +40,7 @@ public class Beeman {
                 + (5 * calculateAccelerationY(particle) * deltaTime) / 6 - (particle.getPrevAccY() * deltaTime) / 6);
     }
 
-    public Particle movePlanet(Particle p) {
+    public Particle moveParticle(Particle p) {
 
         double x = calculatePositionX(p);
         double y = calculatePositionY(p);

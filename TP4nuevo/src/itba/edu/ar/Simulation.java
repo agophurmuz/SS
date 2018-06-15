@@ -38,21 +38,38 @@ public class Simulation {
         double time = 0.0;
         while(time < totalTime) {
 
-            List<Particle> nextStepPlanets = new ArrayList<>();
+
 
             // calculate planet forces
             calculatePlanetsForces(planets);
+
+            // calculate voyager forces
+            calculateVoyagerForces(voyager);
 
             // Printeamos cada delta2
             printState(fileOutputStream, time);
 
             // move planets next step
-            move(planets, nextStepPlanets);
+            List<Particle> nextStepPlanets = movePlanets(planets);
 
+            // move voyager
+            Particle nextStepVoyager = moveVoyager(voyager);
 
-            planets = nextStepPlanets;
+            // uddate state particles
+            updateState(nextStepPlanets, nextStepVoyager);
+
             time += deltaTime;
         }
+    }
+
+    private void updateState(List<Particle> nextStepPlanets, Particle nextStepVoyager) {
+        planets = nextStepPlanets;
+        voyager = nextStepVoyager;
+    }
+
+
+    private void calculateVoyagerForces(Particle voyager) {
+        forceCalculation.setForces(voyager, planets);
     }
 
     private void calculatePlanetsForces(List<Particle> planets) {
@@ -61,21 +78,27 @@ public class Simulation {
         }
     }
 
-    private void move(List<Particle> planets, List<Particle> nextStepPlanets) {
+    private  List<Particle> movePlanets(List<Particle> planets) {
+        List<Particle> nextStepPlanets = new ArrayList<>();
         for (Particle p : planets) {
             if(!p.getType().equals(ParticleType.SUN)) {
-                Particle newPlanet = beeman.movePlanet(p);
+                Particle newPlanet = beeman.moveParticle(p);
                 nextStepPlanets.add(newPlanet);
             } else {
                 nextStepPlanets.add(p);
             }
         }
+        return nextStepPlanets;
+    }
+
+    private Particle moveVoyager(Particle voyager) {
+        return beeman.moveParticle(voyager);
     }
 
     private void printState(FileOutputStream fileOutputStream, double time){
         if( Math.abs(time / delta2 - Math.round(time / delta2)) < deltaTime){
-            FileGenerator.addHeader(fileOutputStream, planets.size());
-            //FileGenerator.addParticle(fileOutputStream, voyager);
+            FileGenerator.addHeader(fileOutputStream, planets.size() + 1);
+            FileGenerator.addParticle(fileOutputStream, voyager);
             for (Particle p: planets) {
                 FileGenerator.addParticle(fileOutputStream, p);
             }
