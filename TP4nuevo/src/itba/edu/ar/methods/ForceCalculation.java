@@ -27,19 +27,19 @@ public class ForceCalculation {
         planet.setForces(totalX, totalY);
     }
 
-    private double getNormalXVector(Particle particle, Particle p) {
+    public double getNormalXVector(Particle particle, Particle p) {
         return (p.getX() - particle.getX()) / getDistance(particle, p);
     }
 
-    private double getNormalYVector(Particle particle, Particle p) {
+    public double getNormalYVector(Particle particle, Particle p) {
         return (p.getY() - particle.getY()) / getDistance(particle, p);
     }
 
-    private double getXTangencial(Particle particle, Particle p) {
+    public double getXTangencial(Particle particle, Particle p) {
         return - getNormalYVector(particle,p);
     }
 
-    private double getYTangencial(Particle particle, Particle p) {
+    public double getYTangencial(Particle particle, Particle p) {
         return getNormalXVector(particle,p);
     }
 

@@ -19,6 +19,7 @@ public class Simulation {
     private Beeman beeman;
     private Particle voyager;
     private ForceCalculation forceCalculation;
+    private int i;
 
 
     public Simulation(double totalTime, double deltaTime, double delta2, List<Particle> planets, Beeman beeman,
@@ -30,6 +31,7 @@ public class Simulation {
         this.beeman = beeman;
         this.voyager = voyager;
         this.forceCalculation = forceCalculation;
+        this.i = 0;
     }
 
 
@@ -58,6 +60,7 @@ public class Simulation {
             // uddate state particles
             updateState(nextStepPlanets, nextStepVoyager);
 
+            i++;
             time += deltaTime;
         }
     }
@@ -96,7 +99,8 @@ public class Simulation {
     }
 
     private void printState(FileOutputStream fileOutputStream, double time){
-        if( Math.abs(time / delta2 - Math.round(time / delta2)) < deltaTime){
+        //if( Math.abs(time / delta2 - Math.round(time / delta2)) < deltaTime){
+        if(i % delta2 == 0) {
             FileGenerator.addHeader(fileOutputStream, planets.size() + 1);
             FileGenerator.addParticle(fileOutputStream, voyager);
             for (Particle p: planets) {
