@@ -20,10 +20,15 @@ public class Simulation {
     private Particle voyager;
     private ForceCalculation forceCalculation;
     private int i;
+    private double jupiterDistance = Double.MAX_VALUE;
+    private double saturnDistance = Double.MAX_VALUE;
+    private FileOutputStream fileOutputStreamMinDist;
+    private FileOutputStream fileOutputStreamSim;
 
 
     public Simulation(double totalTime, double deltaTime, double delta2, List<Particle> planets, Beeman beeman,
-                      Particle voyager, ForceCalculation forceCalculation) {
+                      Particle voyager, ForceCalculation forceCalculation, FileOutputStream fileOutputStreamMinDist,
+                      FileOutputStream fileOutputStreamSim) {
         this.totalTime = totalTime;
         this.deltaTime = deltaTime;
         this.delta2 = delta2;
@@ -32,15 +37,17 @@ public class Simulation {
         this.voyager = voyager;
         this.forceCalculation = forceCalculation;
         this.i = 0;
+        this.fileOutputStreamMinDist = fileOutputStreamMinDist;
+        this.fileOutputStreamSim = fileOutputStreamSim;
     }
 
 
     public void run() {
-        FileOutputStream fileOutputStream = FileGenerator.createOutputFile("simulationMonths.xyz");
         double time = 0.0;
         while(time < totalTime) {
 
-
+            //calculate voyager min dist to saturn
+            calculateMinDistToVoyager();
 
             // calculate planet forces
             calculatePlanetsForces(planets);
@@ -49,7 +56,7 @@ public class Simulation {
             calculateVoyagerForces(voyager);
 
             // Printeamos cada delta2
-            printState(fileOutputStream, time);
+            printState(fileOutputStreamSim, time);
 
             // move planets next step
             List<Particle> nextStepPlanets = movePlanets(planets);
@@ -62,6 +69,31 @@ public class Simulation {
 
             i++;
             time += deltaTime;
+        }
+
+        printMinDistances();
+    }
+
+    private void printMinDistances() {
+            FileGenerator.addDist(fileOutputStreamMinDist, jupiterDistance, saturnDistance);
+    }
+
+
+    private void calculateMinDistToVoyager() {
+
+        for (Particle p : planets) {
+            if(p.getType().equals(ParticleType.JUPITER)){
+                double aux = forceCalculation.getDistance(voyager, p);
+                if(aux < jupiterDistance) {
+                    jupiterDistance = aux;
+                }
+            }
+            if(p.getType().equals(ParticleType.SATURN)){
+                double aux = forceCalculation.getDistance(voyager, p);
+                if(aux < saturnDistance) {
+                    saturnDistance = aux;
+                }
+            }
         }
     }
 
