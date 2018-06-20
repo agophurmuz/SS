@@ -5,6 +5,7 @@ import itba.edu.ar.models.Particle;
 import itba.edu.ar.models.ParticleType;
 import itba.edu.ar.models.Position;
 
+import java.awt.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -22,12 +23,14 @@ public class PlanetParser {
 
         String fileExtension = ".tsv";
         double [] planetsMasses = {EARTH_MASS,JUPITER_MASS,SATURN_MASS};
+        Color[] planetColors = {new Color(24,42,97),new Color(135,121,111),new Color(227,224,192),new Color(2,2,2)};
+        double[] planetRadious = {0.2,0.3,0.33};
         ParticleType[] bodyTypes = {ParticleType.EARTH, ParticleType.JUPITER, ParticleType.SATURN};
 
         File periodFile = new File(path+fileBaseName+monthNumber+fileExtension);
         Scanner scanner = new Scanner(periodFile);
         List<Particle> period = new ArrayList<>();
-        period.add(new Particle(0, new Position(0, 0),0 ,0, SUN_MASS, ParticleType.SUN));
+        period.add(new Particle(0, new Position(0, 0),0 ,0, SUN_MASS, ParticleType.SUN,0.5,Color.orange));
         for (int i = 0; i < planetsInSystem; i++) {
 
             double x = scanner.nextDouble() * 1000;
@@ -37,7 +40,7 @@ public class PlanetParser {
             double vy = scanner.nextDouble() * 1000;
             double vz = scanner.nextDouble() * 1000;
             Position p = new Position(x,y);
-            Particle planet = new Particle(i + 1, p, vx, vy, planetsMasses[i], bodyTypes[i]);
+            Particle planet = new Particle(i + 1, p, vx, vy, planetsMasses[i], bodyTypes[i], planetRadious[i],planetColors[i]);
             //DELETE
             //System.out.println(x);
             //System.out.println(y);

@@ -8,6 +8,7 @@ import itba.edu.ar.models.Position;
 import itba.edu.ar.output.FileGenerator;
 import itba.edu.ar.utils.PlanetParser;
 
+import java.awt.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -29,13 +30,13 @@ public class main {
     public static void main(String[] args) throws FileNotFoundException {
         FileOutputStream fileOutputStreamMinDist = FileGenerator.createOutputFile("minDist.tsv");
         FileGenerator.addDistHeader(fileOutputStreamMinDist);
-        for (int i = 0; i < 12; i++) {
+        for (int i = 0; i < 8; i++) {
             ForceCalculation forceCalculation = new ForceCalculation(G);
             Beeman beeman = new Beeman(deltaTime);
             PlanetParser parser = new PlanetParser();
             String basePath = new File("").getAbsolutePath() + "/TP4nuevo/src/itba/edu/ar";
-            List<Particle> planets = parser.parseFile(basePath +"/utils/data/year/",
-                    "month-", i, 3);
+            List<Particle> planets = parser.parseFile(basePath +"/utils/data/day/",
+                    "day-", i, 3);
             Particle earth = null;
             Particle sun = null;
             for (Particle p : planets) {
@@ -55,7 +56,7 @@ public class main {
             double vyVoyager = VOYAGER_SPEED * normalXvector;
             Position<Double> newPosition = new Position<>(earth.getX() + EARTH_RADIUS + deltaX, earth.getY() + EARTH_RADIUS + deltaY);
             Particle voyager = new Particle(planets.size(), newPosition, earth.getVx() + vxVoyager, earth.getVy() + vyVoyager,
-                    voyagerMass, ParticleType.VOYAGER);
+                    voyagerMass, ParticleType.VOYAGER,0.1, Color.gray);
             FileOutputStream fileOutputStreamSim = FileGenerator.createOutputFile("simulationMonths-" + i + ".xyz");
             Simulation simulation = new Simulation(totalTime, deltaTime, deltaTime2, planets, beeman, voyager, forceCalculation,
                     fileOutputStreamMinDist, fileOutputStreamSim);

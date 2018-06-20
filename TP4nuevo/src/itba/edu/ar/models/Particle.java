@@ -1,5 +1,6 @@
 package itba.edu.ar.models;
 
+import java.awt.*;
 import java.util.Objects;
 
 public class Particle {
@@ -14,6 +15,8 @@ public class Particle {
     private double prevAccY;
     private double fx;
     private double fy;
+    private double radius;
+    private Color color;
     private ParticleType type;
 
     public Particle(int id, Position position, double vx, double vy, double mass, ParticleType type, double prevAccX, double prevAccY) {
@@ -27,13 +30,15 @@ public class Particle {
         this.prevAccY = prevAccY;
     }
 
-    public Particle(int id, Position position, double vx, double vy, double mass, ParticleType type) {
+    public Particle(int id, Position position, double vx, double vy, double mass, ParticleType type, double radius,Color color) {
         this.id = id;
         this.position = position;
         this.vx = vx;
         this.vy = vy;
         this.mass = mass;
         this.type = type;
+        this.radius = radius;
+        this.color = color;
     }
 
     public int getId() {
@@ -99,6 +104,14 @@ public class Particle {
 
     public double getY() {
         return position.getY().doubleValue();
+    }
+
+    public double getRadius() {
+        return radius;
+    }
+
+    public Color getColor() {
+        return color;
     }
 
     public ParticleType getType() {

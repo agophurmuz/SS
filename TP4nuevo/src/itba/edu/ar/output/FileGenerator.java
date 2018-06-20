@@ -25,7 +25,7 @@ public class FileGenerator {
         try {
             StringBuilder sb = new StringBuilder();
             sb.append(cantParticles + "\n");
-            sb.append("id" + "\t" + "x" + "\t" + "y" + "\t" + "vx" + "\t" + "vy" + "\n");
+            sb.append("id" + "\t" + "x" + "\t" + "y" + "\t" + "vx" + "\t" + "vy"+ "\t" + "radius"+ "\t" + "r"+ "\t" + "g"+ "\t" + "b" + "\n");
             fileOutputStream.write(sb.toString().getBytes());
         } catch (IOException e) {
             e.printStackTrace();
@@ -41,7 +41,10 @@ public class FileGenerator {
             double x = particle.getX() / 1000;
             double y = particle.getY() / 1000;
             sb.append(particle.getId() + "\t" + (x / AU) + "\t" + (y / AU) + "\t"
-                    + (particle.getVx() / 1000) + "\t" + (particle.getVy() / 1000) + "\n");
+                    + (particle.getVx() / 1000) + "\t" + (particle.getVy() / 1000)
+                    + "\t"+particle.getRadius()+ "\t"+(double)particle.getColor().getRed()
+                    + "\t"+(double)particle.getColor().getGreen()+ "\t"+(double)particle.getColor().getBlue() + "\n");
+
             fileOutputStream.write(sb.toString().getBytes());
         } catch (IOException e) {
             e.printStackTrace();
