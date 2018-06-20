@@ -8,6 +8,7 @@ import itba.edu.ar.models.Position;
 import itba.edu.ar.output.FileGenerator;
 import itba.edu.ar.utils.PlanetParser;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.util.List;
@@ -28,11 +29,12 @@ public class main {
     public static void main(String[] args) throws FileNotFoundException {
         FileOutputStream fileOutputStreamMinDist = FileGenerator.createOutputFile("minDist.tsv");
         FileGenerator.addDistHeader(fileOutputStreamMinDist);
-        for (int i = 8; i < 9; i++) {
+        for (int i = 0; i < 12; i++) {
             ForceCalculation forceCalculation = new ForceCalculation(G);
             Beeman beeman = new Beeman(deltaTime);
             PlanetParser parser = new PlanetParser();
-            List<Particle> planets = parser.parseFile("/Users/agophurmuz/Documents/ITBA/SS/TP4nuevo/src/itba/edu/ar/utils/data/year/",
+            String basePath = new File("").getAbsolutePath() + "/TP4nuevo/src/itba/edu/ar";
+            List<Particle> planets = parser.parseFile(basePath +"/utils/data/year/",
                     "month-", i, 3);
             Particle earth = null;
             Particle sun = null;
