@@ -28,12 +28,12 @@ public class main {
     public static void main(String[] args) throws FileNotFoundException {
         FileOutputStream fileOutputStreamMinDist = FileGenerator.createOutputFile("minDist.tsv");
         FileGenerator.addDistHeader(fileOutputStreamMinDist);
-        for (int i = 0; i < 13; i++) {
+        for (int i = 8; i < 9; i++) {
+            ForceCalculation forceCalculation = new ForceCalculation(G);
             Beeman beeman = new Beeman(deltaTime);
             PlanetParser parser = new PlanetParser();
             List<Particle> planets = parser.parseFile("/Users/agophurmuz/Documents/ITBA/SS/TP4nuevo/src/itba/edu/ar/utils/data/year/",
                     "month-", i, 3);
-            ForceCalculation forceCalculation = new ForceCalculation(G);
             Particle earth = null;
             Particle sun = null;
             for (Particle p : planets) {

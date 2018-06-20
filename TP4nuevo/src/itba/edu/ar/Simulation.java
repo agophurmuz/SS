@@ -7,7 +7,6 @@ import itba.edu.ar.models.ParticleType;
 import itba.edu.ar.output.FileGenerator;
 
 import java.io.FileOutputStream;
-import java.util.ArrayList;
 import java.util.List;
 
 public class Simulation {
@@ -50,28 +49,58 @@ public class Simulation {
             calculateMinDistToVoyager();
 
             // calculate planet forces
-            calculatePlanetsForces(planets);
+            calculatePlanetsForces();
 
             // calculate voyager forces
-            calculateVoyagerForces(voyager);
+            calculateVoyagerForces();
 
             // Printeamos cada delta2
             printState(fileOutputStreamSim, time);
 
-            // move planets next step
-            List<Particle> nextStepPlanets = movePlanets(planets);
+            //calculo las posiciones nuevas
+            calculateNewPositions();
 
-            // move voyager
-            Particle nextStepVoyager = moveVoyager(voyager);
+            //calculo las nuevas velocidades
+            calculateNewVelocities();
 
-            // uddate state particles
-            updateState(nextStepPlanets, nextStepVoyager);
+            // calculo la nueva posicion de voyager
+            calculateNewPositionsVoyager();
+
+            // calculo la nueva velocidad de voyager
+            calculateNewVelocitiesVoyager();
+
 
             i++;
             time += deltaTime;
         }
 
         printMinDistances();
+    }
+
+    private void calculateNewVelocitiesVoyager() {
+                double[] newForces = forceCalculation.calculateForce(voyager, planets);
+                beeman.calculateVelocity(voyager, (newForces[0]/voyager.getMass()), (newForces[1]/voyager.getMass()));
+    }
+
+    private void calculateNewPositionsVoyager() {
+        beeman.calculatePosition(voyager);
+    }
+
+    private void calculateNewVelocities() {
+        for (Particle p : planets) {
+            if (!p.getType().equals(ParticleType.SUN)) {
+                double[] newForces = forceCalculation.calculateForce(p, planets);
+                beeman.calculateVelocity(p, (newForces[0]/p.getMass()), (newForces[1]/p.getMass()));
+            }
+        }
+    }
+
+    private void calculateNewPositions() {
+        for (Particle p : planets) {
+            if (!p.getType().equals(ParticleType.SUN)) {
+                beeman.calculatePosition(p);
+            }
+        }
     }
 
     private void printMinDistances() {
@@ -103,32 +132,16 @@ public class Simulation {
     }
 
 
-    private void calculateVoyagerForces(Particle voyager) {
+    private void calculateVoyagerForces() {
         forceCalculation.setForces(voyager, planets);
     }
 
-    private void calculatePlanetsForces(List<Particle> planets) {
+    private void calculatePlanetsForces() {
         for (Particle p : planets) {
             forceCalculation.setForces(p, planets);
         }
     }
 
-    private  List<Particle> movePlanets(List<Particle> planets) {
-        List<Particle> nextStepPlanets = new ArrayList<>();
-        for (Particle p : planets) {
-            if(!p.getType().equals(ParticleType.SUN)) {
-                Particle newPlanet = beeman.moveParticle(p);
-                nextStepPlanets.add(newPlanet);
-            } else {
-                nextStepPlanets.add(p);
-            }
-        }
-        return nextStepPlanets;
-    }
-
-    private Particle moveVoyager(Particle voyager) {
-        return beeman.moveParticle(voyager);
-    }
 
     private void printState(FileOutputStream fileOutputStream, double time){
         //if( Math.abs(time / delta2 - Math.round(time / delta2)) < deltaTime){

@@ -30,29 +30,33 @@ public class Beeman {
     }
 
 
-    private double calculateVelocityX(Particle particle) {
-        return particle.getVx() + ((calculateAccelerationX(particle) * deltaTime) / 3
+    private double calculateVelocityX(Particle particle, double newAccX) {
+        return particle.getVx() + ((newAccX * deltaTime) / 3
                 + (5 * calculateAccelerationX(particle) * deltaTime) / 6 - (particle.getPrevAccX() * deltaTime) / 6);
     }
 
-    private double calculateVelocityY(Particle particle) {
-        return particle.getVy() + ((calculateAccelerationY(particle) * deltaTime) / 3
+    private double calculateVelocityY(Particle particle, double newAccY) {
+        return particle.getVy() + ((newAccY * deltaTime) / 3
                 + (5 * calculateAccelerationY(particle) * deltaTime) / 6 - (particle.getPrevAccY() * deltaTime) / 6);
     }
 
-    public Particle moveParticle(Particle p) {
-
+    public void calculatePosition(Particle p) {
         double x = calculatePositionX(p);
         double y = calculatePositionY(p);
-        Position<Double> newPosition = new Position<>(x, y);
+        p.setPosition(new Position(x, y));
+    }
 
-        double vx = calculateVelocityX(p);
-        double vy = calculateVelocityY(p);
+
+    public void calculateVelocity(Particle p, double accX, double accY) {
+        double vx = calculateVelocityX(p, accX);
+        double vy = calculateVelocityY(p, accY);
+        p.setVx(vx);
+        p.setVy(vy);
 
         double prevAccX = p.getFx() / p.getMass();
         double prevAccY = p.getFy() / p.getMass();
+        p.setPrevAccX(prevAccX);
+        p.setPrevAccY(prevAccY);
 
-        return new Particle(p.getId(), newPosition, vx, vy, p.getMass(), p.getType(), prevAccX, prevAccY);
     }
-
 }

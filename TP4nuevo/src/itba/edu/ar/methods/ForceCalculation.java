@@ -23,7 +23,7 @@ public class ForceCalculation {
                 totalY += getGravityForceFrom(planet, p) * getNormalYVector(planet, p);
             }
         }
-
+        //System.out.println("Voyager force " + "fx: " + totalX + " fy: " + totalY);
         planet.setForces(totalX, totalY);
     }
 
@@ -52,4 +52,19 @@ public class ForceCalculation {
         return G * ((particle.getMass() * p.getMass())/ Math.pow(getDistance(particle, p), 2));
     }
 
+    public double[] calculateForce(Particle planet, List<Particle> planets) {
+        double[] forces = {0, 0};
+        double totalX = 0;
+        double totalY = 0;
+
+        for (Particle p : planets) {
+            if(!planet.equals(p)) {
+                totalX += getGravityForceFrom(planet, p) * getNormalXVector(planet, p);
+                totalY += getGravityForceFrom(planet, p) * getNormalYVector(planet, p);
+            }
+        }
+        forces[0] = totalX;
+        forces[1] = totalY;
+        return forces;
+    }
 }
