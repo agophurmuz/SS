@@ -12,7 +12,11 @@ import java.awt.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
+import java.util.stream.Stream;
 
 public class main {
 
@@ -25,18 +29,41 @@ public class main {
     private static final double VOYAGER_DISTANCE = 1500000; /* 1500 km */
     private static final double VOYAGER_SPEED = 14000; /* 11 km/s */
     private static final double EARTH_RADIUS = 6371000;
-    private static final int mes = 8;
+    private static final int PLANETS_IN_SYSTEM = 3;
+    private static final String DAY = "day";
+    private static final String MONTH = "month";
+    private static final String WEEK = "week";
 
-    public static void main(String[] args) throws FileNotFoundException {
+
+    public static void main(String[] args) throws FileNotFoundException{
+        setUpSimulationPeriodAndRun(WEEK);
+    }
+
+    private static int getFilesInFolder(String folder){
+        int count = 0;
+        try (Stream<Path> files = Files.list(Paths.get(folder))) {
+             count = (int)files.count();
+        }catch (Exception e){
+
+        }
+        return count;
+    }
+
+    private static void  setUpSimulationPeriodAndRun(String simulationPeriod) throws FileNotFoundException{
+
         FileOutputStream fileOutputStreamMinDist = FileGenerator.createOutputFile("minDist.tsv");
         FileGenerator.addDistHeader(fileOutputStreamMinDist);
-        for (int i = 0; i < 8; i++) {
+        String basePath = new File("").getAbsolutePath() + "/TP4nuevo/src/itba/edu/ar";
+        String localPath = "/utils/data/"+simulationPeriod+"/";
+        String fileBaseName = simulationPeriod+"-";
+        int filesInFolder = getFilesInFolder(basePath+localPath);
+
+        for (int i = 0; i < filesInFolder; i++) {
             ForceCalculation forceCalculation = new ForceCalculation(G);
             Beeman beeman = new Beeman(deltaTime);
             PlanetParser parser = new PlanetParser();
-            String basePath = new File("").getAbsolutePath() + "/TP4nuevo/src/itba/edu/ar";
-            List<Particle> planets = parser.parseFile(basePath +"/utils/data/day/",
-                    "day-", i, 3);
+            List<Particle> planets = parser.parseFile(basePath +localPath,
+                    fileBaseName, i, PLANETS_IN_SYSTEM);
             Particle earth = null;
             Particle sun = null;
             for (Particle p : planets) {
@@ -57,7 +84,7 @@ public class main {
             Position<Double> newPosition = new Position<>(earth.getX() + EARTH_RADIUS + deltaX, earth.getY() + EARTH_RADIUS + deltaY);
             Particle voyager = new Particle(planets.size(), newPosition, earth.getVx() + vxVoyager, earth.getVy() + vyVoyager,
                     voyagerMass, ParticleType.VOYAGER,0.1, Color.gray);
-            FileOutputStream fileOutputStreamSim = FileGenerator.createOutputFile("simulationMonths-" + i + ".xyz");
+            FileOutputStream fileOutputStreamSim = FileGenerator.createOutputFile(simulationPeriod +"-"+ i +"Simulation.xyz");
             Simulation simulation = new Simulation(totalTime, deltaTime, deltaTime2, planets, beeman, voyager, forceCalculation,
                     fileOutputStreamMinDist, fileOutputStreamSim);
             simulation.run();
