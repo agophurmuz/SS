@@ -52,10 +52,10 @@ public class FileGenerator {
     }
 
 
-    public static void addDist(FileOutputStream fileOutputStreamMinDist, double jupiterDistance, double saturnDistance) {
+    public static void addDist(FileOutputStream fileOutputStreamMinDist, double jupiterDistance, double saturnDistance, double time) {
         try {
             StringBuilder sb = new StringBuilder();
-            sb.append(jupiterDistance + "\t" + saturnDistance + "\n");
+            sb.append(jupiterDistance + "\t" + saturnDistance + "\t" + time + "\n");
             fileOutputStreamMinDist.write(sb.toString().getBytes());
         } catch (IOException e) {
             e.printStackTrace();
@@ -65,8 +65,28 @@ public class FileGenerator {
     public static void addDistHeader(FileOutputStream fileOutputStreamMinDist) {
         try {
             StringBuilder sb = new StringBuilder();
-            sb.append("jupiterDistance" + "\t" + "saturnDistance" + "\n");
+            sb.append("jupiterDistance" + "\t" + "saturnDistance" + "\t" + "time" + "\n");
             fileOutputStreamMinDist.write(sb.toString().getBytes());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void addVoyagerVelocity(FileOutputStream fileOutputStreamVelocities, double time, double voyagerVelocityAbs) {
+        try {
+            StringBuilder sb = new StringBuilder();
+            sb.append(time + "\t" + voyagerVelocityAbs + "\n");
+            fileOutputStreamVelocities.write(sb.toString().getBytes());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void addVoyagerVelocityHeader(FileOutputStream fileOutputStreamVelocities) {
+        try {
+            StringBuilder sb = new StringBuilder();
+            sb.append("Tiempo" + "\t" + "Velocidad Absoluta Voyager" + "\n");
+            fileOutputStreamVelocities.write(sb.toString().getBytes());
         } catch (IOException e) {
             e.printStackTrace();
         }

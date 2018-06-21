@@ -42,7 +42,7 @@ public class main {
     private static int getFilesInFolder(String folder){
         int count = 0;
         try (Stream<Path> files = Files.list(Paths.get(folder))) {
-             count = (int)files.count();
+            count = (int)files.count();
         }catch (Exception e){
 
         }
@@ -52,13 +52,15 @@ public class main {
     private static void  setUpSimulationPeriodAndRun(String simulationPeriod) throws FileNotFoundException{
 
         FileOutputStream fileOutputStreamMinDist = FileGenerator.createOutputFile("minDist.tsv");
+        FileOutputStream fileOutputStreamVelocities = FileGenerator.createOutputFile("voyagerVelocities.tsv");
         FileGenerator.addDistHeader(fileOutputStreamMinDist);
+        FileGenerator.addVoyagerVelocityHeader(fileOutputStreamVelocities);
         String basePath = new File("").getAbsolutePath() + "/TP4nuevo/src/itba/edu/ar";
         String localPath = "/utils/data/"+simulationPeriod+"/";
         String fileBaseName = simulationPeriod+"-";
         int filesInFolder = getFilesInFolder(basePath+localPath);
 
-        for (int i = 0; i < filesInFolder; i++) {
+        for (int i = 0; i < 1; i++) {
             ForceCalculation forceCalculation = new ForceCalculation(G);
             Beeman beeman = new Beeman(deltaTime);
             PlanetParser parser = new PlanetParser();
@@ -86,7 +88,7 @@ public class main {
                     voyagerMass, ParticleType.VOYAGER,0.1, Color.gray);
             FileOutputStream fileOutputStreamSim = FileGenerator.createOutputFile(simulationPeriod +"-"+ i +"Simulation.xyz");
             Simulation simulation = new Simulation(totalTime, deltaTime, deltaTime2, planets, beeman, voyager, forceCalculation,
-                    fileOutputStreamMinDist, fileOutputStreamSim);
+                    fileOutputStreamMinDist, fileOutputStreamSim, fileOutputStreamVelocities);
             simulation.run();
         }
     }
