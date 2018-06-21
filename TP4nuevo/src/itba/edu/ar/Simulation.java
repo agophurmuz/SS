@@ -23,11 +23,12 @@ public class Simulation {
     private double saturnDistance = Double.MAX_VALUE;
     private FileOutputStream fileOutputStreamMinDist;
     private FileOutputStream fileOutputStreamSim;
+    private FileOutputStream fileOutputStreamVelocities;
 
 
     public Simulation(double totalTime, double deltaTime, double delta2, List<Particle> planets, Beeman beeman,
                       Particle voyager, ForceCalculation forceCalculation, FileOutputStream fileOutputStreamMinDist,
-                      FileOutputStream fileOutputStreamSim) {
+                      FileOutputStream fileOutputStreamSim, FileOutputStream fileOutputStreamVelocities) {
         this.totalTime = totalTime;
         this.deltaTime = deltaTime;
         this.delta2 = delta2;
@@ -38,6 +39,7 @@ public class Simulation {
         this.i = 0;
         this.fileOutputStreamMinDist = fileOutputStreamMinDist;
         this.fileOutputStreamSim = fileOutputStreamSim;
+        this.fileOutputStreamVelocities = fileOutputStreamVelocities;
     }
 
 
@@ -55,7 +57,7 @@ public class Simulation {
             calculateVoyagerForces();
 
             // Printeamos cada delta2
-            printState(fileOutputStreamSim, time);
+            printState(time);
 
             //calculo las posiciones nuevas
             calculateNewPositions();
@@ -74,12 +76,17 @@ public class Simulation {
             time += deltaTime;
         }
 
-        printMinDistances();
+        printMinDistances(time);
+    }
+
+    private void printVoyagerVelocities(double time) {
+        double voyagerVelocityAbs = Math.sqrt(Math.pow(voyager.getVx(),2) + Math.pow(voyager.getVy(),2));
+        FileGenerator.addVoyagerVelocity(fileOutputStreamVelocities, time, voyagerVelocityAbs);
     }
 
     private void calculateNewVelocitiesVoyager() {
-                double[] newForces = forceCalculation.calculateForce(voyager, planets);
-                beeman.calculateVelocity(voyager, (newForces[0]/voyager.getMass()), (newForces[1]/voyager.getMass()));
+        double[] newForces = forceCalculation.calculateForce(voyager, planets);
+        beeman.calculateVelocity(voyager, (newForces[0]/voyager.getMass()), (newForces[1]/voyager.getMass()));
     }
 
     private void calculateNewPositionsVoyager() {
@@ -103,8 +110,8 @@ public class Simulation {
         }
     }
 
-    private void printMinDistances() {
-            FileGenerator.addDist(fileOutputStreamMinDist, jupiterDistance, saturnDistance);
+    private void printMinDistances(double time) {
+        FileGenerator.addDist(fileOutputStreamMinDist, jupiterDistance, saturnDistance, time);
     }
 
 
@@ -126,12 +133,6 @@ public class Simulation {
         }
     }
 
-    private void updateState(List<Particle> nextStepPlanets, Particle nextStepVoyager) {
-        planets = nextStepPlanets;
-        voyager = nextStepVoyager;
-    }
-
-
     private void calculateVoyagerForces() {
         forceCalculation.setForces(voyager, planets);
     }
@@ -143,13 +144,14 @@ public class Simulation {
     }
 
 
-    private void printState(FileOutputStream fileOutputStream, double time){
-        //if( Math.abs(time / delta2 - Math.round(time / delta2)) < deltaTime){
+    private void printState(double time){
         if(i % delta2 == 0) {
-            FileGenerator.addHeader(fileOutputStream, planets.size() + 1);
-            FileGenerator.addParticle(fileOutputStream, voyager);
+            // Printeamos el modulo de la velocidad de la sonda en función del tiempo.
+            printVoyagerVelocities(time);
+            FileGenerator.addHeader(fileOutputStreamSim, planets.size() + 1);
+            FileGenerator.addParticle(fileOutputStreamSim, voyager);
             for (Particle p: planets) {
-                FileGenerator.addParticle(fileOutputStream, p);
+                FileGenerator.addParticle(fileOutputStreamSim, p);
             }
         }
     }

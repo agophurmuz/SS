@@ -18,4 +18,5 @@ target/
 *.xyz
 *.txt
 *.csv
-
+voyagerVelocities.tsv
+minDist.tsv
