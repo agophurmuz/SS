@@ -33,10 +33,11 @@ public class main {
     private static final String DAY = "day";
     private static final String MONTH = "month";
     private static final String WEEK = "week";
+    private static final String HOUR = "hour";
 
 
     public static void main(String[] args) throws FileNotFoundException{
-        setUpSimulationPeriodAndRun(WEEK);
+        setUpSimulationPeriodAndRun(HOUR);
     }
 
     private static int getFilesInFolder(String folder){
