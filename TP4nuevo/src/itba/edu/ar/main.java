@@ -60,7 +60,7 @@ public class main {
         String fileBaseName = simulationPeriod+"-";
         int filesInFolder = getFilesInFolder(basePath+localPath);
 
-        for (int i = 0; i < 1; i++) {
+        for (int i = 0; i < filesInFolder; i++) {
             ForceCalculation forceCalculation = new ForceCalculation(G);
             Beeman beeman = new Beeman(deltaTime);
             PlanetParser parser = new PlanetParser();
