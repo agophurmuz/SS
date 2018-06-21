@@ -34,10 +34,11 @@ public class main {
     private static final String MONTH = "month";
     private static final String WEEK = "week";
     private static final String HOUR = "hour";
+    private static final String DETAIL = "detail";
 
 
     public static void main(String[] args) throws FileNotFoundException{
-        setUpSimulationPeriodAndRun(HOUR);
+        setUpSimulationPeriodAndRun(DETAIL);
     }
 
     private static int getFilesInFolder(String folder){
