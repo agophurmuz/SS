@@ -51,12 +51,18 @@ public class Beeman extends MolecularDynamicsAlgorithm {
         double analyticR;
         double predictedV;
         FileOutputStream fileOutputStream = FileGenerator.createFile(getName() + ".csv");
-        FileGenerator.addTitle(fileOutputStream);
+        FileOutputStream fileOutputStreamAnalytic = FileGenerator.createFile("analytic.csv");
+        FileOutputStream fileOutputStreamTime = FileGenerator.createFile("time.csv");
+        //FileGenerator.addTitle(fileOutputStream);
         while (time <= totalTime) {
             analyticR = analyticSolution(time);
             cuadraticErrorStep += calculateCuadraticError(r, analyticR);
-            FileGenerator.addLine(r, analyticR, time, fileOutputStream);
-
+            //FileGenerator.addLine(r, analyticR, time, fileOutputStream);
+            if(i%10 == 0) {
+                FileGenerator.add(r, fileOutputStream);
+                FileGenerator.add(analyticR, fileOutputStreamAnalytic);
+                FileGenerator.add(time, fileOutputStreamTime);
+            }
             r = calculatePosition();
             predictedV = calculateVelocityPredicted();
             v = calculateVelocity(predictedV);
@@ -70,7 +76,7 @@ public class Beeman extends MolecularDynamicsAlgorithm {
 
         cuadraticError = cuadraticErrorStep / i;
         System.out.println("Beeman error: " + cuadraticError);
-        FileGenerator.addCuadraticError(cuadraticError, fileOutputStream);
+        //FileGenerator.addCuadraticError(cuadraticError, fileOutputStream);
         fileOutputStream.close();
     }
 

@@ -66,11 +66,14 @@ public class GearPredictorCorrector extends MolecularDynamicsAlgorithm {
         double analyticR;
         calculateFirstIntegrationStep();
         FileOutputStream fileOutputStream = FileGenerator.createFile(getName() + ".csv");
-        FileGenerator.addTitle(fileOutputStream);
+        //FileGenerator.addTitle(fileOutputStream);
         while (time <= totalTime) {
             analyticR = analyticSolution(time);
             cuadraticErrorStep += calculateCuadraticError(r, analyticR);
-            FileGenerator.addLine(r, analyticR, time, fileOutputStream);
+            //FileGenerator.addLine(r, analyticR, time, fileOutputStream);
+            if(i%1 == 0) {
+                FileGenerator.add(r, fileOutputStream);
+            }
             predic();
 
             evaluate();
@@ -81,7 +84,7 @@ public class GearPredictorCorrector extends MolecularDynamicsAlgorithm {
         }
         cuadraticError = cuadraticErrorStep / i;
         System.out.println("Gear error: " + cuadraticError);
-        FileGenerator.addCuadraticError(cuadraticError, fileOutputStream);
+        //FileGenerator.addCuadraticError(cuadraticError, fileOutputStream);
         fileOutputStream.close();
     }
 

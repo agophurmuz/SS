@@ -44,16 +44,18 @@ public class Verlet extends  MolecularDynamicsAlgorithm{
         double aux;
 
         FileOutputStream fileOutputStream = FileGenerator.createFile(getName() + ".csv");
-        FileGenerator.addTitle(fileOutputStream);
+        //FileGenerator.addTitle(fileOutputStream);
 
         prevPos = calculatePositionEuler(); //fixme euler
         aux = r;
+        FileGenerator.add(r, fileOutputStream);
         r = calculatePosition();
         time += deltaTime;
         a = calculateAcceleration();
         prev2Pos = prevPos;
         prevPos = aux;
         aux = r;
+        FileGenerator.add(r, fileOutputStream);
         r = calculatePosition();
         time += deltaTime;
         i+=2;
@@ -64,8 +66,10 @@ public class Verlet extends  MolecularDynamicsAlgorithm{
             prevPos = aux;
             analyticR = analyticSolution(time);
             cuadraticErrorStep += calculateCuadraticError(r, analyticR);
-            FileGenerator.addLine(r, analyticR, time, fileOutputStream);
-
+            //FileGenerator.addLine(r, analyticR, time, fileOutputStream);
+            if(i%1 == 0) {
+                FileGenerator.add(r, fileOutputStream);
+            }
             prevAcc = a;
 
             //System.out.println(a);
@@ -83,7 +87,7 @@ public class Verlet extends  MolecularDynamicsAlgorithm{
 
         cuadraticError = cuadraticErrorStep / i;
         System.out.println("Verlet: " + cuadraticError);
-        FileGenerator.addCuadraticError(cuadraticError, fileOutputStream);
+        //FileGenerator.addCuadraticError(cuadraticError, fileOutputStream);
         try {
             fileOutputStream.close();
         } catch (IOException e) {

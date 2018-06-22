@@ -1,6 +1,5 @@
 package itba.edu.ar;
 
-import itba.edu.ar.voyager.Body;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -53,24 +52,14 @@ public class FileGenerator {
         }
     }
 
-    public static void addPlanets(Body body, List<Body> bodies, FileOutputStream fileOutputStream) {
+
+    public static void add(double value, FileOutputStream fileOutputStream) {
         try {
             StringBuilder sb = new StringBuilder();
-            sb.append(bodies.size() + 1 + "\n");
-            sb.append("x" + "\t" + "y" + "\t" + "vx" + "\t" + "vy" + "\n");
-            printLine(body, sb);
-            for (Body b: bodies) {
-                printLine(b, sb);
-            }
+            sb.append(value + "\n");
             fileOutputStream.write(sb.toString().getBytes());
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    private static void printLine(Body body, StringBuilder sb) {
-        double posX = body.getPosition().getX() / 1000;
-        double posY = body.getPosition().getY() / 1000;
-        sb.append((posX/AU) + "\t" + (posY/AU) + "\t" + (body.getvX()/1000) + "\t" + (body.getvY()/1000) + "\n");
     }
 }
