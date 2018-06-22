@@ -149,9 +149,9 @@ public class Simulation {
             // Printeamos el modulo de la velocidad de la sonda en función del tiempo.
             printVoyagerVelocities(time);
             FileGenerator.addHeader(fileOutputStreamSim, planets.size() + 1);
-            FileGenerator.addParticle(fileOutputStreamSim, voyager);
+            FileGenerator.addParticle(fileOutputStreamSim, voyager, time);
             for (Particle p: planets) {
-                FileGenerator.addParticle(fileOutputStreamSim, p);
+                FileGenerator.addParticle(fileOutputStreamSim, p, time);
             }
         }
     }
