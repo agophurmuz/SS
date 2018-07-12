@@ -18,51 +18,22 @@
 &RAMP ID='burner_ramp',T=900.,F=1. /
 &RAMP ID='burner_ramp',T=901.,F=0. /
 
-
 &MATL ID            = 'GYPSUM'
       FYI           = 'NBSIR 88-3752'
       CONDUCTIVITY  = 0.17
       SPECIFIC_HEAT = 1.09
       DENSITY       =  930. /
 
-&MATL ID                 = 'CALCIUM SILICATE'
-      FYI                = 'NBSIR 88-3752'
-      CONDUCTIVITY       = 0.12     
-      SPECIFIC_HEAT_RAMP = 'c_cal'   
-      DENSITY            =  720.
-      EMISSIVITY         = 0.83  /
-&RAMP ID='c_cal',T= 20.,F=1.25 /
-&RAMP ID='c_cal',T=200.,F=1.25 /
-&RAMP ID='c_cal',T=300.,F=1.33 /
-&RAMP ID='c_cal',T=600.,F=1.55 /
-
-&MATL ID                 = 'CERAMIC FIBER' 
-      FYI                = 'NBSIR 88-3752'     
-      CONDUCTIVITY_RAMP  = 'k_fiber'              
-      SPECIFIC_HEAT      = 1.04                   
-      DENSITY            =  128.                  
-      EMISSIVITY         = 0.97 /
-&RAMP ID='k_fiber',T= 20.,F=0.09 /
-&RAMP ID='k_fiber',T=300.,F=0.09 /
-&RAMP ID='k_fiber',T=600.,F=0.17 /
-&RAMP ID='k_fiber',T=900.,F=0.25 /
-
 &MATL ID                 = 'FIRE BRICK'           
       FYI                = 'NBSIR 88-3752'        
       CONDUCTIVITY_RAMP  = 'k_brick'              
-      SPECIFIC_HEAT      = 1.04                   
+      SPECIFIC_HEAT      = 3.0                  
       DENSITY            =  750.                  
       EMISSIVITY         = 0.80 /
 &RAMP ID='k_brick',T= 20.,F=0.36 /
 &RAMP ID='k_brick',T=200.,F=0.36 /
 &RAMP ID='k_brick',T=300.,F=0.38 /
 &RAMP ID='k_brick',T=600.,F=0.45 /
-
-&MATL ID            = 'CONCRETE'             
-      FYI           = 'NBSIR 88-3752'        
-      CONDUCTIVITY  = 1.8                    
-      SPECIFIC_HEAT = 1.04                   
-      DENSITY       =  2280. /
 
 &MATL ID            = 'STEEL'
       FYI           = 'Drysdale, Intro to Fire Dynamics'
@@ -71,31 +42,50 @@
       CONDUCTIVITY  = 45.8
       DENSITY       = 7850. /
 
-&SURF ID        = 'GYPSUM BOARD'
-      DEFAULT   = .TRUE.   
-      MATL_ID   = 'GYPSUM'
-      COLOR     = 'BEIGE'
-      THICKNESS = 0.013 /
+&SPEC ID = 'PYROLYZATE', MW=53.6 /
+&SPEC ID = 'OXYGEN', MASS_FRACTION_0 = 0.23 /
+&SPEC ID = 'WATER VAPOR' /
+&SPEC ID = 'CARBON DIOXIDE' /
+
+&MATL ID = 'WOOD'
+      EMISSIVITY = 0.9
+      CONDUCTIVITY = 0.2
+      SPECIFIC_HEAT = 1.3
+      DENSITY = 570.
+      N_REACTIONS = 1
+      A(1) = 1.89E10
+      E(1) = 1.51E5
+      N_S(1) = 1.0
+      NU_MATL(1,1) = 0.18
+      SPEC_ID(1:4,1) = 'PYROLYZATE','OXYGEN','WATER VAPOR','CARBON DIOXIDE'
+      NU_SPEC(1:4,1) = 0.82,0,0,0
+      HEAT_OF_REACTION(1) = 430.
+      HEAT_OF_COMBUSTION(1) = 14500. /
 
 &SURF ID               = 'HALLWAY'
-      MATL_ID(1:2,1)   = 'CALCIUM SILICATE','GYPSUM'
+      MATL_ID   = 'GYPSUM'
       COLOR            = 'WHEAT'
       THICKNESS(1:2)   = 0.013,0.013 /
 
-&SURF ID        = 'INSULATION'
-      MATL_ID   = 'CERAMIC FIBER'
-      COLOR     = 'GRAY'
+&SURF ID               = 'ROOM 1'
+      MATL_ID   = 'GYPSUM'
+      COLOR            = 'GRAY'
+      THICKNESS(1:2)   = 0.013,0.013 /      
+
+&SURF ID               = 'ROOM 3'
+      MATL_ID   = 'GYPSUM'
+      COLOR            = 'GRAY'
+      THICKNESS(1:2)   = 0.013,0.013 /      
+
+&SURF ID        = 'WOOD WALL'
+      MATL_ID   = 'WOOD'
+      COLOR     = 'BRICK'
       THICKNESS = 0.050 /
 
 &SURF ID        = 'FIRE BRICK'
       MATL_ID   = 'FIRE BRICK'
       COLOR     = 'FIREBRICK'
       THICKNESS = 0.113 /
-
-&SURF ID        = 'CONCRETE FLOOR'
-      MATL_ID   = 'CONCRETE'
-      COLOR     = 'GRAY 60'
-      THICKNESS = 0.102 /
 
 &SURF ID        = 'PAN'
       MATL_ID   = 'STEEL'
@@ -104,61 +94,62 @@
 
 
 &OBST XB=10.9,11.2, 0.0, 0.3, 0.4, 0.5, SURF_IDS='burner','PAN','PAN' /  Burner
-&OBST XB= 9.8,11.1, 2.3, 3.4, 0.0, 2.2, SURF_ID='INSULATION' /  Room 1 cut-out
-&OBST XB=11.1,12.2, 2.3, 3.4, 2.0, 2.2, SURF_ID='INSULATION' /  Room 1 Stub Corridor Ceiling
-&OBST XB=11.1,11.2, 3.3, 3.4, 0.0, 2.2, SURF_ID='INSULATION' /  Room 1 Door Jamb Left
-&OBST XB=12.0,12.2, 3.3, 3.4, 0.0, 2.2, SURF_ID='INSULATION' /  Room 1 Door Jamb Right
-&OBST XB=11.2,12.0, 3.3, 3.4, 1.6, 2.0, SURF_ID='INSULATION' /  Room 1 Door Sill 
-&VENT XB= 9.8,12.2, 0.0, 2.3, 2.2, 2.2, SURF_ID='INSULATION' /  Ceiling of Room 1
-&VENT XB= 9.8, 9.8, 0.0, 3.4, 0.0, 2.2, SURF_ID='INSULATION' /  Wall of Room 1
-&VENT XB=12.2,12.2, 0.0, 3.4, 0.0, 2.2, SURF_ID='INSULATION' /  Wall of Room 1
-&VENT XB= 9.8,12.2, 0.0, 0.0, 0.0, 2.2, SURF_ID='INSULATION' /  Wall of Room 1
+&OBST XB= 9.8,11.1, 2.3, 3.4, 0.0, 2.2, SURF_ID='ROOM 1' /  Room 1 cut-out
+&OBST XB=11.1,12.2, 2.3, 3.4, 2.0, 2.2, SURF_ID='ROOM 1' /  Room 1 Stub Corridor Ceiling
+&OBST XB=11.1,11.2, 3.3, 3.4, 0.0, 2.2, SURF_ID='ROOM 1' /  Room 1 Door Jamb Left
+&OBST XB=12.0,12.2, 3.3, 3.4, 0.0, 2.2, SURF_ID='ROOM 1' /  Room 1 Door Jamb Right
+&OBST XB=11.2,12.0, 3.3, 3.4, 1.6, 2.0, SURF_ID='ROOM 1' /  Room 1 Door Sill 
+&VENT XB= 9.8,12.2, 0.0, 2.3, 2.2, 2.2, SURF_ID='ROOM 1' /  Ceiling of Room 1
+&VENT XB= 9.8, 9.8, 0.0, 3.4, 0.0, 2.2, SURF_ID='ROOM 1' /  Wall of Room 1
+&VENT XB=12.2,12.2, 0.0, 3.4, 0.0, 2.2, SURF_ID='ROOM 1' /  Wall of Room 1
+&VENT XB= 9.8,12.2, 0.0, 0.0, 0.0, 2.2, SURF_ID='WOOD WALL' /  Wall of Room 1
 &VENT XB= 9.8,12.2, 0.0, 3.4, 0.0, 0.0, SURF_ID='FIRE BRICK' /  Floor of Room 1
 
-&VENT XB= 0.0,12.2, 3.4, 3.4, 0.0, 2.4, SURF_ID='HALLWAY' /  Wall of Room 2
-&VENT XB= 0.0,12.2, 5.8, 5.8, 0.0, 2.4, SURF_ID='HALLWAY' /  Wall of Room 2
-&VENT XB= 0.0,12.2, 3.4, 5.8, 2.4, 2.4, SURF_ID='HALLWAY' /  Wall of Room 2
+&VENT XB= 0.0,12.2, 3.4, 3.4, 0.0, 2.4, SURF_ID='HALLWAY' /  Wall of hallway
+&VENT XB= 0.0,12.2, 5.8, 5.8, 0.0, 2.4, SURF_ID='HALLWAY' /  Wall of hallway
+&VENT XB= 0.0,12.2, 3.4, 5.8, 2.4, 2.4, SURF_ID='HALLWAY' /  Wall of hallway
+&VENT XB= 0.0,12.2, 3.4, 5.8, 0.0, 0.0, SURF_ID='FIRE BRICK' /  Floor of hallway
 &VENT XB= 0.0, 0.0, 4.2, 5.0, 0.0, 2.0, SURF_ID='OPEN' /  Open Door at end of hallway
 
 
 &VENT XB= 0.8, 1.6, 5.8, 5.8, 0.0, 2.0, SURF_ID='OPEN' /  Open Door at end of hallway connecting Room 3
-&VENT XB= 0.0,0.0,5.8,8.2,0.0,2.2, SURF_ID='INSULATION' /  Wall of Room 3
-&VENT XB=2.4,2.4,5.8,8.2,0.0,2.2, SURF_ID='INSULATION' /  Wall of Room 3
-&VENT XB= 0.0,2.4,8.2,8.2,0.0,2.2, SURF_ID='INSULATION' /  Wall of Room 3
-&VENT XB= 0.0,2.4,5.8,8.2, 0.0, 0.0,SURF_ID='CONCRETE FLOOR' /  Floor of Room 3
+&VENT XB= 0.0,0.0,5.8,8.2,0.0,2.2, SURF_ID='ROOM 3' /  Wall of Room 3
+&VENT XB=2.4,2.4,5.8,8.2,0.0,2.2, SURF_ID='ROOM 3' /  Wall of Room 3
+&VENT XB= 0.0,2.4,8.2,8.2,0.0,2.2, SURF_ID='ROOM 3' /  Wall of Room 3
+&VENT XB= 0.0,2.4,5.8,8.2, 0.0, 0.0,SURF_ID='FIRE BRICK' /  Floor of Room 3
 
 &SLCF PBZ= 2.0,QUANTITY='TEMPERATURE',VECTOR=.TRUE. /  Ceiling temp
 &SLCF PBZ= 0.5,QUANTITY='TEMPERATURE',VECTOR=.TRUE. /  down temp 
 &SLCF PBZ= 2.0,QUANTITY='VOLUME FRACTION', SPEC_ID='CARBON DIOXIDE' /  Ceiling CO2
 &SLCF PBZ= 0.5,QUANTITY='VOLUME FRACTION', SPEC_ID='CARBON DIOXIDE' /  down CO2
 
-&DEVC XYZ=0.0, 4.6, 2.0,QUANTITY='TEMPERATURE',ID='T-0-2' /
-&DEVC XYZ=1.2, 4.6, 2.0,QUANTITY='TEMPERATURE',ID='T-1-2' /
-&DEVC XYZ=2.2, 4.6, 2.0,QUANTITY='TEMPERATURE',ID='T-2-2' /
-&DEVC XYZ=3.2, 4.6, 2.0,QUANTITY='TEMPERATURE',ID='T-3-2' /
-&DEVC XYZ=4.2, 4.6, 2.0,QUANTITY='TEMPERATURE',ID='T-4-2' /
-&DEVC XYZ=5.2, 4.6, 2.0,QUANTITY='TEMPERATURE',ID='T-5-2' /
-&DEVC XYZ=6.2, 4.6, 2.0,QUANTITY='TEMPERATURE',ID='T-6-2' /
-&DEVC XYZ=7.2, 4.6, 2.0,QUANTITY='TEMPERATURE',ID='T-7-2' /
-&DEVC XYZ=8.2, 4.6, 2.0,QUANTITY='TEMPERATURE',ID='T-8-2' /
-&DEVC XYZ=9.2, 4.6, 2.0,QUANTITY='TEMPERATURE',ID='T-9-2' /
-&DEVC XYZ=10.2, 4.6, 2.0,QUANTITY='TEMPERATURE',ID='T-10-2' /
-&DEVC XYZ=11.2, 4.6, 2.0,QUANTITY='TEMPERATURE',ID='T-11-2' /
-&DEVC XYZ=12.2, 4.6, 2.0,QUANTITY='TEMPERATURE',ID='T-12-2' /
+&DEVC XYZ=0.0, 4.6, 2.0,QUANTITY='TEMPERATURE',ID='T-hallway-2' /
+&DEVC XYZ=1.2, 4.6, 2.0,QUANTITY='TEMPERATURE',ID='T-hallway-2' /
+&DEVC XYZ=2.2, 4.6, 2.0,QUANTITY='TEMPERATURE',ID='T-hallway-2' /
+&DEVC XYZ=3.2, 4.6, 2.0,QUANTITY='TEMPERATURE',ID='T-hallway-2' /
+&DEVC XYZ=4.2, 4.6, 2.0,QUANTITY='TEMPERATURE',ID='T-hallway-2' /
+&DEVC XYZ=5.2, 4.6, 2.0,QUANTITY='TEMPERATURE',ID='T-hallway-2' /
+&DEVC XYZ=6.2, 4.6, 2.0,QUANTITY='TEMPERATURE',ID='T-hallway-2' /
+&DEVC XYZ=7.2, 4.6, 2.0,QUANTITY='TEMPERATURE',ID='T-hallway-2' /
+&DEVC XYZ=8.2, 4.6, 2.0,QUANTITY='TEMPERATURE',ID='T-hallway-2' /
+&DEVC XYZ=9.2, 4.6, 2.0,QUANTITY='TEMPERATURE',ID='T-hallway-2' /
+&DEVC XYZ=10.2, 4.6, 2.0,QUANTITY='TEMPERATURE',ID='T-hallway-2' /
+&DEVC XYZ=11.2, 4.6, 2.0,QUANTITY='TEMPERATURE',ID='T-hallway-2' /
+&DEVC XYZ=12.2, 4.6, 2.0,QUANTITY='TEMPERATURE',ID='T-hallway-2' /
 
-&DEVC XYZ=0.0, 4.6, 0.5,QUANTITY='TEMPERATURE',ID='T-0-0.5' /
-&DEVC XYZ=1.2, 4.6, 0.5,QUANTITY='TEMPERATURE',ID='T-1-0.5' /
-&DEVC XYZ=2.2, 4.6, 0.5,QUANTITY='TEMPERATURE',ID='T-2-0.5' /
-&DEVC XYZ=3.2, 4.6, 0.5,QUANTITY='TEMPERATURE',ID='T-3-0.5' /
-&DEVC XYZ=4.2, 4.6, 0.5,QUANTITY='TEMPERATURE',ID='T-4-0.5' /
-&DEVC XYZ=5.2, 4.6, 0.5,QUANTITY='TEMPERATURE',ID='T-5-0.5' /
-&DEVC XYZ=6.2, 4.6, 0.5,QUANTITY='TEMPERATURE',ID='T-6-0.5' /
-&DEVC XYZ=7.2, 4.6, 0.5,QUANTITY='TEMPERATURE',ID='T-7-0.5' /
-&DEVC XYZ=8.2, 4.6, 0.5,QUANTITY='TEMPERATURE',ID='T-8-0.5' /
-&DEVC XYZ=9.2, 4.6, 0.5,QUANTITY='TEMPERATURE',ID='T-9-0.5' /
-&DEVC XYZ=10.2, 4.6, 0.5,QUANTITY='TEMPERATURE',ID='T-10-0.5' /
-&DEVC XYZ=11.2, 4.6, 0.5,QUANTITY='TEMPERATURE',ID='T-11-0.5' /
-&DEVC XYZ=12.2, 4.6, 0.5,QUANTITY='TEMPERATURE',ID='T-12-0.5' /
+&DEVC XYZ=0.0, 4.6, 0.5,QUANTITY='TEMPERATURE',ID='T-hallway-0.5' /
+&DEVC XYZ=1.2, 4.6, 0.5,QUANTITY='TEMPERATURE',ID='T-hallway-0.5' /
+&DEVC XYZ=2.2, 4.6, 0.5,QUANTITY='TEMPERATURE',ID='T-hallway-0.5' /
+&DEVC XYZ=3.2, 4.6, 0.5,QUANTITY='TEMPERATURE',ID='T-hallway-0.5' /
+&DEVC XYZ=4.2, 4.6, 0.5,QUANTITY='TEMPERATURE',ID='T-hallway-0.5' /
+&DEVC XYZ=5.2, 4.6, 0.5,QUANTITY='TEMPERATURE',ID='T-hallway-0.5' /
+&DEVC XYZ=6.2, 4.6, 0.5,QUANTITY='TEMPERATURE',ID='T-hallway-0.5' /
+&DEVC XYZ=7.2, 4.6, 0.5,QUANTITY='TEMPERATURE',ID='T-hallway-0.5' /
+&DEVC XYZ=8.2, 4.6, 0.5,QUANTITY='TEMPERATURE',ID='T-hallway-0.5' /
+&DEVC XYZ=9.2, 4.6, 0.5,QUANTITY='TEMPERATURE',ID='T-hallway-0.5' /
+&DEVC XYZ=10.2, 4.6, 0.5,QUANTITY='TEMPERATURE',ID='T-hallway-0.5' /
+&DEVC XYZ=11.2, 4.6, 0.5,QUANTITY='TEMPERATURE',ID='T-hallway-0.5' /
+&DEVC XYZ=12.2, 4.6, 0.5,QUANTITY='TEMPERATURE',ID='T-hallway-0.5' /
 
 &DEVC XYZ=11, 1.7, 0.5,QUANTITY='TEMPERATURE',ID='T-Room1-0.5' /
 &DEVC XYZ=11, 1.7, 2,QUANTITY='TEMPERATURE',ID='T-Room1-2' /
