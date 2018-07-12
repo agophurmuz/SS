@@ -6,7 +6,7 @@
 
 &TIME T_END=1200. /
 &MISC SIMULATION_MODE='SVLES', TMPA=23. /
-&DUMP DT_DEVC=15., DT_HRR=15., SIG_FIGS=4, SIG_FIGS_EXP=2 /
+&DUMP DT_DEVC=1., DT_HRR=15., SIG_FIGS=4, SIG_FIGS_EXP=2 /
 
 &REAC FUEL='METHANE'                       
       FYI='Methane, C H_4'               
